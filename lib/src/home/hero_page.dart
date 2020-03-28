@@ -21,11 +21,23 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
     return Stack(
       fit: StackFit.expand,
       children: [
-        SafeArea(
-          child: Image.asset(
-            'assets/icons/bg-art.png',
-            fit: BoxFit.cover,
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.blue[700],
+                Colors.blue[900],
+              ],
+              stops: [0.5, 1.0],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              tileMode: TileMode.repeated,
+            ),
           ),
+        ),
+        Image.asset(
+          'assets/icons/bg-art.png',
+          fit: BoxFit.cover,
         ),
         Positioned(
           right: 20.0,
@@ -48,7 +60,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
-          top: 180.0,
+          top: 100.0,
           left: 20.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,9 +77,40 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
                   textAlign: TextAlign.left,
                 ),
               ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 150.0,
+          left: 22.0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
               Container(
                 child: Text(
                   'the',
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 190.0,
+          left: 20.0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                child: Text(
+                  'Difference',
                   style: TextStyle(
                     fontSize: 50.0,
                     fontWeight: FontWeight.w400,
@@ -76,15 +119,23 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
                   textAlign: TextAlign.left,
                 ),
               ),
-              Text(
-                'Difference',
-                style: TextStyle(
-                  fontSize: 50.0,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                ),
-              ),
             ],
+          ),
+        ),
+        Positioned(
+          top: 270.0,
+          left: 0.0,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 35.0,
+//            margin: EdgeInsets.only(top:200.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40.0),
+                topRight: Radius.circular(40.0),
+              ),
+            ),
           ),
         ),
       ],
@@ -129,21 +180,8 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
   Widget _scrollView(BuildContext context) {
     // Use LayoutBuilder to get the hero header size while keeping the image aspect-ratio
     return Container(
-      decoration: BoxDecoration(
-          //color: Colors.blue[800],
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.blue[500], Colors.blue[900]])),
-      child: Container(
-        margin: EdgeInsets.only(top:200.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40.0),
-            topRight: Radius.circular(40.0),
-          ),
-        ),
+        color: Colors.white,
+
         child: CustomScrollView(
           slivers: <Widget>[
             SliverPersistentHeader(
@@ -151,10 +189,11 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
               delegate: HeroHeader(
                 layoutGroup: layoutGroup,
                 onLayoutToggle: onLayoutToggle,
-                minExtent: 150.0,
-                maxExtent: 250.0,
+                minExtent: 300.0,
+                maxExtent: 300.0,
               ),
             ),
+
             SliverGrid(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200.0,
@@ -177,8 +216,8 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
             ),
           ],
         ),
-      ),
-    );
+
+      );
   }
 
   EdgeInsets _edgeInsetsForIndex(int index) {
