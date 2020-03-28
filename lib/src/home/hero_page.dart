@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'layout_type.dart';
+import 'info_icons.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/foundation.dart';
 
@@ -60,7 +61,12 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
-          top: 100.0,
+          top:100,
+          left:20,
+          child:Container(color:Colors.white,height:50,width:50)
+        ),
+        Positioned(
+          top: 150.0,
           left: 20.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +87,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
-          top: 150.0,
+          top: 200.0,
           left: 22.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +108,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
-          top: 190.0,
+          top: 240.0,
           left: 20.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +129,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
-          top: 270.0,
+          top: 310.0,
           left: 0.0,
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -159,15 +165,42 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
   final LayoutGroup layoutGroup;
   final VoidCallback onLayoutToggle;
 
-  final List<String> assetNames = [
-    'assets/icons/assistive-learning.png',
-    'assets/icons/create-test.png',
-    'assets/icons/daily-dose.png',
-    'assets/icons/wild-choice.png',
-    'assets/icons/progress-report.png',
-    'assets/icons/truly-adaptive.png',
-    'assets/icons/percentage.png',
-    'assets/icons/math.png',
+//  final List<String> assetNames = [
+//    'assets/icons/assistive-learning.png',
+//    'assets/icons/create-test.png',
+//    'assets/icons/daily-dose.png',
+//    'assets/icons/wild-choice.png',
+//    'assets/icons/progress-report.png',
+//    'assets/icons/truly-adaptive.png',
+//    'assets/icons/percentage.png',
+//    'assets/icons/math.png',
+//  ];
+
+  final List<Widget> assetNames = [
+  InfoIcons( imageSrc:'assets/icons/create-test.png',
+             primaryText:'Create Test',
+             secondaryText: 'Why don\'t you test yourself?',),
+
+    InfoIcons( imageSrc:'assets/icons/daily-dose.png',
+      primaryText:'Daily Dose',
+      secondaryText: '5 pills',),
+
+    InfoIcons( imageSrc:'assets/icons/wild-choice.png',
+      primaryText:'Wild Choices',
+      secondaryText: 'Be Wild,be wise',),
+
+    InfoIcons( imageSrc:'assets/icons/assistive-learning.png',
+      primaryText:'Assistive learning',
+      secondaryText: 'Learning made fun and interestingly helpful',),
+
+    InfoIcons( imageSrc:'assets/icons/truly-adaptive.png',
+      primaryText:'Truly adaptive',
+      secondaryText: 'It will help you to be adaptive',),
+
+    InfoIcons( imageSrc:'assets/icons/progress-report.png',
+      primaryText:'Progress report',
+      secondaryText: 'Know your progress',),
+
   ];
 
   @override
@@ -189,14 +222,14 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
               delegate: HeroHeader(
                 layoutGroup: layoutGroup,
                 onLayoutToggle: onLayoutToggle,
-                minExtent: 300.0,
-                maxExtent: 300.0,
+                minExtent: 340.0,
+                maxExtent: 340.0,
               ),
             ),
 
             SliverGrid(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200.0,
+                maxCrossAxisExtent: 205.0,
                 mainAxisSpacing: 0.0,
                 crossAxisSpacing: 0.0,
                 childAspectRatio: 0.75,
@@ -206,12 +239,10 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
                   return Container(
                     alignment: Alignment.center,
                     padding: _edgeInsetsForIndex(index),
-                    child: Image.asset(
-                      assetNames[index % assetNames.length],
-                    ),
+                    child: assetNames[index],
                   );
                 },
-                childCount: assetNames.length * 2,
+                childCount: assetNames.length,
               ),
             ),
           ],
