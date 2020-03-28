@@ -63,7 +63,15 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
         Positioned(
           top:100,
           left:20,
-          child:Container(color:Colors.white,height:50,width:50)
+          child:Container(
+              color:Colors.transparent,
+              height:50,
+              width:50,
+              child: Image.asset(
+                'assets/icons/science.png',
+                fit: BoxFit.cover,
+              ),
+          )
         ),
         Positioned(
           top: 150.0,
@@ -179,26 +187,26 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
   final List<Widget> assetNames = [
   InfoIcons( imageSrc:'assets/icons/create-test.png',
              primaryText:'Create Test',
-             secondaryText: 'Why don\'t you test yourself?',),
+             secondaryText: 'Why not build your own test?',),
 
     InfoIcons( imageSrc:'assets/icons/daily-dose.png',
       primaryText:'Daily Dose',
-      secondaryText: '5 pills',),
+      secondaryText: 'Knowledge pills for you',),
 
     InfoIcons( imageSrc:'assets/icons/wild-choice.png',
       primaryText:'Wild Choices',
       secondaryText: 'Be Wild,be wise',),
 
     InfoIcons( imageSrc:'assets/icons/assistive-learning.png',
-      primaryText:'Assistive learning',
-      secondaryText: 'Learning made fun and interestingly helpful',),
+      primaryText:'Assistive Inbuilt',
+      secondaryText: 'Fun and interestingly helpful',),
 
-    InfoIcons( imageSrc:'assets/icons/truly-adaptive.png',
-      primaryText:'Truly adaptive',
-      secondaryText: 'It will help you to be adaptive',),
+    InfoIcons( imageSrc:'assets/icons/truely-adaptive.png',
+      primaryText:'Truly Adaptive',
+      secondaryText: 'Adapts to what you need',),
 
     InfoIcons( imageSrc:'assets/icons/progress-report.png',
-      primaryText:'Progress report',
+      primaryText:'Progress Report',
       secondaryText: 'Know your progress',),
 
   ];
