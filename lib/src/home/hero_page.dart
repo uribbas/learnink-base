@@ -29,7 +29,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
                 Colors.blue[700],
                 Colors.blue[900],
               ],
-              stops: [0.5, 1.0],
+              stops: [0.2, 1.0],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               tileMode: TileMode.repeated,
