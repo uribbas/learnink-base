@@ -3,6 +3,16 @@ import 'layout_type.dart';
 import 'info_icons.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/foundation.dart';
+import '../login/sign_in_page.dart';
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body:HeroPage(),
+    );
+  }
+}
 
 class HeroHeader implements SliverPersistentHeaderDelegate {
   HeroHeader({
@@ -56,23 +66,29 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
                   fontSize: 20.0,
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    fullscreenDialog: true,
+                    builder: (context) => SignInPage.create(context),
+                  ),
+                );
+              },
             ),
           ),
         ),
         Positioned(
-          top:100,
-          left:20,
-          child:Container(
-              color:Colors.transparent,
-              height:50,
-              width:50,
+            top: 100,
+            left: 20,
+            child: Container(
+              color: Colors.transparent,
+              height: 50,
+              width: 50,
               child: Image.asset(
                 'assets/icons/science.png',
                 fit: BoxFit.cover,
               ),
-          )
-        ),
+            )),
         Positioned(
           top: 150.0,
           left: 20.0,
@@ -185,30 +201,36 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
 //  ];
 
   final List<Widget> assetNames = [
-  InfoIcons( imageSrc:'assets/icons/create-test.png',
-             primaryText:'Create Test',
-             secondaryText: 'Why not build your own test?',),
-
-    InfoIcons( imageSrc:'assets/icons/daily-dose.png',
-      primaryText:'Daily Dose',
-      secondaryText: 'Knowledge pills for you',),
-
-    InfoIcons( imageSrc:'assets/icons/wild-choice.png',
-      primaryText:'Wild Choices',
-      secondaryText: 'Be Wild,be wise',),
-
-    InfoIcons( imageSrc:'assets/icons/assistive-learning.png',
-      primaryText:'Assistive Inbuilt',
-      secondaryText: 'Fun and interestingly helpful',),
-
-    InfoIcons( imageSrc:'assets/icons/truely-adaptive.png',
-      primaryText:'Truly Adaptive',
-      secondaryText: 'Adapts to what you need',),
-
-    InfoIcons( imageSrc:'assets/icons/progress-report.png',
-      primaryText:'Progress Report',
-      secondaryText: 'Know your progress',),
-
+    InfoIcons(
+      imageSrc: 'assets/icons/create-test.png',
+      primaryText: 'Create Test',
+      secondaryText: 'Why not build your own test?',
+    ),
+    InfoIcons(
+      imageSrc: 'assets/icons/daily-dose.png',
+      primaryText: 'Daily Dose',
+      secondaryText: 'Knowledge pills for you',
+    ),
+    InfoIcons(
+      imageSrc: 'assets/icons/wild-choice.png',
+      primaryText: 'Wild Choices',
+      secondaryText: 'Be Wild,be wise',
+    ),
+    InfoIcons(
+      imageSrc: 'assets/icons/assistive-learning.png',
+      primaryText: 'Assistive Inbuilt',
+      secondaryText: 'Fun and interestingly helpful',
+    ),
+    InfoIcons(
+      imageSrc: 'assets/icons/truely-adaptive.png',
+      primaryText: 'Truly Adaptive',
+      secondaryText: 'Adapts to what you need',
+    ),
+    InfoIcons(
+      imageSrc: 'assets/icons/progress-report.png',
+      primaryText: 'Progress Report',
+      secondaryText: 'Know your progress',
+    ),
   ];
 
   @override
@@ -221,42 +243,39 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
   Widget _scrollView(BuildContext context) {
     // Use LayoutBuilder to get the hero header size while keeping the image aspect-ratio
     return Container(
-        color: Colors.white,
-
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverPersistentHeader(
-              pinned: false,
-              delegate: HeroHeader(
-                layoutGroup: layoutGroup,
-                onLayoutToggle: onLayoutToggle,
-                minExtent: 340.0,
-                maxExtent: 340.0,
-              ),
+      color: Colors.white,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverPersistentHeader(
+            pinned: false,
+            delegate: HeroHeader(
+              layoutGroup: layoutGroup,
+              onLayoutToggle: onLayoutToggle,
+              minExtent: 340.0,
+              maxExtent: 340.0,
             ),
-
-            SliverGrid(
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 205.0,
-                mainAxisSpacing: 0.0,
-                crossAxisSpacing: 0.0,
-                childAspectRatio: 0.75,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    alignment: Alignment.center,
-                    padding: _edgeInsetsForIndex(index),
-                    child: assetNames[index],
-                  );
-                },
-                childCount: assetNames.length,
-              ),
+          ),
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 205.0,
+              mainAxisSpacing: 0.0,
+              crossAxisSpacing: 0.0,
+              childAspectRatio: 0.75,
             ),
-          ],
-        ),
-
-      );
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return Container(
+                  alignment: Alignment.center,
+                  padding: _edgeInsetsForIndex(index),
+                  child: assetNames[index],
+                );
+              },
+              childCount: assetNames.length,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   EdgeInsets _edgeInsetsForIndex(int index) {

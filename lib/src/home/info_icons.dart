@@ -13,28 +13,29 @@ class InfoIcons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Column(
-      children: <Widget>[
-        Image.asset(
-          imageSrc,
-          height: 130,
-          width: 130,
-        ),
-        Text(
-          primaryText,
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 15.0,
-              fontWeight: FontWeight.w500),
-        ),
-        Text(
-          secondaryText,
-          style: TextStyle(
-              color: Colors.black54,
-              fontSize: 8.0,
-              fontWeight: FontWeight.w700),
-        )
-      ],
-    ));
+      child: Column(
+        children: <Widget>[
+          Image.asset(
+            imageSrc,
+            height: 130,
+            width: 130,
+          ),
+          Text(
+            primaryText,
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w500),
+          ),
+          Text(
+            secondaryText,
+            style: TextStyle(
+                color: Colors.black54,
+                fontSize: 8.0,
+                fontWeight: FontWeight.w700),
+          )
+        ],
+      ),
+    );
   }
 }
