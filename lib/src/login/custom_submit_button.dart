@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'custom_raised_button.dart';
+import 'custom_outline_button.dart';
 
-class SubmitRaisedButton extends CustomRaisedButton {
+class SubmitRaisedButton extends CustomOutlineButton {
   SubmitRaisedButton({@required text, VoidCallback onPressed})
       : super(
           child: Text(
