@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "528863922705",
+    "firebase_url": "https://learnink-ffd82.firebaseio.com",
+    "project_id": "learnink-ffd82",
+    "storage_bucket": "learnink-ffd82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528863922705:android:1c527147b0b1ff23f67fb0",
+        "android_client_info": {
+          "package_name": "com.suchibrata.learnink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528863922705-9m350ntcnk0gclfne15147rr3f03ppro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.suchibrata.learnink",
+            "certificate_hash": "957ee71fd9ccf341bce6f7bdd12191c52c722d6e"
+          }
+        },
+        {
+          "client_id": "528863922705-g4shaiho8l8lh8qlvmdq0d5jh74gn039.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt6b20uGwK_woExvJ-go8bE0QXqYrO730"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528863922705-g4shaiho8l8lh8qlvmdq0d5jh74gn039.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

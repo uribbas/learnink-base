@@ -88,7 +88,8 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
                 'assets/icons/science.png',
                 fit: BoxFit.cover,
               ),
-            )),
+            )
+        ),
         Positioned(
           top: 150.0,
           left: 20.0,

@@ -87,8 +87,17 @@ class SignInPage extends StatelessWidget {
               ),
             ),
           ),
-          Image.asset(
-            'assets/icons/bg-art.png',
+          Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                color: Colors.transparent,
+//                height: 50,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  'assets/icons/bg-art.png',
+                ),
+              )
           ),
           _buildContent(context),
         ],
@@ -100,7 +109,7 @@ class SignInPage extends StatelessWidget {
     BuildContext context,
   ) {
     return Positioned(
-       left:20.0,
+//       left:10.0,
         top:20.0,
         child: Container(
           width:MediaQuery.of(context).size.width,
