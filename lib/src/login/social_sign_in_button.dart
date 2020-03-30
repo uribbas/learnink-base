@@ -21,11 +21,12 @@ class SocialSignInButton extends CustomOutlineButton {
                 style: TextStyle(
                     color: textColor,
                     fontSize: 16.0,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,
+                ),
               ),
               Opacity(
                 opacity: 0.0,
-                child: Image.asset(image),
+//                child: Image.asset(image),
               ),
             ],
           ),

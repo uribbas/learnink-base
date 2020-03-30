@@ -5,10 +5,11 @@ class CustomOutlineButton extends StatelessWidget {
     this.child,
     this.color:Colors.transparent,
     this.height:50.0,
-    this.radius:20.0,
+    this.radius:10.0,
     this.borderColor:Colors.white,
-    this.borderWidth:1.0,
-    this.highlightElevation:20.0,
+    this.borderWidth:2.0,
+    this.highlightColor: Colors.indigoAccent,
+    this.highlightElevation:0.0,
     this.onPressed,
   });
 
@@ -18,6 +19,7 @@ class CustomOutlineButton extends StatelessWidget {
   final double height;
   final Color borderColor;
   final double borderWidth;
+  final Color highlightColor;
   final double highlightElevation;
   final VoidCallback onPressed;
 
@@ -25,16 +27,43 @@ class CustomOutlineButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height:height,
-      child:OutlineButton(
-      child: child,
-      color: color,
-      borderSide:BorderSide(width:borderWidth,color:borderColor) ,
-      shape: RoundedRectangleBorder(
-        side:BorderSide(width:borderWidth,color:borderColor),
-        borderRadius: BorderRadius.all(Radius.circular(radius)),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.transparent,
+              Colors.white54,
+            ],
+            stops: [0.8, 1.0],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            tileMode: TileMode.repeated,
+          ),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(radius),
+              bottomRight: Radius.circular(radius),
+          ),
+        ),
+        child: Column(
+          children: <Widget>[
+            OutlineButton(
+              child: child,
+              color: color,
+              highlightColor: highlightColor,
+              highlightElevation: highlightElevation,
+              borderSide:BorderSide(width:borderWidth,color:borderColor) ,
+              shape: RoundedRectangleBorder(
+                side:BorderSide(width:borderWidth,color:borderColor),
+                borderRadius: BorderRadius.all(Radius.circular(radius)),
+              ),
+              onPressed: onPressed,
+            ),
+            Container(
+              height: 0.0,
+            ),
+          ],
+        ),
       ),
-      onPressed: onPressed,
-    ),
     );
   }
 }
