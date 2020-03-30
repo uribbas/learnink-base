@@ -36,8 +36,8 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.blue[700],
-                Colors.blue[900],
+                Color(0xff004fe0),
+                Color(0xff002d7f),
               ],
               stops: [0.2, 1.0],
               begin: Alignment.topCenter,

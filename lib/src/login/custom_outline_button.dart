@@ -7,8 +7,9 @@ class CustomOutlineButton extends StatelessWidget {
     this.height:50.0,
     this.radius:10.0,
     this.borderColor:Colors.white,
-    this.borderWidth:2.0,
+    this.borderWidth:1.0,
     this.highlightColor: Colors.indigoAccent,
+    this.elevationColor:Colors.white,
     this.highlightElevation:0.0,
     this.onPressed,
   });
@@ -20,6 +21,7 @@ class CustomOutlineButton extends StatelessWidget {
   final Color borderColor;
   final double borderWidth;
   final Color highlightColor;
+  final Color elevationColor;
   final double highlightElevation;
   final VoidCallback onPressed;
 
@@ -32,9 +34,9 @@ class CustomOutlineButton extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               Colors.transparent,
-              Colors.white54,
+              elevationColor,
             ],
-            stops: [0.8, 1.0],
+            stops: [0.9, 1.0],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             tileMode: TileMode.repeated,

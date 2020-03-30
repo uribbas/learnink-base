@@ -77,8 +77,8 @@ class SignInPage extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.blue[700],
-                  Colors.blue[900],
+                  Color(0xff004fe0),
+                  Color(0xff002d7f),
                 ],
                 stops: [0.2, 1.0],
                 begin: Alignment.topCenter,
@@ -116,11 +116,11 @@ class SignInPage extends StatelessWidget {
           height:MediaQuery.of(context).size.height,
         padding: EdgeInsets.all(16.0),
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            SizedBox(height: 50.0, child: _buildHeader()),
-            SizedBox(height: 50.0),
+            SizedBox(height: 200.0, child: _buildHeader()),
+            SizedBox(height: 150.0),
             SocialSignInButton(
               text: 'Sign in with Google',
               image: 'assets/icons/google.png',
@@ -160,11 +160,23 @@ class SignInPage extends StatelessWidget {
       );
     }
 
-    return Text(
-      'Sign in',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-          color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+    return SafeArea(
+      top:true,
+      left:true,
+      right:true,
+      child: Column(
+        children: <Widget> [
+          Text(
+          'Sign in',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.w500, fontSize: 30),
+        ),
+          SizedBox(height:50.0),
+          CircleAvatar(backgroundColor: Colors.white,
+          child:Text('Logo'),)
+        ]
+      ),
     );
   }
 }

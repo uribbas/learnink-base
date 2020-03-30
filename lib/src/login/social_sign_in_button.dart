@@ -6,22 +6,27 @@ class SocialSignInButton extends CustomOutlineButton {
       {String text,
       String image,
       Color textColor,
+      double height:50,
       Color color,
       VoidCallback onPressed})
       : super(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Image.asset(image),
+
+              Container(
+                height:height-4.0,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Image.asset(image),
+                ),
               ),
               Text(
                 text,
                 style: TextStyle(
                     color: textColor,
                     fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                 ),
               ),
               Opacity(
@@ -31,6 +36,7 @@ class SocialSignInButton extends CustomOutlineButton {
             ],
           ),
           color: color,
+          height:height,
           onPressed: onPressed,
         );
 }
