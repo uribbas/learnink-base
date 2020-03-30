@@ -33,7 +33,7 @@ class CustomOutlineButton extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.white10,
+              Color(0x00FFFFFF),
               elevationColor,
             ],
             stops: [0.9, 1.0],

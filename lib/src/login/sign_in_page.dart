@@ -69,27 +69,28 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff004fe0),
-                  Color(0xff002d7f),
-                ],
-                stops: [0.2, 1.0],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                tileMode: TileMode.repeated,
-              ),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xff004fe0),
+                Color(0xff002d7f),
+              ],
+              stops: [0.2, 1.0],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              tileMode: TileMode.repeated,
             ),
           ),
-          Positioned(
-              top: 0,
-              left: 0,
+        ),
+        Positioned(
+            top: 0,
+            left: 0,
+            child: SafeArea(
+              top:true,
               child: Container(
                 color: Colors.transparent,
 //                height: 50,
@@ -97,57 +98,74 @@ class SignInPage extends StatelessWidget {
                 child: Image.asset(
                   'assets/icons/bg-art.png',
                 ),
-              )
+              ),
+            )),
+        Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onPressed:()=>Navigator.of(context).pop()
+            ),
+            title: Text(
+              'Sign in',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 30,
+              ),
+            ),
           ),
-          _buildContent(context),
-        ],
-      ),
+          body: _buildContent(context),
+          backgroundColor: Colors.transparent,
+        )
+      ],
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-  ) {
-    return Positioned(
-//       left:10.0,
-        top:20.0,
-        child: Container(
-          width:MediaQuery.of(context).size.width,
-          height:MediaQuery.of(context).size.height,
-        padding: EdgeInsets.all(16.0),
+  Widget _buildContent(BuildContext context) {
+    return Container(
+      // width:MediaQuery.of(context).size.width,
+      //height:MediaQuery.of(context).size.height,
+      padding: EdgeInsets.all(16.0),
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SizedBox(height: 200.0, child: _buildHeader()),
-            SizedBox(height: MediaQuery.of(context).size.height > 420.0 ? 120.0 : 0.0),
-            SocialSignInButton(
-              text: 'Sign in with Google',
-              image: 'assets/icons/google.png',
-              textColor: Colors.white,
-              color: Colors.transparent,
-              onPressed: isLoading ? null : () => _signInWithGoogle(context),
-            ),
-            SizedBox(height: 8.0),
-            SocialSignInButton(
-              text: 'Sign in with Phone',
-              image: 'assets/icons/phone.png',
-              textColor: Colors.white,
-              color: Colors.transparent,
-              onPressed: () {},
-            ),
-            SizedBox(height: 8.0),
-            SocialSignInButton(
-              text: 'Sign in with Email',
-              image: 'assets/icons/email.png',
-              textColor: Colors.white,
-              color: Colors.transparent,
-              onPressed: () {},
-            ),
-            SizedBox(height: 8.0),
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SizedBox(height: 200.0, child: _buildHeader()),
+          SizedBox(
+              height: MediaQuery.of(context).size.height > 420.0 ? 120.0 : 0.0),
+          SocialSignInButton(
+            text: 'Sign in with Google',
+            image: 'assets/icons/google.png',
+            textColor: Colors.white,
+            color: Colors.transparent,
+            onPressed: isLoading ? null : () => _signInWithGoogle(context),
+          ),
+          SizedBox(height: 8.0),
+          SocialSignInButton(
+            text: 'Sign in with Phone',
+            image: 'assets/icons/phone.png',
+            textColor: Colors.white,
+            color: Colors.transparent,
+            onPressed: () {},
+          ),
+          SizedBox(height: 8.0),
+          SocialSignInButton(
+            text: 'Sign in with Email',
+            image: 'assets/icons/email.png',
+            textColor: Colors.white,
+            color: Colors.transparent,
+            onPressed: isLoading?null:()=>_signInWithEmail(context),
+          ),
+          SizedBox(height: 8.0),
 //
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -161,22 +179,16 @@ class SignInPage extends StatelessWidget {
     }
 
     return SafeArea(
-      top:true,
-      left:true,
-      right:true,
-      child: Column(
-        children: <Widget> [
-          Text(
-          'Sign in',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w500, fontSize: 30),
-        ),
-          SizedBox(height:50.0),
-          CircleAvatar(backgroundColor: Colors.white,
-          child:Text('Logo'),)
-        ]
-      ),
+      top: true,
+      left: true,
+      right: true,
+      child: Column(children: <Widget>[
+        SizedBox(height: 100.0),
+        CircleAvatar(
+          backgroundColor: Colors.white,
+          child: Text('Logo'),
+        )
+      ]),
     );
   }
 }

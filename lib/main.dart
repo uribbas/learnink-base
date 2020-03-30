@@ -16,6 +16,8 @@ class MyApp extends StatelessWidget {
           theme:ThemeData(
             primarySwatch: Colors.blue,
             fontFamily: 'Montserrat',
+            primaryTextTheme: Typography().white,
+            textTheme:Typography().white,
 
           ),
           home:LandingPage()
