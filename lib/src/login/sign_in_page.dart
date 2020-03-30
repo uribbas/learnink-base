@@ -120,7 +120,7 @@ class SignInPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             SizedBox(height: 200.0, child: _buildHeader()),
-            SizedBox(height: 150.0),
+            SizedBox(height: MediaQuery.of(context).size.height > 420.0 ? 120.0 : 0.0),
             SocialSignInButton(
               text: 'Sign in with Google',
               image: 'assets/icons/google.png',

@@ -9,7 +9,7 @@ class CustomOutlineButton extends StatelessWidget {
     this.borderColor:Colors.white,
     this.borderWidth:1.0,
     this.highlightColor: Colors.indigoAccent,
-    this.elevationColor:Colors.white,
+    this.elevationColor:Colors.white54,
     this.highlightElevation:0.0,
     this.onPressed,
   });
@@ -33,7 +33,7 @@ class CustomOutlineButton extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.transparent,
+              Colors.white10,
               elevationColor,
             ],
             stops: [0.9, 1.0],
@@ -44,6 +44,8 @@ class CustomOutlineButton extends StatelessWidget {
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(radius),
               bottomRight: Radius.circular(radius),
+              topLeft: Radius.circular(radius),
+              topRight: Radius.circular(radius),
           ),
         ),
         child: Column(
