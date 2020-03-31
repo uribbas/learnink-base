@@ -46,7 +46,7 @@ class EmailSignInPage extends StatelessWidget {
               ),
               onPressed: () => Navigator.of(context).pop()),
           title: Text(
-            'Sign in',
+            'Sign In',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w500,

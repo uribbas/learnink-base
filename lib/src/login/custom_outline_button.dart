@@ -53,7 +53,10 @@ class CustomOutlineButton extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             OutlineButton(
-              child: child,
+              child: Container(
+                  height: height - 6.0,
+                  child: Center(child: child)
+              ),
               color: color,
               highlightColor: highlightColor,
               highlightElevation: highlightElevation,

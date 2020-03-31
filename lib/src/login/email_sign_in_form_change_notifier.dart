@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learnink/src/login/custom_outline_button.dart';
+import 'custom_outline_button.dart';
 import 'package:provider/provider.dart';
-import 'custom_submit_button.dart';
 import 'platform_exception_alert_dialog.dart';
 import 'auth.dart';
 import 'package:flutter/services.dart';
@@ -86,20 +85,17 @@ class _EmailSignInFormChangeNotifierState
       SizedBox(
         height: 8.0,
       ),
-//      SubmitRaisedButton(
-//        text: model.primaryButtonText,
-//        onPressed: model.canSubmit? _submit : null,
-//      ),
       CustomOutlineButton(
-          child: Text(
-        'Sign in',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 20.0,
-          fontWeight: FontWeight.w500,
+        child: Text(
+          "Sign In",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+          ),
         ),
+        onPressed: (){},
       ),
-      onPressed: (){},),
       SizedBox(
         height: 8.0,
       ),
@@ -159,7 +155,7 @@ class _EmailSignInFormChangeNotifierState
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
