@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomOutlineButton extends StatelessWidget {
@@ -49,6 +50,7 @@ class CustomOutlineButton extends StatelessWidget {
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             OutlineButton(
               child: child,
