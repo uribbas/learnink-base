@@ -87,22 +87,34 @@ class _EmailSignInFormChangeNotifierState
       ),
       CustomOutlineButton(
         child: Text(
-          "Sign In",
+          model.primaryButtonText,
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.0,
             fontWeight: FontWeight.w600,
           ),
         ),
-        onPressed: (){},
+        onPressed:_submit,
       ),
       SizedBox(
         height: 8.0,
       ),
       FlatButton(
         onPressed: !model.isLoading ? () => _toggleFormType() : null,
-        child: Text(model.secondaryButtonText),
-      )
+        child: Text(model.secondaryButtonText,
+            style: TextStyle(
+              color: Colors.white,
+            )),
+      ),
+
+      FlatButton(
+        onPressed: () {},
+        child: Text('Forgot password?',
+            style: TextStyle(
+              color: Colors.white,
+              decoration: TextDecoration.underline,
+            )),
+      ),
     ];
   }
 
@@ -114,6 +126,7 @@ class _EmailSignInFormChangeNotifierState
       decoration: InputDecoration(
         labelText: 'Password',
         errorText: model.showPasswordErrorText,
+        errorStyle:TextStyle(color:Colors.white54),
         enabled: model.isLoading == false,
         suffixIcon: IconButton(
           icon: _toggleVisibility
@@ -141,6 +154,7 @@ class _EmailSignInFormChangeNotifierState
         labelText: 'Email',
         hintText: 'test@test.com ',
         errorText: model.showEmailErrorText,
+        errorStyle: TextStyle(color:Colors.white54),
         enabled: model.isLoading == false,
       ),
       autocorrect: false,
