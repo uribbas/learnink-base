@@ -54,6 +54,7 @@ class CustomOutlineButton extends StatelessWidget {
           children: <Widget>[
             OutlineButton(
               child: Container(
+                  padding: const EdgeInsets.all(5.0),
                   height: height - 6.0,
                   child: Center(child: child)
               ),

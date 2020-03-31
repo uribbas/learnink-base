@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'custom_outline_button.dart';
 import 'package:provider/provider.dart';
@@ -97,23 +99,46 @@ class _EmailSignInFormChangeNotifierState
         onPressed:_submit,
       ),
       SizedBox(
-        height: 8.0,
-      ),
-      FlatButton(
-        onPressed: !model.isLoading ? () => _toggleFormType() : null,
-        child: Text(model.secondaryButtonText,
-            style: TextStyle(
-              color: Colors.white,
-            )),
+        height: 20.0,
       ),
 
-      FlatButton(
-        onPressed: () {},
-        child: Text('Forgot password?',
-            style: TextStyle(
-              color: Colors.white,
-              decoration: TextDecoration.underline,
-            )),
+      Row(
+        children: <Widget>[
+          FlatButton(
+            onPressed: !model.isLoading ? () => _toggleFormType() : null,
+//        color: Colors.redAccent,
+            child: Text(model.secondaryButtonText,
+                style: TextStyle(
+                  color: Colors.white,
+                )),
+          ),
+          Container(
+            child: Text(''),
+            width: 5.0,
+              decoration:BoxDecoration(
+                color: Colors.transparent,
+                border: Border(
+                  left: BorderSide(
+                  color: Colors.white,
+                  width: 1.0,
+                  style: BorderStyle.solid
+                ),
+                ),
+              )
+
+          ),
+          FlatButton(
+            onPressed: () {},
+//        color: Colors.redAccent,
+            child: Text('Forgot password?',
+              style: TextStyle(
+                color: Colors.white,
+//                decoration: TextDecoration.underline,
+              ),
+//          textAlign: TextAlign.start,
+            ),
+          ),
+        ],
       ),
     ];
   }
@@ -125,9 +150,24 @@ class _EmailSignInFormChangeNotifierState
       controller: _passwordController,
       decoration: InputDecoration(
         labelText: 'Password',
+        labelStyle: TextStyle(
+          color: Colors.white,
+        ),
         errorText: model.showPasswordErrorText,
-        errorStyle:TextStyle(color:Colors.white54),
+        errorStyle:TextStyle(color:Colors.yellowAccent),
         enabled: model.isLoading == false,
+        disabledBorder:UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white54, ) ,
+        ),
+        enabledBorder:UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, ) ,
+        ),
+        errorBorder:UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.yellowAccent, ) ,
+        ),
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.yellowAccent, ) ,
+        ),
         suffixIcon: IconButton(
           icon: _toggleVisibility
               ? Icon(Icons.visibility)
@@ -152,10 +192,25 @@ class _EmailSignInFormChangeNotifierState
       controller: _emailController,
       decoration: InputDecoration(
         labelText: 'Email',
+        labelStyle: TextStyle(
+          color: Colors.white,
+        ),
         hintText: 'test@test.com ',
         errorText: model.showEmailErrorText,
-        errorStyle: TextStyle(color:Colors.white54),
+        errorStyle: TextStyle(color:Colors.yellowAccent),
         enabled: model.isLoading == false,
+        disabledBorder:UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white54, ) ,
+        ),
+        enabledBorder:UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, ) ,
+        ),
+        errorBorder:UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.yellowAccent,) ,
+        ),
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.yellowAccent,) ,
+        ),
       ),
       autocorrect: false,
       keyboardType: TextInputType.emailAddress,
