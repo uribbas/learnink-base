@@ -79,6 +79,13 @@ class _EmailSignInFormChangeNotifierState
 
   List<Widget> _buildChildren() {
     return [
+      CircleAvatar(
+        backgroundColor: Colors.white,
+        child:Image.asset('assets/icons/email.png'),
+      ),
+      SizedBox(
+        height: 40.0,
+      ),
       _buildEmailTextField(),
       SizedBox(
         height: 8.0,
@@ -145,7 +152,7 @@ class _EmailSignInFormChangeNotifierState
 
   TextField _buildPasswordTextField() {
     print(
-        'Insode _buildPasswordTextField,errorText:${model.invalidPasswordErrorText}');
+        'Inside _buildPasswordTextField,errorText:${model.invalidPasswordErrorText}');
     return TextField(
       controller: _passwordController,
       decoration: InputDecoration(
@@ -170,8 +177,8 @@ class _EmailSignInFormChangeNotifierState
         ),
         suffixIcon: IconButton(
           icon: _toggleVisibility
-              ? Icon(Icons.visibility)
-              : Icon(Icons.visibility_off),
+              ? Icon(Icons.visibility,color:Colors.white,)
+              : Icon(Icons.visibility_off,color:Colors.white,),
           onPressed: () {
             setState(() {
               _toggleVisibility = !_toggleVisibility;

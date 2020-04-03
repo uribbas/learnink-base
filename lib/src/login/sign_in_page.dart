@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'phone_signin_page.dart';
 import 'package:provider/provider.dart';
 import 'email_sign_in_page.dart';
-//import 'package:time_tracker_flutter_course/app/sign_in/phone_sign_in_page.dart';
 import 'sign_in_manager.dart';
-//import 'package:time_tracker_flutter_course/app/sign_in/sign_in_button.dart';
 import 'social_sign_in_button.dart';
 import 'platform_exception_alert_dialog.dart';
 import 'auth.dart';
@@ -45,10 +44,10 @@ class SignInPage extends StatelessWidget {
   }
 
   void _signInWithPhone(BuildContext context) {
-    /* Navigator.of(context).push(MaterialPageRoute<void>(
+     Navigator.of(context).push(MaterialPageRoute<void>(
       fullscreenDialog: true,
       builder: (context) => PhoneSignInPage(),
-    ));*/
+    ));
   }
 
   Future<void> _signInAnonymously(BuildContext context) async {
@@ -153,7 +152,7 @@ class SignInPage extends StatelessWidget {
             image: 'assets/icons/phone.png',
             textColor: Colors.white,
             color: Colors.transparent,
-            onPressed: () {},
+            onPressed: isLoading?null:()=>_signInWithPhone(context),
           ),
           SizedBox(height: 8.0),
           SocialSignInButton(
