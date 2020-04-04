@@ -124,7 +124,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                 ),
                 CustomOutlineButton(
                   child: Text(
-                    "ENTER OTP",
+                    "Enter OTP",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16.0,

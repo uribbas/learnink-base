@@ -1,6 +1,7 @@
 import 'dart:ui';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import '../dashboard.dart';
 import 'custom_outline_button.dart';
 import 'package:provider/provider.dart';
 import 'platform_exception_alert_dialog.dart';
@@ -66,14 +67,16 @@ class _EmailSignInFormChangeNotifierState
       print('Inside try _submit EmailSignInBlocBased:1');
       await model.submit();
       print('Inside try _submit EmailSignInBlocBased:2');
-      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute<void>(builder:(context)=>Dashboard(),fullscreenDialog: true,),);
     } on PlatformException catch (e) {
       print('Inside catch _submit EmailSignInBlocBased');
       print(e.toString());
-      PlatformExceptionAlertDialog(
+      /*PlatformExceptionAlertDialog(
         title: 'Sign in failed',
         exception: e,
-      ).show(context);
+      ).show(context);*/
+      showToast(e.message,Colors.red);
     }
   }
 
@@ -226,6 +229,18 @@ class _EmailSignInFormChangeNotifierState
       onEditingComplete: () => _emailEditingComplete(),
       onChanged: model.updateEmail,
     );
+  }
+
+  void showToast(message, Color color) {
+    print(message);
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        //timeInSecForIos: 2,
+        backgroundColor: color,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   @override

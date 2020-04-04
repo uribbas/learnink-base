@@ -46,9 +46,20 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
             ),
           ),
         ),
-        Image.asset(
-          'assets/icons/bg-art.png',
-          fit: BoxFit.cover,
+        Positioned(
+          top: 0,
+          left: 0,
+          child: SafeArea(
+            top:true,
+            child: Container(
+              color: Colors.transparent,
+//                height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: Image.asset(
+                'assets/icons/bg-art.png',
+              ),
+            ),
+          ),
         ),
         Positioned(
           right: 20.0,
