@@ -42,12 +42,7 @@ class CustomOutlineButton extends StatelessWidget {
             end: Alignment.bottomCenter,
             tileMode: TileMode.repeated,
           ),
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(radius),
-              bottomRight: Radius.circular(radius),
-              topLeft: Radius.circular(radius),
-              topRight: Radius.circular(radius),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(radius)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

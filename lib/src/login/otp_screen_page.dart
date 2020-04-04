@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'custom_outline_button.dart';
 //import '../../home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,7 +25,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
 
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration =
-      UnderlineDecoration(enteredColor: Colors.black, hintText: '333333');
+      UnderlineDecoration(enteredColor: Colors.white, hintText: '      ');
   bool isCodeSent = false;
   String _verificationId;
   @override
@@ -91,59 +92,54 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
               ),
             ),
           ),
-          body:Center(
-            child: Card(
-              color: Colors.transparent,
-              elevation: 0.0,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: PinInputTextField(
-                        pinLength: 6,
-                        decoration: _pinDecoration,
-                        controller: _pinEditingController,
-                        autoFocus: true,
-                        textInputAction: TextInputAction.done,
-                        onSubmit: (pin) {
-                          if (pin.length == 6) {
-                            _onFormSubmitted();
-                          } else {
-                            showToast("Invalid OTP", Colors.red);
-                          }
-                        },
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: RaisedButton(
-                            color: Theme.of(context).primaryColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0.0)),
-                            child: Text(
-                              "ENTER OTP",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            onPressed: () {
-                              if (_pinEditingController.text.length == 6) {
-                                _onFormSubmitted();
-                              } else {
-                                showToast("Invalid OTP", Colors.red);
-                              }
-                            },
-                            padding: EdgeInsets.all(16.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+          body:Padding(
+            padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child:Image.asset('assets/icons/phone.png'),
+                  ),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  PinInputTextField(
+                    pinLength: 6,
+                    decoration: _pinDecoration,
+                    controller: _pinEditingController,
+                    autoFocus: true,
+                    textInputAction: TextInputAction.done,
+                    onSubmit: (pin) {
+                      if (pin.length == 6) {
+                        _onFormSubmitted();
+                      } else {
+                        showToast("Invalid OTP", Colors.red);
+                      }
+                    },
+                  ),
+                SizedBox(
+                  height: 16.0,
                 ),
+                CustomOutlineButton(
+                  child: Text(
+                    "ENTER OTP",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onPressed: () {
+                    if (_pinEditingController.text.length == 6) {
+                      _onFormSubmitted();
+                    } else {
+                      showToast("Invalid OTP", Colors.red);
+                    }
+                  },
+                ),
+              ],
             ),
           ),
         ),

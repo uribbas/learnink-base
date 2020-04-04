@@ -61,6 +61,13 @@ class _PhoneLogInBlocBasedState extends State<PhoneLogInBlocBased> {
         : 'Continue';
 
     return [
+      CircleAvatar(
+        backgroundColor: Colors.white,
+        child:Image.asset('assets/icons/phone.png'),
+      ),
+      SizedBox(
+        height: 40.0,
+      ),
       _buildPhoneTextField(model),
       SizedBox(
         height: 8.0,
@@ -85,8 +92,24 @@ class _PhoneLogInBlocBasedState extends State<PhoneLogInBlocBased> {
       decoration: InputDecoration(
         labelText: 'Phone Number',
         hintText: '1234567890',
+        labelStyle: TextStyle(
+          color: Colors.white,
+        ),
         errorText: model.showErrorText,
+        errorStyle:TextStyle(color:Colors.yellowAccent),
         enabled: !model.isLoading,
+        disabledBorder:UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white54, ) ,
+        ),
+        enabledBorder:UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, ) ,
+        ),
+        errorBorder:UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.yellowAccent, ) ,
+        ),
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.yellowAccent, ) ,
+        ),
       ),
       autocorrect: false,
       keyboardType: TextInputType.phone,
