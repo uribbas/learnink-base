@@ -57,7 +57,7 @@ class PhoneSignInPage extends StatelessWidget {
           ),
         ),
         body:  Padding(
-            padding: const EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(30.0),
             child: Center(
               child: Card(
                 child:PhoneLogInBlocBased.create(context),

@@ -128,16 +128,13 @@ class _PhoneLogInBlocBasedState extends State<PhoneLogInBlocBased> {
         initialData: PhoneSignInModel(),
         builder: (context, snapshot) {
           final PhoneSignInModel model = snapshot.data;
-          return Padding(
-            padding: EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
+          return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: _buildChildren(model),
               ),
-            ),
-          );
+            );
         });
   }
 }

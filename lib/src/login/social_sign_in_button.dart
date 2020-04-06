@@ -18,7 +18,12 @@ class SocialSignInButton extends CustomOutlineButton {
                 height:height-4.0,
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
-                  child: Image.asset(image),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      image
+                    ),
+                  ),
                 ),
               ),
               Text(
@@ -31,7 +36,10 @@ class SocialSignInButton extends CustomOutlineButton {
               ),
               Opacity(
                 opacity: 0.0,
-//                child: Image.asset(image),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(image),
+                ),
               ),
             ],
           ),

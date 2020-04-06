@@ -29,8 +29,9 @@ class CustomOutlineButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height:height,
+      height: height,
       child: Container(
+//        padding: EdgeInsets.all(1.0),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -43,6 +44,11 @@ class CustomOutlineButton extends StatelessWidget {
             tileMode: TileMode.repeated,
           ),
           borderRadius: BorderRadius.all(Radius.circular(radius)),
+          border: Border.all(
+              color: Colors.transparent,
+              width: 1.0,
+              style: BorderStyle.solid
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -50,15 +56,15 @@ class CustomOutlineButton extends StatelessWidget {
             OutlineButton(
               child: Container(
                   padding: const EdgeInsets.all(5.0),
-                  height: height - 6.0,
+                  height: height - 8.0,
                   child: Center(child: child)
               ),
               color: color,
               highlightColor: highlightColor,
               highlightElevation: highlightElevation,
-              borderSide:BorderSide(width:borderWidth,color:borderColor) ,
+              borderSide: BorderSide(width: borderWidth, color: borderColor),
               shape: RoundedRectangleBorder(
-                side:BorderSide(width:borderWidth,color:borderColor),
+                side: BorderSide(width: borderWidth, color: borderColor),
                 borderRadius: BorderRadius.all(Radius.circular(radius)),
               ),
               onPressed: onPressed,

@@ -93,53 +93,62 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
             ),
           ),
           body:Padding(
-            padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child:Image.asset('assets/icons/phone.png'),
+            padding: const EdgeInsets.all(30.0),
+            child: Center(
+              child: Card(
+                color:Colors.transparent,
+                elevation:0.0,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child:Image.asset('assets/icons/phone.png'),
+                      ),
+                      SizedBox(
+                        height: 40.0,
+                      ),
+                      PinInputTextField(
+                        pinLength: 6,
+                        decoration: _pinDecoration,
+                        controller: _pinEditingController,
+                        autoFocus: true,
+                        textInputAction: TextInputAction.done,
+                        onSubmit: (pin) {
+                          if (pin.length == 6) {
+                            _onFormSubmitted();
+                          } else {
+                            showToast("Invalid OTP", Colors.red);
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      CustomOutlineButton(
+                        child: Text(
+                          "Validate OTP",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_pinEditingController.text.length == 6) {
+                            _onFormSubmitted();
+                          } else {
+                            showToast("Invalid OTP", Colors.red);
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  PinInputTextField(
-                    pinLength: 6,
-                    decoration: _pinDecoration,
-                    controller: _pinEditingController,
-                    autoFocus: true,
-                    textInputAction: TextInputAction.done,
-                    onSubmit: (pin) {
-                      if (pin.length == 6) {
-                        _onFormSubmitted();
-                      } else {
-                        showToast("Invalid OTP", Colors.red);
-                      }
-                    },
-                  ),
-                SizedBox(
-                  height: 16.0,
                 ),
-                CustomOutlineButton(
-                  child: Text(
-                    "Enter OTP",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  onPressed: () {
-                    if (_pinEditingController.text.length == 6) {
-                      _onFormSubmitted();
-                    } else {
-                      showToast("Invalid OTP", Colors.red);
-                    }
-                  },
-                ),
-              ],
+              ),
+
             ),
           ),
         ),

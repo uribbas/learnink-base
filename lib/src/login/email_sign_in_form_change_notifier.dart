@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import '../dashboard.dart';
@@ -111,35 +112,36 @@ class _EmailSignInFormChangeNotifierState
       SizedBox(
         height: 20.0,
       ),
-
       Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           FlatButton(
             onPressed: !model.isLoading ? () => _toggleFormType() : null,
 //        color: Colors.redAccent,
+            padding: EdgeInsets.all(0.0),
             child: Text(model.secondaryButtonText,
                 style: TextStyle(
                   color: Colors.white,
                 )),
           ),
           Container(
-            child: Text(''),
-            width: 5.0,
+            width: 1.0,
+              child: Text(''),
               decoration:BoxDecoration(
                 color: Colors.transparent,
-                border: Border(
-                  left: BorderSide(
+                border: Border.all(
+//                  left: BorderSide(
                   color: Colors.white,
                   width: 1.0,
                   style: BorderStyle.solid
-                ),
+//                ),
                 ),
               )
-
           ),
           FlatButton(
             onPressed: () {},
 //        color: Colors.redAccent,
+            padding: EdgeInsets.all(0.0),
             child: Text('Forgot password?',
               style: TextStyle(
                 color: Colors.white,
@@ -246,11 +248,13 @@ class _EmailSignInFormChangeNotifierState
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: _buildChildren(),
+      padding: const EdgeInsets.all(0.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: _buildChildren(),
+        ),
       ),
     );
   }

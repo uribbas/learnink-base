@@ -112,7 +112,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
                 child: Text(
                   'Experience',
                   style: TextStyle(
-                    fontSize: 50.0,
+                    fontSize: 40.0,
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
                   ),
@@ -123,8 +123,8 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
-          top: 200.0,
-          left: 22.0,
+          top: 190.0,
+          left: 20.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -144,7 +144,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
-          top: 240.0,
+          top: 230.0,
           left: 20.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +154,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
                 child: Text(
                   'Difference',
                   style: TextStyle(
-                    fontSize: 50.0,
+                    fontSize: 40.0,
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
                   ),
@@ -173,9 +173,14 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
 //            margin: EdgeInsets.only(top:200.0),
             decoration: BoxDecoration(
               color: Colors.white,
+              border: Border.all(
+                  color: Colors.white,
+                  width: 5.0,
+                  style: BorderStyle.solid
+              ),
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40.0),
-                topRight: Radius.circular(40.0),
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
               ),
             ),
           ),
@@ -215,33 +220,33 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
   final List<Widget> assetNames = [
     InfoIcons(
       imageSrc: 'assets/icons/create-test.png',
-      primaryText: 'Create Test',
-      secondaryText: 'Why not build your own test?',
+      primaryText: 'Create Test                      ',
+      secondaryText: 'Customise and create your tests',
     ),
     InfoIcons(
       imageSrc: 'assets/icons/daily-dose.png',
-      primaryText: 'Daily Dose',
-      secondaryText: 'Knowledge pills for you',
+      primaryText: 'Daily Dose                      ',
+      secondaryText: 'Knowledge pills to enhance concepts',
     ),
     InfoIcons(
       imageSrc: 'assets/icons/wild-choice.png',
-      primaryText: 'Wild Choices',
-      secondaryText: 'Be Wild,be wise',
+      primaryText: 'Wild Choices                      ',
+      secondaryText: 'Be Wild,be wise. you are in charge',
     ),
     InfoIcons(
       imageSrc: 'assets/icons/assistive-learning.png',
-      primaryText: 'Assistive Inbuilt',
-      secondaryText: 'Fun and interestingly helpful',
+      primaryText: 'Assistive Inside                      ',
+      secondaryText: 'Interestingly helpful, joyful learning',
     ),
     InfoIcons(
       imageSrc: 'assets/icons/truely-adaptive.png',
-      primaryText: 'Truly Adaptive',
-      secondaryText: 'Adapts to what you need',
+      primaryText: 'Truly Adaptive                      ',
+      secondaryText: 'Adapts to the needs, a personalised approach',
     ),
     InfoIcons(
       imageSrc: 'assets/icons/progress-report.png',
-      primaryText: 'Progress Report',
-      secondaryText: 'Know your progress',
+      primaryText: 'Progress Card                      ',
+      secondaryText: 'Know your progress, anytime anywhere',
     ),
   ];
 
@@ -263,16 +268,16 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
             delegate: HeroHeader(
               layoutGroup: layoutGroup,
               onLayoutToggle: onLayoutToggle,
-              minExtent: 340.0,
-              maxExtent: 340.0,
+              minExtent: 345.0,
+              maxExtent: 345.0,
             ),
           ),
           SliverGrid(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 205.0,
               mainAxisSpacing: 0.0,
-              crossAxisSpacing: 0.0,
-              childAspectRatio: 0.75,
+              crossAxisSpacing: 20.0,
+              childAspectRatio: 1.1,
             ),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {

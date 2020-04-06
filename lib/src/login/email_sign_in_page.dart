@@ -56,15 +56,10 @@ class EmailSignInPage extends StatelessWidget {
         ),
         body:Center(
           child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                child: EmailSignInFormChangeNotifier.create(context),
-                color: Colors.transparent,
-                elevation: 0.0,
-              ),
+              padding: const EdgeInsets.all(30.0),
+              child: EmailSignInFormChangeNotifier.create(context),
             ),
         ),
-
         backgroundColor: Colors.transparent,
       ),
     ]);

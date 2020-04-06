@@ -122,7 +122,7 @@ class SignInPage extends StatelessWidget {
           ),
           body: _buildContent(context),
           backgroundColor: Colors.transparent,
-        )
+        ),
       ],
     );
   }
@@ -131,40 +131,40 @@ class SignInPage extends StatelessWidget {
     return Container(
       // width:MediaQuery.of(context).size.width,
       //height:MediaQuery.of(context).size.height,
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          SizedBox(height: 200.0, child: _buildHeader()),
-          SizedBox(
-              height: MediaQuery.of(context).size.height > 420.0 ? 120.0 : 0.0),
-          SocialSignInButton(
-            text: 'Sign in with Google',
-            image: 'assets/icons/google.png',
-            textColor: Colors.white,
-            color: Colors.transparent,
-            onPressed: isLoading ? null : () => _signInWithGoogle(context),
-          ),
-          SizedBox(height: 8.0),
-          SocialSignInButton(
-            text: 'Sign in with Phone',
-            image: 'assets/icons/phone.png',
-            textColor: Colors.white,
-            color: Colors.transparent,
-            onPressed: isLoading?null:()=>_signInWithPhone(context),
-          ),
-          SizedBox(height: 8.0),
-          SocialSignInButton(
-            text: 'Sign in with Email',
-            image: 'assets/icons/email.png',
-            textColor: Colors.white,
-            color: Colors.transparent,
-            onPressed: isLoading?null:()=>_signInWithEmail(context),
-          ),
-          SizedBox(height: 8.0),
-//
-        ],
+      padding: EdgeInsets.all(30.0),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            SizedBox(height: 200.0, child: _buildHeader()),
+            SizedBox(height: 0.0),
+            SocialSignInButton(
+              text: 'Sign in with Google',
+              image: 'assets/icons/google.png',
+              textColor: Colors.white,
+              color: Colors.transparent,
+              onPressed: isLoading ? null : () => _signInWithGoogle(context),
+            ),
+            SizedBox(height: 8.0),
+            SocialSignInButton(
+              text: 'Sign in with Phone',
+              image: 'assets/icons/phone.png',
+              textColor: Colors.white,
+              color: Colors.transparent,
+              onPressed: isLoading?null:()=>_signInWithPhone(context),
+            ),
+            SizedBox(height: 8.0),
+            SocialSignInButton(
+              text: 'Sign in with Email',
+              image: 'assets/icons/email.png',
+              textColor: Colors.white,
+              color: Colors.transparent,
+              onPressed: isLoading?null:()=>_signInWithEmail(context),
+            ),
+            SizedBox(height: 8.0),
+          ],
+        ),
       ),
     );
   }
@@ -182,9 +182,10 @@ class SignInPage extends StatelessWidget {
       left: true,
       right: true,
       child: Column(children: <Widget>[
-        SizedBox(height: 100.0),
+        SizedBox(height: 80.0),
         CircleAvatar(
           backgroundColor: Colors.white,
+          radius: 30.0,
           child: Text('Logo'),
         )
       ]),
