@@ -175,7 +175,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
               color: Colors.white,
               border: Border.all(
                   color: Colors.white,
-                  width: 5.0,
+                  width: 2.0,
                   style: BorderStyle.solid
               ),
               borderRadius: BorderRadius.only(
@@ -274,9 +274,9 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
           ),
           SliverGrid(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 205.0,
+              maxCrossAxisExtent: _maxCrossAxisExtent(MediaQuery.of(context).size.width),
               mainAxisSpacing: 0.0,
-              crossAxisSpacing: 20.0,
+              crossAxisSpacing: 0.0,
               childAspectRatio: 1.1,
             ),
             delegate: SliverChildBuilderDelegate(
@@ -296,10 +296,22 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
   }
 
   EdgeInsets _edgeInsetsForIndex(int index) {
-    if (index % 2 == 0) {
-      return EdgeInsets.only(top: 4.0, left: 8.0, right: 4.0, bottom: 4.0);
+    return EdgeInsets.only(top: 4.0, left: 20.0, right: 4.0, bottom: 4.0);
+//    if (index % 2 == 0) {
+//      return EdgeInsets.only(top: 4.0, left: 8.0, right: 4.0, bottom: 4.0);
+//    } else {
+//      return EdgeInsets.only(top: 4.0, left: 4.0, right: 8.0, bottom: 4.0);
+//    }
+  }
+
+  double _maxCrossAxisExtent(double width){
+    double remainderwidth = width%205.0;
+    //    if the excess width is more than 100, then use 205 since that will
+    //    create items with min size of 150, which is good enough to show content
+    if(remainderwidth >= 110.0){
+      return 205.0;
     } else {
-      return EdgeInsets.only(top: 4.0, left: 4.0, right: 8.0, bottom: 4.0);
+      return width * 205 /(width - remainderwidth);
     }
   }
 }

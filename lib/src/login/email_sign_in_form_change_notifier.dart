@@ -36,7 +36,7 @@ class _EmailSignInFormChangeNotifierState
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-  bool _toggleVisibility = true;
+  bool _toggleVisibility = false;
 
   EmailSignInChangeModel get model => widget.model;
 
@@ -191,7 +191,7 @@ class _EmailSignInFormChangeNotifierState
           },
         ),
       ),
-      obscureText: _toggleVisibility,
+      obscureText: !_toggleVisibility,
       textInputAction: TextInputAction.next,
       focusNode: _passwordFocusNode,
       onEditingComplete: _submit,

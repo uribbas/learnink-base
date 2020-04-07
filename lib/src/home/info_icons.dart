@@ -17,10 +17,15 @@ class InfoIcons extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Expanded(
-              child: Image.asset(
-                imageSrc,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    right: 40.0,
+                ),
+                child: Image.asset(
+                  imageSrc,
 //                height: 118,
 //            width: 130,
+                ),
               )
           ),
           Padding(
