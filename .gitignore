@@ -31,8 +31,8 @@
 /build/
 
 #Config related
-android/app/google-services.json
-android/app/build.gradle
+**/app/google-services.json
+**/app/build.gradle
 
 # Web related
 lib/generated_plugin_registrant.dart
