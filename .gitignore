@@ -30,6 +30,10 @@
 .pub/
 /build/
 
+#Config related
+android/app/google-services.json
+android/app/build.gradle
+
 # Web related
 lib/generated_plugin_registrant.dart
 

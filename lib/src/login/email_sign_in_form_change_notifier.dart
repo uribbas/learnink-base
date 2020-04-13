@@ -57,8 +57,11 @@ class _EmailSignInFormChangeNotifierState
     FocusScope.of(context).requestFocus(newFocus);
   }
 
-  void _toggleFormType() {
-    model.toggleFormType();
+  void _toggleFormType({
+    toggleType
+  }) {
+    print("Pressed toogle buttonn $toggleType value of enum ${model.formType}");
+    model.toggleFormType(toggleType: toggleType);
     _emailController.clear();
     _passwordController.clear();
   }
@@ -68,8 +71,15 @@ class _EmailSignInFormChangeNotifierState
       print('Inside try _submit EmailSignInBlocBased:1');
       await model.submit();
       print('Inside try _submit EmailSignInBlocBased:2');
-      Navigator.of(context).push(
-          MaterialPageRoute<void>(builder:(context)=>Dashboard(),fullscreenDialog: true,),);
+      if(model.formType==model.resetPassword){
+        showToast('Password reset email sent, please check your email',Colors.lime);
+        _toggleFormType(toggleType: model.signin);
+        print('Inside try _submit Reset password redirect to login :3');
+      } else {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+//        Navigator.of(context).push(
+//          MaterialPageRoute<void>(builder:(context)=>Dashboard(),fullscreenDialog: true,),);
+      }
     } on PlatformException catch (e) {
       print('Inside catch _submit EmailSignInBlocBased');
       print(e.toString());
@@ -94,9 +104,9 @@ class _EmailSignInFormChangeNotifierState
       SizedBox(
         height: 8.0,
       ),
-      _buildPasswordTextField(),
+      model.formType!=model.resetPassword ? _buildPasswordTextField() : SizedBox(height: 0.0,),
       SizedBox(
-        height: 8.0,
+        height: model.formType!=model.resetPassword ? 8.0 : 0.0,
       ),
       CustomOutlineButton(
         child: Text(
@@ -116,7 +126,7 @@ class _EmailSignInFormChangeNotifierState
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           FlatButton(
-            onPressed: !model.isLoading ? () => _toggleFormType() : null,
+            onPressed: !model.isLoading ? () => _toggleFormType(toggleType: model.formType==model.signin ? model.register : model.signin) : null,
 //        color: Colors.redAccent,
             padding: EdgeInsets.all(0.0),
             child: Text(model.secondaryButtonText,
@@ -139,7 +149,7 @@ class _EmailSignInFormChangeNotifierState
               )
           ),
           FlatButton(
-            onPressed: () {},
+            onPressed: !model.isLoading ? () => _toggleFormType(toggleType: model.resetPassword) : null,
 //        color: Colors.redAccent,
             padding: EdgeInsets.all(0.0),
             child: Text('Forgot password?',
@@ -182,8 +192,8 @@ class _EmailSignInFormChangeNotifierState
         ),
         suffixIcon: IconButton(
           icon: _toggleVisibility
-              ? Icon(Icons.visibility,color:Colors.white,)
-              : Icon(Icons.visibility_off,color:Colors.white,),
+              ? Icon(Icons.visibility_off,color:Colors.white,)
+              : Icon(Icons.visibility,color:Colors.white,),
           onPressed: () {
             setState(() {
               _toggleVisibility = !_toggleVisibility;

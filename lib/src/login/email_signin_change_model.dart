@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'validators.dart';
 import 'auth.dart';
 
-enum EmailSignInFormType { signIn, register }
+enum EmailSignInFormType { signIn, register, resetPassword }
 
 class EmailSignInChangeModel with EmailAndPasswordValidator,ChangeNotifier {
 
@@ -12,7 +12,10 @@ class EmailSignInChangeModel with EmailAndPasswordValidator,ChangeNotifier {
       this.password='',
       this.formType=EmailSignInFormType.signIn,
       this.isLoading=false,
-      this.submitted=false});
+      this.submitted=false,
+      this.signin=EmailSignInFormType.signIn,
+      this.register=EmailSignInFormType.register,
+      this.resetPassword=EmailSignInFormType.resetPassword,});
 
   final AuthBase auth;
   String email;
@@ -20,22 +23,47 @@ class EmailSignInChangeModel with EmailAndPasswordValidator,ChangeNotifier {
   EmailSignInFormType formType;
   bool isLoading;
   bool submitted;
+  EmailSignInFormType signin;
+  EmailSignInFormType register;
+  EmailSignInFormType resetPassword;
 
   String get primaryButtonText{
-    return formType == EmailSignInFormType.signIn
-        ? 'Sign in'
-        : 'Create an account';
+    switch(formType) {
+      case EmailSignInFormType.signIn:
+        return 'Sign in';
+        break;
+      case EmailSignInFormType.register:
+        return 'Create an account';
+        break;
+      case EmailSignInFormType.resetPassword:
+        return 'Reset password';
+        break;
+      default:
+        return 'Sign in';
+        break;
+    }
   }
 
   String get secondaryButtonText{
-    return formType == EmailSignInFormType.signIn
-        ? 'Need an account? Register'
-        : 'Have and account? Sign in';
+    switch(formType) {
+      case EmailSignInFormType.signIn:
+        return 'Need an account? Register';
+        break;
+      case EmailSignInFormType.register:
+        return 'Have an account? Sign in';
+        break;
+      case EmailSignInFormType.resetPassword:
+        return 'Have an account? Sign in';
+        break;
+      default:
+        return 'Have an account? Sign in';
+        break;
+    }
   }
 
   bool get canSubmit{
     return emailValidator.isValid(email) &&
-        passwordValidator.isValid(password) &&
+        (formType == EmailSignInFormType.resetPassword || passwordValidator.isValid(password)) &&
         !isLoading;
   }
 
@@ -57,7 +85,9 @@ class EmailSignInChangeModel with EmailAndPasswordValidator,ChangeNotifier {
 
     try {
       //await Future.delayed(Duration(seconds: 10));
-      if (formType == EmailSignInFormType.signIn) {
+      if (formType == EmailSignInFormType.resetPassword) {
+        await auth.sendPasswordResetEmail(email: email);
+      } else if (formType == EmailSignInFormType.signIn) {
         await auth.signInWithEmailandPassword(
           email: email,
           password: password,
@@ -81,10 +111,10 @@ class EmailSignInChangeModel with EmailAndPasswordValidator,ChangeNotifier {
 
   void updatePassword(password) => updateWith(password: password);
 
-  void toggleFormType() {
-    final formType = this.formType == EmailSignInFormType.signIn
-        ? EmailSignInFormType.register
-        : EmailSignInFormType.signIn;
+  void toggleFormType({
+    EmailSignInFormType toggleType
+  }) {
+    final formType = toggleType;
     updateWith(
         email: '',
         password: '',

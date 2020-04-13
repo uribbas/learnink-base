@@ -61,6 +61,7 @@ class SignInPage extends StatelessWidget {
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
       await manager.signInWithGoogle();
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } on PlatformException catch (e) {
       _showSignInError(context, e);
     }

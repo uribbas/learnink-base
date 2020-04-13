@@ -245,12 +245,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
       if (value.user != null) {
         // Handle loogged in state
         print(value.user.phoneNumber);
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Dashboard(),
-            ),
-            (Route<dynamic> route) => false);
+        Navigator.of(context).popUntil((route) => route.isFirst);
       } else {
         showToast("Error validating OTP, try again", Colors.red);
       }
