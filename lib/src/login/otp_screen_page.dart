@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'custom_outline_button.dart';
-//import '../../home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:learnink/src/dashboard.dart';
 import 'otp_input.dart';
 
 class OTPScreenPage extends StatefulWidget {
@@ -183,12 +181,13 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
 
           print(value.user.phoneNumber);
 
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Dashboard(),
-              ),
-              (Route<dynamic> route) => false);
+//          Navigator.pushAndRemoveUntil(
+//              context,
+//              MaterialPageRoute(
+//                builder: (context) => Dashboard(),
+//              ),
+//              (Route<dynamic> route) => false);
+          Navigator.of(context).popUntil((route) => route.isFirst);
         } else {
           showToast("Error validating OTP, try again", Colors.red);
         }
