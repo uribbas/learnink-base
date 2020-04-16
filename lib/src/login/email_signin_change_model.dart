@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'validators.dart';
 import 'auth.dart';
+import '../services/database.dart';
+import '../models/user.dart';
 
 enum EmailSignInFormType { signIn, register, resetPassword }
 
@@ -88,16 +91,23 @@ class EmailSignInChangeModel with EmailAndPasswordValidator,ChangeNotifier {
       if (formType == EmailSignInFormType.resetPassword) {
         await auth.sendPasswordResetEmail(email: email);
       } else if (formType == EmailSignInFormType.signIn) {
-        await auth.signInWithEmailandPassword(
+        final user = await auth.signInWithEmailandPassword(
           email: email,
           password: password,
         );
+        print('uid of user sign in is ${user.uid}');
+        final db = FirestoreDatabase(uid: user.uid);
+        final userref = await db.getCollectionRef('users');
+        final userInfo = await db.selectedUsersRefList(userref.where('uid',isEqualTo: user.uid));
+        print("User info received ${userInfo[0].email} Name: ${userInfo[0].name}");
       } else {
         print('email:${email}, password:${password}');
-        await auth.createUserWithEmailandPassword(
+        final user = await auth.createUserWithEmailandPassword(
           email: email,
           password: password,
         );
+        print('uid of user is ${user.uid}');
+        await FirestoreDatabase(uid: user.uid).addUser(UserInfo( uid: user.uid, email: email));
       }
     } catch (e) {
       updateWith(isLoading: false);

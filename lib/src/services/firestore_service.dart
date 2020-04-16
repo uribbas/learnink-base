@@ -6,10 +6,20 @@ class FirestoreService{
 
   static final instance=FirestoreService._();
 
+  Future<CollectionReference> getCollectionRef({String path}) async {
+    return Firestore.instance.collection(path);
+  }
+
   Future<void> setData({String path, Map<String,dynamic> data} ) async {
     final documentReference=Firestore.instance.document(path);
     //print('$uid:$data');
     await documentReference.setData(data);
+  }
+
+  Future<void> addData({String path, Map<String,dynamic> data} ) async {
+    final collectionReference=Firestore.instance.collection(path);
+    //print('$uid:$data');
+    await collectionReference.add(data);
   }
 
   Stream<List<T>> collectionStream<T>({@required String path,
@@ -22,4 +32,28 @@ class FirestoreService{
         ).toList());
 
   }
+
+  //  Stream data based on reference provide, this will be for the use cases where .where conditions
+  //  are applied on the collection as per the data requirement
+  Stream<List<T>> collectionRefStream<T>({@required CollectionReference ref,
+    @required T builder(Map<String,dynamic> data,String documentId)}){
+    final reference=ref;
+    final snapshots=reference.snapshots();
+    return snapshots.map((snapshot)=>
+        snapshot.documents.map(
+                (snapshot)=> builder(snapshot.data,snapshot.documentID)
+        ).toList());
+
+  }
+
+  Future<List<T>> collectionRefList<T>({@required Query query,
+    @required T builder(Map<String,dynamic> data,String documentId)}) async {
+    final reference=query;
+    final snapshots= await reference.getDocuments();
+    return snapshots.documents.map(
+                (snapshot)=> builder(snapshot.data,snapshot.documentID)
+                ).toList();
+
+  }
+
 }

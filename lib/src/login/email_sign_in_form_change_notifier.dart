@@ -7,6 +7,7 @@ import 'custom_outline_button.dart';
 import 'package:provider/provider.dart';
 import 'platform_exception_alert_dialog.dart';
 import 'auth.dart';
+import '../services/database.dart';
 import 'package:flutter/services.dart';
 import 'email_signin_change_model.dart';
 
