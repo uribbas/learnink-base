@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
-import '../dashboard.dart';
+import '../dashboard/dashboard.dart';
 import 'custom_outline_button.dart';
 import 'package:provider/provider.dart';
 import 'platform_exception_alert_dialog.dart';

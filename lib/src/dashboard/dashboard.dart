@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'login/auth.dart';
+import '../login/auth.dart';
 
 class Dashboard extends StatelessWidget {
   final AuthBase auth;

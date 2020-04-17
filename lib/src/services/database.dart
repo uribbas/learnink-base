@@ -10,11 +10,11 @@ abstract class Database {
   Future<CollectionReference> getCollectionRef(String path);
   Future<void> setJob(Job job);
   Stream<List<Job>> jobsStream();
-  Future<void> addUser(UserInfo userinfo);
-  Future<void> setUser(UserInfo userinfo, String documentId);
-  Stream<List<UserInfo>> usersStream();
-  Stream<List<UserInfo>> selectedUsersStream(CollectionReference ref);
-  Future<List<UserInfo>> selectedUsersRefList(Query query);
+  Future<void> addUser(LearninkUserInfo userinfo);
+  Future<void> setUser(LearninkUserInfo userinfo, String documentId);
+  Stream<List<LearninkUserInfo>> usersStream();
+  Stream<List<LearninkUserInfo>> selectedUsersStream(CollectionReference ref);
+  Future<List<LearninkUserInfo>> selectedUsersRefList(Query query);
 }
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -39,28 +39,28 @@ class FirestoreDatabase implements Database {
 
   //  User management related methods
 
-  Future<void> addUser(UserInfo userinfo) async => await _service.addData(
+  Future<void> addUser(LearninkUserInfo userinfo) async => await _service.addData(
     path: APIPath.users(),
     data: userinfo.toMap(),
   );
 
-  Future<void> setUser(UserInfo userinfo, String documentId) async => await _service.setData(
+  Future<void> setUser(LearninkUserInfo userinfo, String documentId) async => await _service.setData(
     path: APIPath.user(documentId),
     data: userinfo.toMap(),
   );
 
-  Stream<List<UserInfo>> usersStream() => _service.collectionStream(
+  Stream<List<LearninkUserInfo>> usersStream() => _service.collectionStream(
     path: APIPath.users(),
-    builder: (data,documentId) => UserInfo.fromMap(data,documentId),
+    builder: (data,documentId) => LearninkUserInfo.fromMap(data,documentId),
   );
 
-  Stream<List<UserInfo>> selectedUsersStream(CollectionReference ref) => _service.collectionRefStream(
+  Stream<List<LearninkUserInfo>> selectedUsersStream(CollectionReference ref) => _service.collectionRefStream(
     ref: ref,
-    builder: (data,documentId) => UserInfo.fromMap(data,documentId),
+    builder: (data,documentId) => LearninkUserInfo.fromMap(data,documentId),
   );
 
-  Future<List<UserInfo>> selectedUsersRefList(Query query) async => await _service.collectionRefList(
+  Future<List<LearninkUserInfo>> selectedUsersRefList(Query query) async => await _service.collectionRefList(
     query: query,
-    builder: (data,documentId) => UserInfo.fromMap(data,documentId),
+    builder: (data,documentId) => LearninkUserInfo.fromMap(data,documentId),
   );
 }
