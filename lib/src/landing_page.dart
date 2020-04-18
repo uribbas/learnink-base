@@ -26,7 +26,7 @@ class LandingPage extends StatelessWidget {
             return HomePage();
           }
           print("inside builder ${snapshot.connectionState} ${user.uid} ");
-          return  DashboardLanding(user: user);
+          return  DashboardLanding(auth: auth, user: user);
 
         } else {
           return Scaffold(

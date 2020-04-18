@@ -96,10 +96,6 @@ class EmailSignInChangeModel with EmailAndPasswordValidator,ChangeNotifier {
           password: password,
         );
         print('uid of user sign in is ${user.uid}');
-        final db = FirestoreDatabase(uid: user.uid);
-        final userRef = await db.getCollectionRef('users');
-        final userInfo = await db.selectedUsersRefList(userRef.where('uid',isEqualTo: user.uid));
-        print("User info received ${userInfo[0].email} Name: ${userInfo[0].name}");
       } else {
         print('email:${email}, password:${password}');
         final user = await auth.createUserWithEmailandPassword(
@@ -107,7 +103,6 @@ class EmailSignInChangeModel with EmailAndPasswordValidator,ChangeNotifier {
           password: password,
         );
         print('uid of user is ${user.uid}');
-        await FirestoreDatabase(uid: user.uid).addUser(LearninkUserInfo( uid: user.uid, email: email));
       }
     } catch (e) {
       updateWith(isLoading: false);
