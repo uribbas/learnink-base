@@ -25,7 +25,6 @@ dependencies:
   google_sign_in: ^4.3.0
   provider: ^4.0.4
   fluttertoast: ^4.0.1
-  dropdown_formfield: ^0.1.2
 
 
   # The following adds the Cupertino Icons font to your application.

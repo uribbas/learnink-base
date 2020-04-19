@@ -8,7 +8,6 @@ import 'package:learnink/src/widgets/custom_outline_button.dart';
 import '../services/database.dart';
 import 'dashboard_landing.dart';
 import 'package:flutter/services.dart';
-import 'package:dropdown_formfield/dropdown_formfield.dart';
 
 
 class UserDetailPage extends StatefulWidget {
@@ -76,19 +75,21 @@ class _UserDetailPageState extends State<UserDetailPage> {
    try { //TODO: create a userInfo object and write to database
      if (_validateAndSaveForm()) {
        form.deactivate();
+       //      set the existing document
+       // Check changes in the form fields and then add the values
+       LearninkUserInfo user= widget.user.copyWith(
+         name:_name,
+         gender: _gender,
+         phoneNumber: _phoneNumber,
+         email: _email,
+       );
        if (widget.documentId != null) {
-         //      set the existing document
-         // Check changes in the form fields and then add the values
-         LearninkUserInfo user= widget.user.copyWith(
-           name:_name,
-           gender: _gender,
-           phoneNumber: _phoneNumber,
-           email: _email,
-          );
-
          await widget.database.setUser(user, widget.documentId);
-         widget.skipPage(true);
+       } else {
+        // New user registration, so create the user document
+         await widget.database.addUser(user);
        }
+       widget.skipPage(true);
      }
    } on PlatformException catch(e){
 
@@ -183,59 +184,62 @@ class _UserDetailPageState extends State<UserDetailPage> {
           labelStyle: TextStyle(
             color: Colors.white,
           ),
-          disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white54,
-            ),
+          errorStyle: TextStyle(color:Colors.yellowAccent),
+          disabledBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white54, ) ,
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white,
-            ),
+          enabledBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white, ) ,
+          ),
+          errorBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellowAccent,) ,
+          ),
+          focusedErrorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellowAccent,) ,
           ),
         ),
         initialValue: _name,
         validator: (value) => value.isNotEmpty ? null : 'Name can\'t be empty',
         onSaved: (value) => _name = value,
       ),
-
-    DropdownButtonFormField(
-      value: _gender,
-      decoration:InputDecoration(
-        labelText: 'Gender',
-        labelStyle: TextStyle(
-          color: Colors.white,
-        ),
-        disabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.white54,
-          ),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
+      DropdownButtonFormField(
+        value: _gender,
+        decoration:InputDecoration(
+          labelText: 'Gender',
+          labelStyle: TextStyle(
             color: Colors.white,
           ),
+          errorStyle: TextStyle(color:Colors.yellowAccent),
+          disabledBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white54, ) ,
+          ),
+          enabledBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white, ) ,
+          ),
+          errorBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellowAccent,) ,
+          ),
+          focusedErrorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellowAccent,) ,
+          ),
         ),
-      ),
-    items:<DropdownMenuItem>[
-       DropdownMenuItem(
-           child:Text('Male',style:TextStyle(color:Colors.blue)),
-         value:'M'
-       ),
-       DropdownMenuItem(
-           child:Text('Female',style:TextStyle(color:Colors.blue)),
-           value:'F'
-       ),
-       DropdownMenuItem(
-           child:Text('Other',style:TextStyle(color:Colors.blue)),
-           value:'O'
-       ),
-     ],
-      onSaved: (value) => _gender = value,
-      onChanged:(value) => setState((){_gender=value;}),
-      validator: (value) => value!=null? null : 'Gender can\'t be empty',
+        items:<String>['Girl','Boy','Other'].map((String item) {
+          return DropdownMenuItem<String>(
+            child: Text('$item', style: TextStyle(color: Colors.blue),),
+            value: item,
+          );
+        }).toList(),
+        selectedItemBuilder: (BuildContext context) {
+          return <String>['Girl','Boy','Other'].map<Widget>((String item) {
+            return Text(item);
+          }).toList();
+        },
+        iconEnabledColor: Colors.white,
+        onSaved: (value) => _gender = value,
+        onChanged:(value) => setState((){_gender=value;}),
+        validator: (value) => value!=null? null : 'Gender can\'t be empty',
 
-    ),
+      ),
 
       TextFormField(
         decoration: InputDecoration(
@@ -244,15 +248,18 @@ class _UserDetailPageState extends State<UserDetailPage> {
             color: Colors.white,
           ),
           enabled: widget.authSource != AuthSource.email,
-          disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white54,
-            ),
+          errorStyle: TextStyle(color:Colors.yellowAccent),
+          disabledBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white54, ) ,
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white,
-            ),
+          enabledBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white, ) ,
+          ),
+          errorBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellowAccent,) ,
+          ),
+          focusedErrorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellowAccent,) ,
           ),
         ),
         validator: (value) => value.isNotEmpty ? null : 'Email can\'t be empty',
@@ -266,15 +273,18 @@ class _UserDetailPageState extends State<UserDetailPage> {
             color: Colors.white,
           ),
           enabled: widget.authSource != AuthSource.phone,
-          disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white54,
-            ),
+          errorStyle: TextStyle(color:Colors.yellowAccent),
+          disabledBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white54, ) ,
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white,
-            ),
+          enabledBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white, ) ,
+          ),
+          errorBorder:UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellowAccent,) ,
+          ),
+          focusedErrorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellowAccent,) ,
           ),
         ),
         keyboardType: TextInputType.numberWithOptions(

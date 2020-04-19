@@ -60,6 +60,7 @@ class LearninkUserInfo {
     return LearninkUserInfo(
         uid:uid??this.uid,
         name:name??this.name,
+        gender: gender??this.gender,
         email:email??this.email,
         phoneNumber: phoneNumber??this.phoneNumber,
         subscriberId: subscriberId??this.subscriberId,
