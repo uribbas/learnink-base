@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'custom_outline_button.dart';
+import '../widgets/custom_outline_button.dart';
 import 'otp_screen_page.dart';
 import 'phone_signin_bloc.dart';
 import 'phone_signin_model.dart';

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:learnink/src/dashboard/dashboard_landing.dart';
 import 'package:meta/meta.dart';
 
 class LearninkUserInfo {
@@ -47,6 +48,24 @@ class LearninkUserInfo {
         userCreationTimeStamp: userCreationTimeStamp,
         subscriberId: subscriberId,
         documentId: documentId);
+  }
+
+  LearninkUserInfo copyWith({String uid,
+  String name,  String gender,
+  String email,
+  String phoneNumber,
+  String subscriberId,
+  Timestamp userCreationTimeStamp,
+  String documentId}){
+    return LearninkUserInfo(
+        uid:uid??this.uid,
+        name:name??this.name,
+        email:email??this.email,
+        phoneNumber: phoneNumber??this.phoneNumber,
+        subscriberId: subscriberId??this.subscriberId,
+        userCreationTimeStamp: userCreationTimeStamp??this.userCreationTimeStamp,
+        documentId: documentId??this.documentId
+    );
   }
 
   Map<String, dynamic> toMap() {

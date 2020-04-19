@@ -4,7 +4,7 @@ import 'phone_signin_page.dart';
 import 'package:provider/provider.dart';
 import 'email_sign_in_page.dart';
 import 'sign_in_manager.dart';
-import 'social_sign_in_button.dart';
+import '../widgets/social_sign_in_button.dart';
 import 'platform_exception_alert_dialog.dart';
 import 'auth.dart';
 
