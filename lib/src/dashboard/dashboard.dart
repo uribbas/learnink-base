@@ -1,68 +1,46 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../bookshelves.dart';
-import 'package:provider/provider.dart';
+import 'package:learnink/src/dashboard/cupertino_dashboard_scaffold.dart';
+import 'package:learnink/src/dashboard/tab_item.dart';
 import '../account.dart';
+import '../bookshelves.dart';
 import '../cart.dart';
 import '../chat.dart';
 import '../login/auth.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({Key key, this.auth}) : super(key: key);
   final AuthBase auth;
 
   @override
+  _DashboardState createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+ TabItem _currentTab=TabItem.bookshelves;
+
+ Map<TabItem,WidgetBuilder> get widgetBuilders{
+   return {
+     TabItem.bookshelves:(_)=>CupertinoPageScaffold(child:BookShelves(),),
+     TabItem.account:(_)=>CupertinoPageScaffold(child: Account(),),
+     TabItem.chat:(_)=>CupertinoPageScaffold(child: Chat(),),
+     TabItem.cart:(_)=>CupertinoPageScaffold(child:Cart(),),
+   };
+ }
+  @override
   Widget build(BuildContext context){
-    return CupertinoTabScaffold(
-      tabBar: CupertinoTabBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search),
-            ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.shopping_cart),
-            ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.conversation_bubble),
-          ),
-        ],
-      ),
-      tabBuilder: (context, index) {
-        switch (index) {
-          case 0:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: BookShelves(),
-              );
-            });
-          case 1:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: Account(),
-              );
-            });
-          case 2:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: Cart(),
-              );
-            });
-          case 3:
-            return CupertinoTabView(builder:(context){
-              return CupertinoPageScaffold(
-                child: Chat(),
-              );
-            });
-        }
+    return CupertinoDashboardScaffold(
+      currentTab:_currentTab,
+      onSelectTab: (item){setState(() {
+        _currentTab=item;
+      });
       },
+      widgetBuilders: widgetBuilders,
     );
   }
 
   Future<void> _signOut(BuildContext context) async {
-    await auth.signOut();
+    await widget.auth.signOut();
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 }
