@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:learnink/src/dashboard/cupertino_dashboard_scaffold.dart';
-import 'package:learnink/src/dashboard/tab_item.dart';
+import 'cupertino_dashboard_scaffold.dart';
+import 'tab_item.dart';
+import 'package:provider/provider.dart';
 import '../account.dart';
 import '../bookshelves.dart';
 import '../cart.dart';
@@ -9,9 +10,6 @@ import '../chat.dart';
 import '../login/auth.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key key, this.auth}) : super(key: key);
-  final AuthBase auth;
-
   @override
   _DashboardState createState() => _DashboardState();
 }
@@ -22,7 +20,9 @@ class _DashboardState extends State<Dashboard> {
  Map<TabItem,WidgetBuilder> get widgetBuilders{
    return {
      TabItem.bookshelves:(_)=>CupertinoPageScaffold(child:BookShelves(),),
-     TabItem.account:(_)=>CupertinoPageScaffold(child: Account(),),
+     TabItem.account:(context){
+       AuthBase auth=Provider.of<AuthBase>(context);
+        return CupertinoPageScaffold(child: Account(auth:auth),);},
      TabItem.chat:(_)=>CupertinoPageScaffold(child: Chat(),),
      TabItem.cart:(_)=>CupertinoPageScaffold(child:Cart(),),
    };
@@ -39,8 +39,4 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Future<void> _signOut(BuildContext context) async {
-    await widget.auth.signOut();
-    Navigator.of(context).popUntil((route) => route.isFirst);
-  }
 }

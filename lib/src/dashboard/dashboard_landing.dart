@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learnink/src/dashboard/dashboard.dart';
 import 'package:learnink/src/dashboard/user_details_page.dart';
+import 'package:provider/provider.dart';
 import '../services/database.dart';
 import '../login/auth.dart';
 import '../models/user.dart';
@@ -9,10 +10,9 @@ import '../models/user.dart';
 enum AuthSource { email, phone }
 
 class DashboardLanding extends StatefulWidget {
-  DashboardLanding({Key key, this.auth, this.user}) : super(key: key);
+  DashboardLanding({Key key, this.user}) : super(key: key);
   final User user;
-  final AuthBase auth;
-  @override
+ @override
   _DashboardLandingState createState() => _DashboardLandingState();
 }
 
@@ -26,7 +26,6 @@ class _DashboardLandingState extends State<DashboardLanding> {
   void initState() {
     super.initState();
     _db = FirestoreDatabase(uid: widget.user.uid);
-    print("Inside initState call ${widget.auth} ${widget.user.uid}");
     _checkUserDetails();
   }
 
@@ -77,6 +76,7 @@ class _DashboardLandingState extends State<DashboardLanding> {
   @override
   Widget build(BuildContext context) {
     print("_authUser ${_authUser}");
+    final AuthBase auth=Provider.of<AuthBase>(context);
     if (_authUser != null) {
       if (_isDetailsMissing(_authUser) && !_skip) {
         print(
@@ -84,12 +84,12 @@ class _DashboardLandingState extends State<DashboardLanding> {
         return UserDetailPage(
             database: _db,
             user: _authUser,
-            auth: widget.auth,
+            auth: auth,
             documentId: _documentId,
             authSource: _authSource,
              skipPage:_skipPage);
       } else {
-        return Dashboard(auth: widget.auth);
+        return Dashboard();
 //        return Dashboard(auth: widget.auth);
       }
     } else {

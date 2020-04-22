@@ -26,7 +26,9 @@ class LandingPage extends StatelessWidget {
             return HomePage();
           }
           print("inside builder ${snapshot.connectionState} ${user.uid} ");
-          return  DashboardLanding(auth: auth, user: user);
+          return Provider<Database>(
+              create:(context)=> FirestoreDatabase(uid:user.uid),
+              child: DashboardLanding(user: user));
 
         } else {
           return Scaffold(
