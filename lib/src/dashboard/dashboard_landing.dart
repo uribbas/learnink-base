@@ -25,8 +25,7 @@ class _DashboardLandingState extends State<DashboardLanding> {
 
   void initState() {
     super.initState();
-    _db = FirestoreDatabase(uid: widget.user.uid);
-    _checkUserDetails();
+   _checkUserDetails();
   }
 
   LearninkUserInfo _getAuthUserInfo() {
@@ -46,12 +45,11 @@ class _DashboardLandingState extends State<DashboardLanding> {
         (user.gender == null || user.gender == '');
   }
 
-  void _checkUserDetails() {
-    _db.getCollectionRef('users').then((userRef) {
-      _db
-          .selectedUsersRefList(
-              userRef.where('uid', isEqualTo: widget.user.uid))
-          .then((userInfo) {
+  Future<void> _checkUserDetails() async {
+      await Future.delayed(Duration.zero,(){_db=Provider.of<Database>(context,listen:false);});
+      final userRef=await _db.getCollectionRef('users');
+      final userInfo=await _db.selectedUsersRefList(userRef.where('uid', isEqualTo: widget.user.uid));
+
         setState(() {
           _authUser = userInfo.isNotEmpty ? userInfo[0] : _getAuthUserInfo();
           _authSource = (widget.user.email != null || widget.user.email != '')
@@ -59,12 +57,7 @@ class _DashboardLandingState extends State<DashboardLanding> {
               : AuthSource.phone;
           _documentId = userInfo.isNotEmpty ? userInfo[0].documentId : null;
         });
-      }).catchError((error) {
-        print(error);
-      });
-    }).catchError((error) {
-      print(error);
-    });
+
   }
 
   void _skipPage(bool skip) {

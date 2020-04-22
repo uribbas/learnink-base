@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'login/auth.dart';
 
 class Account extends StatelessWidget {
-  const Account({Key key, this.auth}) : super(key: key);
-  final AuthBase auth;
-
-  @override
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:AppBar(title:Text('Account'),
@@ -25,6 +23,7 @@ class Account extends StatelessWidget {
     );
   }
   Future<void> _signOut(BuildContext context) async{
-    await auth.signOut();
+    final AuthBase auth_p=Provider.of<AuthBase>(context,listen:false);
+    await auth_p.signOut();
   }
 }

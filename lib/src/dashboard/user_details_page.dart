@@ -313,8 +313,4 @@ class _UserDetailPageState extends State<UserDetailPage> {
     ];
   }
 
-  Future<void> _signOut(BuildContext context) async {
-    await widget.auth.signOut();
-    Navigator.of(context).popUntil((route) => route.isFirst);
-  }
 }
