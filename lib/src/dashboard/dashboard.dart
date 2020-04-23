@@ -19,10 +19,11 @@ class _DashboardState extends State<Dashboard> {
  Map<TabItem,WidgetBuilder> get widgetBuilders{
    return {
      TabItem.bookshelves:(_)=>CupertinoPageScaffold(child:BookShelves(),),
-     TabItem.account:(_)=> CupertinoPageScaffold(child: Account(),),
-     TabItem.chat:(_)=>CupertinoPageScaffold(child: Chat(),),
      TabItem.cart:(_)=>CupertinoPageScaffold(child:Cart(),),
      TabItem.progress:(_)=>CupertinoPageScaffold(child:Progress(),),
+     TabItem.chat:(_)=>CupertinoPageScaffold(child: Chat(),),
+     TabItem.account:(_)=> CupertinoPageScaffold(child: Account(),),
+
    };
  }
   @override

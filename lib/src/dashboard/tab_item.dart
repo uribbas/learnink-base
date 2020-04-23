@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../widgets/my_flutter_icons.dart';
 
-enum TabItem {bookshelves,account,cart,chat,progress}
+enum TabItem {bookshelves,cart,progress,chat,account}
 
 class TabItemData{
   const TabItemData({@ required this.icon});
