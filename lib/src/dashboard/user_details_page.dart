@@ -1,10 +1,10 @@
 import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learnink/src/login/auth.dart';
 import 'package:learnink/src/models/user.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
+import 'package:provider/provider.dart';
 import '../services/database.dart';
 import 'dashboard_landing.dart';
 import 'package:flutter/services.dart';
@@ -13,14 +13,12 @@ import 'package:flutter/services.dart';
 class UserDetailPage extends StatefulWidget {
   UserDetailPage(
       {Key key,
-      this.database,
       this.user,
       this.auth,
       this.documentId,
       this.authSource,
       this.skipPage})
       : super(key: key);
-  final Database database;
   final LearninkUserInfo user;
   final AuthBase auth;
   final String documentId;
@@ -42,6 +40,11 @@ class _UserDetailPageState extends State<UserDetailPage> {
   String _subscriberId;
   Timestamp _userCreationTimeStamp;
 
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _phoneFocusNode = FocusNode();
+
+
   void initState() {
     super.initState();
     if (widget.user != null) {
@@ -53,6 +56,15 @@ class _UserDetailPageState extends State<UserDetailPage> {
     }
   }
 
+  void _nameEditingComplete(BuildContext context){
+    final newFocus=widget.authSource==AuthSource.email?_phoneFocusNode:_emailFocusNode;
+    FocusScope.of(context).requestFocus(newFocus);
+  }
+
+  void _emailEditingComplete(BuildContext context){
+    FocusScope.of(context).requestFocus(_phoneFocusNode);
+  }
+
   bool _validateAndSaveForm() {
     final form = _formKey.currentState;
     if (form.validate()) {
@@ -62,17 +74,19 @@ class _UserDetailPageState extends State<UserDetailPage> {
     return false;
   }
 
-  Future<void> _skipPage() async{
+  Future<void> _skipPage(BuildContext context) async{
+    final Database database=Provider.of<Database>(context,listen:false);
     if (widget.documentId == null) {
       // Check changes in the form fields and then add the values
-      await widget.database.addUser(widget.user);
+      await database.addUser(widget.user);
     }
     widget.skipPage(true);
   }
 
-  Future<void> _submit() async {
+  Future<void> _submit(BuildContext context) async {
     final form=_formKey.currentState;
-   try { //TODO: create a userInfo object and write to database
+   try {
+     final Database database=Provider.of<Database>(context,listen:false);
      if (_validateAndSaveForm()) {
        form.deactivate();
        //      set the existing document
@@ -84,10 +98,10 @@ class _UserDetailPageState extends State<UserDetailPage> {
          email: _email,
        );
        if (widget.documentId != null) {
-         await widget.database.setUser(user, widget.documentId);
+         await database.setUser(user, widget.documentId);
        } else {
         // New user registration, so create the user document
-         await widget.database.addUser(user);
+         await database.addUser(user);
        }
        widget.skipPage(true);
      }
@@ -140,17 +154,17 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 'Skip',
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),
-              onPressed: _skipPage,
+              onPressed: ()=>_skipPage(context),
             ),
           ],
         ),
-        body: _buildContents(),
+        body: _buildContents(context),
         backgroundColor: Colors.transparent,
       ),
     ]);
   }
 
-  Widget _buildContents() {
+  Widget _buildContents(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -159,24 +173,24 @@ class _UserDetailPageState extends State<UserDetailPage> {
           elevation: 0.0,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _buildForm(),
+            child: _buildForm(context),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildForm() {
+  Widget _buildForm(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: _buildFormChildren(),
+        children: _buildFormChildren(context),
       ),
     );
   }
 
-  List<Widget> _buildFormChildren() {
+  List<Widget> _buildFormChildren(BuildContext context) {
     return [
       TextFormField(
         decoration: InputDecoration(
@@ -198,6 +212,9 @@ class _UserDetailPageState extends State<UserDetailPage> {
             borderSide: BorderSide(color: Colors.yellowAccent,) ,
           ),
         ),
+        focusNode: _nameFocusNode,
+        textInputAction: TextInputAction.next,
+        onEditingComplete: ()=>_nameEditingComplete(context),
         initialValue: _name,
         validator: (value) => value.isNotEmpty ? null : 'Name can\'t be empty',
         onSaved: (value) => _name = value,
@@ -264,6 +281,11 @@ class _UserDetailPageState extends State<UserDetailPage> {
         ),
         validator: (value) => value.isNotEmpty ? null : 'Email can\'t be empty',
         initialValue: _email,
+        focusNode: _emailFocusNode,
+        textInputAction: TextInputAction.next,
+        onEditingComplete: ()=>widget.authSource==AuthSource.phone?
+                               _submit(context):
+                              _emailEditingComplete(context),
         onSaved: (value) => _email = value,
       ),
       TextFormField(
@@ -294,6 +316,9 @@ class _UserDetailPageState extends State<UserDetailPage> {
         validator: (value) =>
             value.isNotEmpty ? null : 'Phone number can\'t be empty',
         initialValue: _phoneNumber != null ? '$_phoneNumber' : null,
+        focusNode: _phoneFocusNode,
+        textInputAction: TextInputAction.next,
+        onEditingComplete: ()=>_submit(context),
         onSaved: (value) => _phoneNumber = value,
       ),
       SizedBox(
@@ -308,7 +333,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        onPressed:_submit,
+        onPressed:()=>_submit(context),
       ),
     ];
   }

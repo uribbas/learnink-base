@@ -120,5 +120,9 @@ flutter:
            style: italic
            weight: 700
 
+    - family:  MyFlutterIcons
+      fonts:
+         - asset: assets/flutter_icons/MyFlutterIcons.ttf
+
 
 

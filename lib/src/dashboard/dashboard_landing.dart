@@ -49,7 +49,7 @@ class _DashboardLandingState extends State<DashboardLanding> {
       await Future.delayed(Duration.zero,(){_db=Provider.of<Database>(context,listen:false);});
       final userRef=await _db.getCollectionRef('users');
       final userInfo=await _db.selectedUsersRefList(userRef.where('uid', isEqualTo: widget.user.uid));
-
+      if(mounted) {
         setState(() {
           _authUser = userInfo.isNotEmpty ? userInfo[0] : _getAuthUserInfo();
           _authSource = (widget.user.email != null || widget.user.email != '')
@@ -57,7 +57,7 @@ class _DashboardLandingState extends State<DashboardLanding> {
               : AuthSource.phone;
           _documentId = userInfo.isNotEmpty ? userInfo[0].documentId : null;
         });
-
+      }
   }
 
   void _skipPage(bool skip) {
@@ -75,7 +75,6 @@ class _DashboardLandingState extends State<DashboardLanding> {
         print(
             "Provider value ${widget.user.providerId} $_authSource $_documentId");
         return UserDetailPage(
-            database: _db,
             user: _authUser,
             auth: auth,
             documentId: _documentId,

@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../progress.dart';
 import 'cupertino_dashboard_scaffold.dart';
 import 'tab_item.dart';
-import 'package:provider/provider.dart';
 import '../account.dart';
 import '../bookshelves.dart';
 import '../cart.dart';
 import '../chat.dart';
-import '../login/auth.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -23,6 +22,7 @@ class _DashboardState extends State<Dashboard> {
      TabItem.account:(_)=> CupertinoPageScaffold(child: Account(),),
      TabItem.chat:(_)=>CupertinoPageScaffold(child: Chat(),),
      TabItem.cart:(_)=>CupertinoPageScaffold(child:Cart(),),
+     TabItem.progress:(_)=>CupertinoPageScaffold(child:Progress(),),
    };
  }
   @override
