@@ -20,10 +20,10 @@ class CupertinoDashboardScaffold extends StatelessWidget {
       tabBar: CupertinoTabBar(
         items: <BottomNavigationBarItem>[
           _buildItem(TabItem.bookshelves),
-          _buildItem(TabItem.account),
           _buildItem(TabItem.cart),
-          _buildItem(TabItem.chat),
           _buildItem(TabItem.progress),
+          _buildItem(TabItem.chat),
+          _buildItem(TabItem.account),
         ],
         //border:Border(top:BorderSide(color:Colors.black,width:2.0,),),
         onTap: (index)=>onSelectTab(TabItem.values[index]),
