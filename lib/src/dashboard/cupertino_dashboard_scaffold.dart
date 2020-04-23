@@ -19,11 +19,11 @@ class CupertinoDashboardScaffold extends StatelessWidget {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         items: <BottomNavigationBarItem>[
-          _buildItem(TabItem.bookshelves),
-          _buildItem(TabItem.cart),
-          _buildItem(TabItem.progress),
-          _buildItem(TabItem.chat),
-          _buildItem(TabItem.account),
+          _buildItem(TabItem.bookshelves, 'Bookshelves'),
+          _buildItem(TabItem.cart, 'Store'),
+          _buildItem(TabItem.progress,'Progress'),
+          _buildItem(TabItem.chat,'Discuss'),
+          _buildItem(TabItem.account,'My Account'),
         ],
         //border:Border(top:BorderSide(color:Colors.black,width:2.0,),),
         onTap: (index)=>onSelectTab(TabItem.values[index]),
@@ -35,11 +35,12 @@ class CupertinoDashboardScaffold extends StatelessWidget {
             );
 
   }
-  BottomNavigationBarItem _buildItem(TabItem tabItem){
+  BottomNavigationBarItem _buildItem(TabItem tabItem, String title ){
     final itemData=TabItemData.allTabs[tabItem];
     final color=currentTab==tabItem? Colors.blueAccent:Colors.grey;
     return BottomNavigationBarItem(
-      icon:Icon(itemData.icon,color: color,size:45.0,),
+      icon:Icon(itemData.icon,color: color,size:30.0,),
+      title: Text(title),
      );
   }
 }
