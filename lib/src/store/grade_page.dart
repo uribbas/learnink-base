@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:learnink/src/store/grade_page_list.dart';
-import 'package:learnink/src/widgets/custom_outline_button.dart';
+import 'package:learnink/src/store/grade_page_list_item.dart';
+import 'package:learnink/src/store/search_list_item_bar.dart';
 import '../models/grade.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../widgets/notification_icon_button.dart';
+import 'package:learnink/src/widgets/custom_outline_button.dart';
 
 class GradePage extends StatelessWidget {
   GradePage({ this.grades});
@@ -12,12 +14,20 @@ class GradePage extends StatelessWidget {
   ValueNotifier<bool> _isCleared=ValueNotifier(false);
 
   void _onSelectItem(int index){
+    if(_isCleared.value){
+      selected.clear();
+      _isCleared.value = false;
+    }
     if(selected.contains(index)){
       selected.remove(index);
     }
     else{
       selected.add(index);
     }
+  }
+
+  void _onSelectAll(){
+    // to be implemented
   }
 
   @override
@@ -79,32 +89,66 @@ class GradePage extends StatelessWidget {
                 ),
               ),
               //color: Colors.white,
-              child: Stack(
-                children: <Widget>[
-                  ValueListenableBuilder(
-                    valueListenable: _isCleared,
-                    builder:(context,isCleared,_){
-                      return GradePageList(grades:grades,
-                        isCleared:isCleared ,
-                        onSelectItem: _onSelectItem,);
-                    }
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left:0,
-                    right:0,
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: CustomOutlineButton(
-                        child:Text('Add to Bag',
-                          style:TextStyle(color:Colors.black),
+              child: ValueListenableBuilder(
+                  valueListenable: _isCleared,
+                  builder:(context,isCleared,_){
+                    return CustomScrollView(
+                      slivers: <Widget>[
+                        SliverFixedExtentList(
+                          itemExtent: 95.0,
+                          delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                              return Padding(
+                                padding:EdgeInsets.all(0),
+                                child: SearchListItemBar(
+                                  onClick:()=>_onSelectAll(),
+                                  isCleared: isCleared,
+                                ),
+                              );
+                            },
+                            childCount: 1,
+                          ),
                         ),
-                        borderColor: Colors.black,
-                        elevationColor: Colors.black,
-                        onPressed: (){},
-                      ),
-                    ),
-                  ),],
+                        SliverFixedExtentList(
+                          itemExtent: 120.0,
+                          delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                              return Padding(
+                                padding:EdgeInsets.all(0),
+                                child: GradePageListItem(grade:grades[index],
+                                  isFirst: index==0,
+                                  isLast: index == grades.length -1,
+                                  onSelectItem:()=>_onSelectItem(index),
+                                  isCleared: isCleared,),
+                              );
+                            },
+                            childCount: grades.length,
+                          ),
+                        ),
+                        SliverFillRemaining(
+                          hasScrollBody: false,
+                          // fillOverscroll: true, // Set true to change overscroll behavior. Purely preference.
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top:10.0),
+                              child: CustomOutlineButton(
+                                child:Text('Add to Bag',
+                                  style:TextStyle(color:Colors.black),
+                                ),
+                                borderColor: Colors.black,
+                                elevationColor: Colors.black,
+                                onPressed: (){
+                                  _isCleared.value = true;
+//                                  _isCleared.value = false;
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  }
               ),
         ),
       ),
