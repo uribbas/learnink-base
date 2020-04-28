@@ -26,4 +26,7 @@ class MyFlutterIcons {
   static const IconData chart = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData dialog_bubble = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData profile = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData search = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData tick = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
 }

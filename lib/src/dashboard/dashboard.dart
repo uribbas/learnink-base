@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'material_dashboard_scaffold.dart';
 import '../progress.dart';
-import 'cupertino_dashboard_scaffold.dart';
 import 'tab_item.dart';
 import '../account.dart';
 import '../bookshelves.dart';
-import '../cart.dart';
+import '../store/store.dart';
 import '../chat.dart';
 
 class Dashboard extends StatefulWidget {
@@ -16,22 +16,22 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
  TabItem _currentTab=TabItem.bookshelves;
 
- Map<TabItem,WidgetBuilder> get widgetBuilders{
+ Map<TabItem,Widget> get widgetBuilders{
    return {
-     TabItem.bookshelves:(_)=>CupertinoPageScaffold(child:BookShelves(),),
-     TabItem.cart:(_)=>CupertinoPageScaffold(child:Cart(),),
-     TabItem.progress:(_)=>CupertinoPageScaffold(child:Progress(),),
-     TabItem.chat:(_)=>CupertinoPageScaffold(child: Chat(),),
-     TabItem.account:(_)=> CupertinoPageScaffold(child: Account(),),
+     TabItem.bookshelves:BookShelves(),
+     TabItem.store:Store(),
+     TabItem.progress:Progress(),
+     TabItem.chat:Chat(),
+     TabItem.account: Account(),
 
    };
  }
   @override
   Widget build(BuildContext context){
-    return CupertinoDashboardScaffold(
+    return MaterialDashboardScaffold(
       currentTab:_currentTab,
       onSelectTab: (item){setState(() {
-        _currentTab=item;
+        _currentTab=TabItem.values[item];
       });
       },
       widgetBuilders: widgetBuilders,

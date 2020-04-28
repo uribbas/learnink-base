@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meta/meta.dart';
+import '../models/subject.dart';
+import '../models/grade.dart';
 import '../models/job.dart';
 import '../models/user.dart';
 import 'api_path.dart';
@@ -15,6 +16,8 @@ abstract class Database {
   Stream<List<LearninkUserInfo>> usersStream();
   Stream<List<LearninkUserInfo>> selectedUsersStream(CollectionReference ref);
   Future<List<LearninkUserInfo>> selectedUsersRefList(Query query);
+  Stream<List<Grade>> gradesStream();
+  Stream<List<Subject>> subjectsStream();
 }
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -36,6 +39,21 @@ class FirestoreDatabase implements Database {
         path: APIPath.jobs(uid),
         builder: (data,documentId) => Job.fromMap(data,documentId),
       );
+
+  //subject related methods
+  Stream<List<Subject>> subjectsStream() => _service.collectionStream(
+    path: APIPath.subjects(),
+    builder: (data,documentId) => Subject.fromMap(data,documentId),
+  );
+
+
+  // grades related methods
+
+  Stream<List<Grade>> gradesStream() => _service.collectionStream(
+    path: APIPath.grades(),
+    builder: (data,documentId) => Grade.fromMap(data,documentId),
+  );
+
 
   //  User management related methods
 

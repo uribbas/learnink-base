@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learnink/src/dashboard/dashboard.dart';
-import 'package:learnink/src/dashboard/user_details_page.dart';
+import 'dashboard.dart';
+import 'user_details_page.dart';
 import 'package:provider/provider.dart';
 import '../services/database.dart';
 import '../login/auth.dart';
