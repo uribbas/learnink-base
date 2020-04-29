@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:learnink/src/models/grade.dart';
-import 'package:learnink/src/services/database.dart';
-import 'package:learnink/src/store/grade_page.dart';
+import '../models/grade.dart';
+import '../models/subject.dart';
+import '../services/database.dart';
+import 'grade_page.dart';
+import 'subject_page.dart';
 import 'package:provider/provider.dart';
 import '../widgets/custom_divider.dart';
 import 'grade_list.dart';
@@ -16,7 +18,7 @@ class StoreNestedList extends StatelessWidget {
         CustomDivider(leadingText: 'Grades', onMore: ()=>_onGradeView(context)),
         GradeList(),
         SizedBox(height: 20),
-        CustomDivider(leadingText: 'Subjects'),
+        CustomDivider(leadingText: 'Subjects',onMore:()=>_onSubjectView(context),),
         SubjectList(),
         SizedBox(height: 20),
         CustomDivider(leadingText: 'Featured'),
@@ -37,6 +39,30 @@ class StoreNestedList extends StatelessWidget {
               if(snapshot.hasData) {
                 final List<Grade> grades = snapshot.data;
                 return GradePage(grades: grades);
+              }
+              if(snapshot.hasError){
+                return Container(color:Colors.white);
+              }
+              return Container(color:Colors.green);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  void _onSubjectView(BuildContext context) {
+    final Database database = Provider.of<Database>(context,listen: false);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          print('Inside _onGradeView');
+          return StreamBuilder(
+            stream: database.subjectsStream(),
+            builder: (context, snapshot) {
+              if(snapshot.hasData) {
+                final List<Subject> subjects = snapshot.data;
+                return SubjectPage(subjects: subjects);
               }
               if(snapshot.hasError){
                 return Container(color:Colors.white);

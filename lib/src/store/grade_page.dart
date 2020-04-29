@@ -1,33 +1,61 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:learnink/src/store/grade_page_list_item.dart';
-import 'package:learnink/src/store/search_list_item_bar.dart';
+import 'grade_page_list_item.dart';
+import 'search_list_item_bar.dart';
 import '../models/grade.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../widgets/notification_icon_button.dart';
-import 'package:learnink/src/widgets/custom_outline_button.dart';
+import '../widgets/custom_outline_button.dart';
 
-class GradePage extends StatelessWidget {
+class GradePageModel{
+  GradePageModel({this.selected,this.isSelected});
+  List<int> selected;
+  bool isSelected;
+
+  GradePageModel copyWith({List<int> selected, bool isSelected}){
+    return GradePageModel(
+       selected: selected?? this.selected,
+      isSelected:isSelected?? this.isSelected,
+    );
+  }
+}
+
+class GradePage extends StatefulWidget {
   GradePage({ this.grades});
   final List<Grade> grades;
-  List<int> selected=[];
-  ValueNotifier<bool> _isCleared=ValueNotifier(false);
 
-  void _onSelectItem(int index){
-    if(_isCleared.value){
-      selected.clear();
-      _isCleared.value = false;
-    }
-    if(selected.contains(index)){
-      selected.remove(index);
-    }
-    else{
-      selected.add(index);
-    }
+  @override
+  _GradePageState createState() => _GradePageState();
+}
+
+class _GradePageState extends State<GradePage> {
+
+  StreamController<GradePageModel> _selectedController=StreamController<GradePageModel>();
+  GradePageModel _model=GradePageModel(selected: [],isSelected: false);
+
+  @override
+  void dispose(){
+    super.dispose();
+    _selectedController.close();
   }
 
-  void _onSelectAll(){
-    // to be implemented
+  void _onSelectItem(int index){
+    List<int> selectedList=_model.selected;
+    selectedList.contains(index)?selectedList.remove(index):selectedList.add(index);
+    _model=_model.copyWith(selected:selectedList,isSelected: false);
+    _selectedController.add(_model);
+   }
+
+  void _onSelectAll(bool newValue){
+    List<int> selectedList=newValue?List<int>.generate(widget.grades.length, (i) => i ):[];
+    _model=_model.copyWith(selected:selectedList,isSelected:newValue);
+    _selectedController.add(_model);
+  }
+
+  void _onAddtoBag()
+  {
+    _model=_model.copyWith(selected: [],isSelected: false);
+    _selectedController.add(_model);
   }
 
   @override
@@ -67,7 +95,7 @@ class GradePage extends StatelessWidget {
           elevation: 0.0,
           centerTitle: true,
           backgroundColor: Colors.transparent,
-          title: Text('Store'),
+          title: Text('All Classes'),
           actions: <Widget>[
             NotificationIconButton(
               size:50,
@@ -89,68 +117,75 @@ class GradePage extends StatelessWidget {
                 ),
               ),
               //color: Colors.white,
-              child: ValueListenableBuilder(
-                  valueListenable: _isCleared,
-                  builder:(context,isCleared,_){
-                    return CustomScrollView(
-                      slivers: <Widget>[
-                        SliverFixedExtentList(
-                          itemExtent: 95.0,
-                          delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int index) {
-                              return Padding(
-                                padding:EdgeInsets.all(0),
-                                child: SearchListItemBar(
-                                  onClick:()=>_onSelectAll(),
-                                  isCleared: isCleared,
-                                ),
-                              );
-                            },
-                            childCount: 1,
-                          ),
-                        ),
-                        SliverFixedExtentList(
-                          itemExtent: 120.0,
-                          delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int index) {
-                              return Padding(
-                                padding:EdgeInsets.all(0),
-                                child: GradePageListItem(grade:grades[index],
-                                  isFirst: index==0,
-                                  isLast: index == grades.length -1,
-                                  onSelectItem:()=>_onSelectItem(index),
-                                  isCleared: isCleared,),
-                              );
-                            },
-                            childCount: grades.length,
-                          ),
-                        ),
-                        SliverFillRemaining(
-                          hasScrollBody: false,
-                          // fillOverscroll: true, // Set true to change overscroll behavior. Purely preference.
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top:10.0),
-                              child: CustomOutlineButton(
-                                child:Text('Add to Bag',
-                                  style:TextStyle(color:Colors.black),
-                                ),
-                                borderColor: Colors.black,
-                                elevationColor: Colors.black,
-                                onPressed: (){
-                                  _isCleared.value = true;
-//                                  _isCleared.value = false;
-                                },
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  }
+              child: StreamBuilder(
+                 stream:_selectedController.stream,
+                 initialData:_model,
+                 builder:(context,snapshot){
+                   List<int> _selectedList=[];
+                   if(snapshot.hasData){
+                     print('snapshot value ${snapshot.data}');
+                     _selectedList=List.from(snapshot.data.selected);
+                   }
+
+                   if(snapshot.hasError){
+                     _selectedList=[];
+                   }
+                   return CustomScrollView(
+                     slivers: <Widget>[
+                       SliverFixedExtentList(
+                         itemExtent: 95.0,
+                         delegate: SliverChildBuilderDelegate(
+                               (BuildContext context, int index) {
+                             return Padding(
+                               padding:EdgeInsets.all(0),
+                               child: SearchListItemBar(
+                                 onClick:_onSelectAll,
+                                 isSelected: snapshot.data.isSelected,
+                               ),
+                             );
+                           },
+                           childCount: 1,
+                         ),
+                       ),
+                       SliverFixedExtentList(
+                         itemExtent: 120.0,
+                         delegate: SliverChildBuilderDelegate(
+                               (BuildContext context, int index) {
+                             return Padding(
+                               padding:EdgeInsets.all(0),
+                               child: GradePageListItem(grade:widget.grades[index],
+                                 isFirst: index==0,
+                                 isLast: index == widget.grades.length -1,
+                                 onSelectItem:()=>_onSelectItem(index),
+                                 isSelected:_selectedList.contains(index),),
+                             );
+                           },
+                           childCount: widget.grades.length,
+                         ),
+                       ),
+                       SliverFillRemaining(
+                         hasScrollBody: false,
+                         // fillOverscroll: true, // Set true to change overscroll behavior. Purely preference.
+                         child: Align(
+                           alignment: Alignment.bottomCenter,
+                           child: Padding(
+                             padding: const EdgeInsets.only(top:10.0),
+                             child: CustomOutlineButton(
+                               child:Text('Add to Bag',
+                                 style:TextStyle(color:Colors.black),
+                               ),
+                               borderColor: Colors.black,
+                               elevationColor: Colors.black,
+                               onPressed: _onAddtoBag,
+                             ),
+                           ),
+                         ),
+                       )
+                     ],
+                   );
+                 },
+              )
               ),
-        ),
       ),
     ]);
 

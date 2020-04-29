@@ -2,19 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 
-class SearchListItemBar extends StatefulWidget {
-  SearchListItemBar({this.isCleared,this.onClick});
+class SearchListItemBar extends StatelessWidget {
+  SearchListItemBar({this.isSelected,this.onClick});
 
-  final bool isCleared;
-  final VoidCallback onClick;
+  final bool isSelected;
+  final ValueChanged<bool> onClick;
 
-  @override
-  _SearchListItemBarState createState() => _SearchListItemBarState();
-}
-
-class _SearchListItemBarState extends State<SearchListItemBar> {
-  bool _selected=false;
-  @override
+ @override
   Widget build(BuildContext context) {
     return Column(
 //      crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,9 +33,9 @@ class _SearchListItemBarState extends State<SearchListItemBar> {
                   ),
                 ),
               ), //    <-- label
-              value: _selected,
-              activeColor: _selected ? Colors.greenAccent : Colors.black12,
-              onChanged: (bool newValue) => _onSelectItem(newValue),
+              value: isSelected,
+              activeColor: isSelected? Colors.greenAccent : Colors.black12,
+              onChanged: onClick,
               controlAffinity: ListTileControlAffinity.trailing
         ),
       ],
@@ -73,14 +67,6 @@ class _SearchListItemBarState extends State<SearchListItemBar> {
       ),
       textInputAction: TextInputAction.next,
     );
-  }
-
-  void _onSelectItem(bool newValue)
-  {
-    setState(() {
-      _selected= !_selected;
-    });
-    widget.onClick();
   }
 
 }

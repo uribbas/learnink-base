@@ -16,19 +16,22 @@ class SubjectIcon extends StatelessWidget {
     print('${subject.subjectName},${subject.subjectDescription}');
     return Container(
       padding: EdgeInsets.all(edgeSize),
-      child: SizedBox(
-        width: itemSize,
-        child:Column(
-          children: <Widget>[
-            LearninkNetworkImage(subject.subjectImageUrl),
-            SizedBox(height:5),
-            Text('Class ${subject.gradeId}' ,style:TextStyle(color:Colors.black),),
-            SizedBox(height:5),
-            Text(subject.subjectName ,style:TextStyle(color:Colors.black),),
-            SizedBox(height:5),
-            Text(subject.subjectDescription ,style:TextStyle(color:Colors.black54),),
-          ],
+      child: FlatButton(
+        child: SizedBox(
+          width: itemSize,
+          child:Column(
+            children: <Widget>[
+              LearninkNetworkImage(subject.subjectImageUrl),
+              SizedBox(height:5),
+              Text('Class ${subject.gradeId}' ,style:TextStyle(color:Colors.black),),
+              SizedBox(height:5),
+              Text(subject.subjectName ,style:TextStyle(color:Colors.black),),
+              SizedBox(height:5),
+              Text(subject.subjectDescription ,style:TextStyle(color:Colors.black54),),
+            ],
+          ),
         ),
+        onPressed: (){},
       ),
     );
   }
