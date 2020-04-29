@@ -46,7 +46,7 @@ class SubjectPageListItem extends StatelessWidget {
                      overflow: TextOverflow.ellipsis,
                      softWrap: false,
                      maxLines: 4,
-                     style: TextStyle(color:Colors.black45,fontSize:12.0,),),
+                     style: TextStyle(color:Color(0xff999999),fontSize:12.0,),),
                 ),),
                ],),
           IconButton(padding:EdgeInsets.all(0),

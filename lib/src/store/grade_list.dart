@@ -16,6 +16,7 @@ class GradeIcon extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(edgeSize),
       child: FlatButton(
+        padding: EdgeInsets.all(0.0),
         child: SizedBox(
           width: itemSize,
           child:Column(

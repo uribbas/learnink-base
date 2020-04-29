@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../services/database.dart';
 import 'package:provider/provider.dart';
@@ -17,17 +18,18 @@ class SubjectIcon extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(edgeSize),
       child: FlatButton(
+        padding: EdgeInsets.all(0.0),
         child: SizedBox(
           width: itemSize,
           child:Column(
             children: <Widget>[
               LearninkNetworkImage(subject.subjectImageUrl),
               SizedBox(height:5),
-              Text('Class ${subject.gradeId}' ,style:TextStyle(color:Colors.black),),
+              Text('Class ${subject.gradeId}' ,overflow: TextOverflow.ellipsis, maxLines: 1, textAlign: TextAlign.center, style:TextStyle(color: Colors.black,),),
               SizedBox(height:5),
-              Text(subject.subjectName ,style:TextStyle(color:Colors.black),),
+              Text(subject.subjectName ,overflow: TextOverflow.ellipsis, maxLines: 1, textAlign: TextAlign.center, style:TextStyle(color: Colors.black,),),
               SizedBox(height:5),
-              Text(subject.subjectDescription ,style:TextStyle(color:Colors.black54),),
+              Text(subject.subjectDescription ,overflow: TextOverflow.ellipsis, maxLines: 2, softWrap: true, textAlign: TextAlign.center, style:TextStyle(color:Color(0xff999999)),),
             ],
           ),
         ),
@@ -39,7 +41,7 @@ class SubjectIcon extends StatelessWidget {
 
 
 class SubjectList extends StatelessWidget {
-  double height = 220.0;
+  double height = 190.0;
   double width=140.0;
   @override
   Widget build(BuildContext context) {
