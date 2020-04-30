@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class LearninkNetworkImage extends StatelessWidget {
-  LearninkNetworkImage(@required this.imageUrl,{this.height:100.0, this.width:100.0});
+  LearninkNetworkImage(@required this.imageUrl,{this.height:120.0, this.width:120.0});
  final double height;
   final double width;
   final String imageUrl;

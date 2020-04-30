@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'subject_detail.dart';
 import '../services/database.dart';
 import 'package:provider/provider.dart';
 import '../models/subject.dart';
@@ -33,15 +34,23 @@ class SubjectIcon extends StatelessWidget {
             ],
           ),
         ),
-        onPressed: (){},
+        onPressed: ()=>onViewSubjectDetail(context,subject),
       ),
     );
+  }
+
+  void onViewSubjectDetail(BuildContext context,Subject subject){
+    Navigator.of(context).push(MaterialPageRoute(
+     builder:(context)=>SubjectDetail(subject:subject),
+    fullscreenDialog: true,
+    ),);
+
   }
 }
 
 
 class SubjectList extends StatelessWidget {
-  double height = 190.0;
+  double height = 210.0;
   double width=140.0;
   @override
   Widget build(BuildContext context) {

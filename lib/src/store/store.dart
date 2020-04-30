@@ -51,8 +51,7 @@ class Store extends StatelessWidget {
             ],
         ),
         backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Container(
+        body: Container(
               padding: EdgeInsets.all(20.0),
               decoration: BoxDecoration(
                 color:Colors.white,
@@ -64,8 +63,11 @@ class Store extends StatelessWidget {
                 ),
               ),
               //color: Colors.white,
-              child: StoreNestedList()),
-        ),
+              child: SingleChildScrollView(
+                  child: StoreNestedList(),
+              ),
+          ),
+
       ),
     ]);
   }
