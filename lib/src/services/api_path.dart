@@ -11,4 +11,7 @@ class APIPath{
   //subject collection
   static String subject(String documentId)=>'subjects/$documentId';
   static String subjects()=>'subjects';
+  //chapter collection
+  static String chapter(String documentId)=>'chapters/$documentId';
+  static String chapters()=>'chapters';
 }

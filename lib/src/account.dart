@@ -87,7 +87,7 @@ class Account extends StatelessWidget {
         final chapterReference=Firestore.instance.document('chapters/${gradeId}_${_s}_${c}');
         var chapter = {
           'gradeId': '${gradeId}',
-          'subjectId': { 'subjectId': '${_s}'},
+          'subjectId': '${_s}',
           'chapterId': '${c}',
           'chapterTitle': '${_s} Chapter ${c}',
           'chapterImageUrl': 'https://picsum.photos/400/400',

@@ -3,8 +3,12 @@ import 'package:flutter/rendering.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
 import 'package:learnink/src/widgets/learnink_network_image.dart';
 import '../models/subject.dart';
+import '../models/chapter.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../widgets/notification_icon_button.dart';
+import '../services/database.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SubjectDetailHeader implements SliverPersistentHeaderDelegate {
   SubjectDetailHeader({this.subject, this.maxExtent, this.minExtent});
@@ -56,10 +60,11 @@ class SubjectDetailHeader implements SliverPersistentHeaderDelegate {
   OverScrollHeaderStretchConfiguration get stretchConfiguration => null;
 }
 
-class SubjectDetail extends StatelessWidget {
-  SubjectDetail({this.subject});
+class SubjectDetailBody extends StatelessWidget {
+  SubjectDetailBody({this.subject, this.chapters});
 
   final Subject subject;
+  final List<Chapter> chapters;
 
   @override
   Widget build(BuildContext context) {
@@ -135,11 +140,13 @@ class SubjectDetail extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                       return Padding(
-                        padding: EdgeInsets.all(0),
-                        child:Container(),
+                        padding: EdgeInsets.all(8),
+                        child:Container(
+                          child: Text('Grade: ${chapters[index].gradeId} Title: ${chapters[index].chapterTitle}', style: TextStyle(color: Colors.redAccent),),
+                        ),
                       );
                     },
-                    childCount: 1,
+                    childCount: chapters.length,
                   ),
                 ),
                 SliverFillRemaining(
@@ -167,5 +174,42 @@ class SubjectDetail extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class SubjectDetail extends StatelessWidget {
+  SubjectDetail({this.subject, this.chapters});
+
+  final Subject subject;
+  final List<Chapter> chapters;
+
+  @override
+  Widget build(BuildContext context) {
+    print("Chapters length ${chapters.length} ${subject.subjectId}");
+    return SubjectDetailBody(subject: subject, chapters: chapters,);
+//    final Database database=Provider.of<Database>(context);
+//    return StreamBuilder(
+//      stream: database.chaptersStream(),
+//      builder:(context,snapshot) {
+//        if (snapshot.hasData) {
+//          final List<Chapter> chapters = snapshot.data;
+//          if (chapters.isNotEmpty) {
+//            return SubjectDetailBody(subject: subject, chapters: chapters,);
+//          }
+//          return SizedBox(
+//              height: 20.0,
+//              child: Text(
+//                'Nothing to show here', style: TextStyle(color: Colors.black),)
+//          );
+//        }
+//        if (snapshot.hasError) {
+//          return Center(
+//            child: Text('Some error has ocurred',
+//              style: TextStyle(color: Colors.black,),),);
+//        }
+//
+//        return CircularProgressIndicator();
+//      }
+//    );
   }
 }

@@ -55,5 +55,16 @@ class FirestoreService{
                 ).toList();
 
   }
+  //  Stream for the query based data snapshot
+  Stream<List<T>> queryStream<T>({@required Query query,
+    @required T builder(Map<String,dynamic> data,String documentId)}){
+    final reference=query;
+    final snapshots=reference.snapshots();
+    return snapshots.map((snapshot)=>
+        snapshot.documents.map(
+                (snapshot)=> builder(snapshot.data,snapshot.documentID)
+        ).toList());
+
+  }
 
 }

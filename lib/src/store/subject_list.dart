@@ -4,6 +4,7 @@ import 'subject_detail.dart';
 import '../services/database.dart';
 import 'package:provider/provider.dart';
 import '../models/subject.dart';
+import '../models/chapter.dart';
 import '../widgets/learnink_network_image.dart';
 class SubjectIcon extends StatelessWidget {
 
@@ -39,12 +40,46 @@ class SubjectIcon extends StatelessWidget {
     );
   }
 
-  void onViewSubjectDetail(BuildContext context,Subject subject){
-    Navigator.of(context).push(MaterialPageRoute(
-     builder:(context)=>SubjectDetail(subject:subject),
-    fullscreenDialog: true,
-    ),);
+//  void onViewSubjectDetail(BuildContext context,Subject subject) async {
+//    Navigator.of(context).push(MaterialPageRoute(
+//     builder:(context)=>SubjectDetail(subject:subject),
+//    fullscreenDialog: true,
+//    ),);
+//
+//  }
 
+  void onViewSubjectDetail(BuildContext context,Subject subject) async {
+//    Database database;
+//    await Future.delayed(Duration.zero,(){database=Provider.of<Database>(context,listen:false);});
+    final Database database=Provider.of<Database>(context,listen:false);
+    final chapterRef=await database.getCollectionRef('chapters');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          print('Inside onViewSubjectDetail');
+          return StreamBuilder(
+            stream: database.selectedChaptersRefStream(
+                chapterRef.where('gradeId', isEqualTo: subject.gradeId)
+                    .where('subjectId', isEqualTo: subject.subjectId)
+            ),
+            builder: (context, snapshot) {
+              if(snapshot.hasData) {
+                final List<Chapter> chapters = snapshot.data;
+                print('onViewSubjectDetail chapters ${chapters.length}');
+                return SubjectDetail(subject: subject, chapters: chapters);
+              }
+              if(snapshot.hasError){
+                print('onViewSubjectDetail ${snapshot.error}');
+                return Container(color:Colors.white,
+                  child: Center(child: Text('${snapshot.error}', style: TextStyle(fontSize: 14.0),)),
+                );
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          );
+        },
+      ),
+    );
   }
 }
 
