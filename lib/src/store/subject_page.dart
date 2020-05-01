@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:learnink/src/services/database.dart';
 import 'package:learnink/src/store/search_list_item_bar.dart';
@@ -8,20 +7,7 @@ import 'package:learnink/src/widgets/my_flutter_icons.dart';
 import 'package:learnink/src/widgets/notification_icon_button.dart';
 import '../models/subject.dart';
 import 'subject_page_list_item.dart';
-
-class SubjectPageModel{
-  SubjectPageModel({this.selected,this.isSelected});
-  List<int> selected;
-  bool isSelected;
-
-  SubjectPageModel copyWith({List<int> selected, bool isSelected}){
-    return SubjectPageModel(
-      selected: selected?? this.selected,
-      isSelected:isSelected?? this.isSelected,
-    );
-  }
-}
-
+import 'subject_page_model.dart';
 
 class SubjectPage extends StatefulWidget {
   SubjectPage({this.subjects,this.database});

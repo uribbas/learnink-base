@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:learnink/src/widgets/blue_page_template.dart';
 import 'dashboard.dart';
 import 'user_details_page.dart';
 import 'package:provider/provider.dart';
@@ -85,43 +86,51 @@ class _DashboardLandingState extends State<DashboardLanding> {
 //        return Dashboard(auth: widget.auth);
       }
     } else {
-      return Stack(fit: StackFit.expand, children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff004fe0),
-                Color(0xff002d7f),
-              ],
-              stops: [0.2, 1.0],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              tileMode: TileMode.repeated,
-            ),
-          ),
-        ),
-        Positioned(
-          top: 0,
-          left: 0,
-          child: SafeArea(
-            top: true,
-            child: Container(
-              color: Colors.transparent,
-//                height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: Image.asset(
-                'assets/icons/bg-art.png',
+
+      return BluePageTemplate(
+          title: 'Loading...',
+          child:Center(
+              child:CircularProgressIndicator(),
               ),
-            ),
-          ),
-        ),
-        Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-          backgroundColor: Colors.transparent,
-        ),
-      ]);
+      );
+
+//        return Stack(fit: StackFit.expand, children: <Widget>[
+//        Container(
+//          decoration: BoxDecoration(
+//            gradient: LinearGradient(
+//              colors: [
+//                Color(0xff004fe0),
+//                Color(0xff002d7f),
+//              ],
+//              stops: [0.2, 1.0],
+//              begin: Alignment.topCenter,
+//              end: Alignment.bottomCenter,
+//              tileMode: TileMode.repeated,
+//            ),
+//          ),
+//        ),
+//        Positioned(
+//          top: 0,
+//          left: 0,
+//          child: SafeArea(
+//            top: true,
+//            child: Container(
+//              color: Colors.transparent,
+////                height: 50,
+//              width: MediaQuery.of(context).size.width,
+//              child: Image.asset(
+//                'assets/icons/bg-art.png',
+//              ),
+//            ),
+//          ),
+//        ),
+//        Scaffold(
+//          body: Center(
+//            child: CircularProgressIndicator(),
+//          ),
+//          backgroundColor: Colors.transparent,
+//        ),
+//      ]);
     }
   }
 }

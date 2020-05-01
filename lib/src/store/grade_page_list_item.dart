@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learnink/src/models/subject.dart';
+import '../models/subject.dart';
+import '../widgets/white_page_template.dart';
 import '../services/database.dart';
 import '../widgets/learnink_network_image.dart';
 import '../widgets/my_flutter_icons.dart';
@@ -77,11 +78,14 @@ class GradePageListItem extends StatelessWidget {
               }
               if(snapshot.hasError){
                 print('onViewSubjectDetail ${snapshot.error}');
-                return Container(color:Colors.white,
-                  child: Center(child: Text('${snapshot.error}', style: TextStyle(fontSize: 14.0),)),
-                );
+                return WhitePageTemplate(title:'Error!',
+                    child:Text('Some error occured',style:
+                    TextStyle(color:Colors.red,
+                      fontSize: 20.0,
+                    ),),);
               }
-              return Center(child: CircularProgressIndicator());
+              return WhitePageTemplate(title:'Laoding...',
+                child:Center(child:CircularProgressIndicator(),),);
             },
           );
         },

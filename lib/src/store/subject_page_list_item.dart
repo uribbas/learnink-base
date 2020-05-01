@@ -4,6 +4,7 @@ import 'package:learnink/src/services/database.dart';
 import 'package:learnink/src/store/subject_detail.dart';
 import 'package:learnink/src/widgets/learnink_network_image.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
+import 'package:learnink/src/widgets/white_page_template.dart';
 import '../models/subject.dart';
 
 class SubjectPageListItem extends StatelessWidget {
@@ -87,11 +88,12 @@ class SubjectPageListItem extends StatelessWidget {
               }
               if(snapshot.hasError){
                 print('onViewSubjectDetail ${snapshot.error}');
-                return Container(color:Colors.white,
-                  child: Center(child: Text('${snapshot.error}', style: TextStyle(fontSize: 14.0),)),
-                );
+                return WhitePageTemplate(title:'Error!',
+                    child:Text('Some error has occured',
+                      style: TextStyle(color:Colors.red,fontSize: 20.0,),),);
               }
-              return Center(child: CircularProgressIndicator());
+              return WhitePageTemplate(title:'Laoding...',
+                child:Center(child:CircularProgressIndicator(),),);
             },
           );
         },

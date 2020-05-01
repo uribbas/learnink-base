@@ -7,19 +7,8 @@ import '../models/grade.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../widgets/notification_icon_button.dart';
 import '../widgets/custom_outline_button.dart';
+import 'grade_page_model.dart';
 
-class GradePageModel{
-  GradePageModel({this.selected,this.isSelected});
-  List<int> selected;
-  bool isSelected;
-
-  GradePageModel copyWith({List<int> selected, bool isSelected}){
-    return GradePageModel(
-       selected: selected?? this.selected,
-      isSelected:isSelected?? this.isSelected,
-    );
-  }
-}
 
 class GradePage extends StatefulWidget {
   GradePage({ this.grades,this.database});
