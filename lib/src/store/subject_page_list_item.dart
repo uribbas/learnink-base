@@ -40,6 +40,7 @@ class SubjectPageListItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           FlatButton(
+              padding: EdgeInsets.all(0.0),
               child: LearninkNetworkImage(subject.subjectImageUrl),
           onPressed:()=> _onSubjectDetailView(context),),
           Column(

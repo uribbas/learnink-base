@@ -35,11 +35,22 @@ class ChapterListItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          LearninkNetworkImage(chapter.chapterImageUrl),
+          LearninkNetworkImage(chapter.chapterImageUrl,),
           Column(
             children: <Widget>[
-              Text(chapter.chapterTitle,style: TextStyle(color: Colors.black,fontSize: 20.0,),),
-              Text('${chapter.chapterPopularityRating}',style: TextStyle(color: Colors.black,fontSize: 18.0,),)
+              Container(
+                width:120,
+                child: Text(chapter.chapterTitle,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  maxLines: 3,
+                  style: TextStyle(color: Colors.black,fontSize: 15.0,),),
+              ),
+              Container(
+                  width:120,
+                  alignment: Alignment.centerLeft,
+                  child: Text('${chapter.chapterPopularityRating}',style: TextStyle(color: Colors.black,fontSize: 15.0,),)
+              )
             ],
           ),
 
