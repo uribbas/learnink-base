@@ -6,9 +6,52 @@ import '../models/subject.dart';
 import '../models/chapter.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../widgets/notification_icon_button.dart';
-import '../services/database.dart';
-import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+class ChapterListItem extends StatelessWidget {
+  ChapterListItem({
+    this.chapter,
+    this.isFirst,
+    this.isLast,
+    this.isSelected,
+  });
+
+  final Chapter chapter;
+  final bool isSelected;
+  final bool isFirst;
+  final bool isLast;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Colors.black12, width: isFirst ? 2.0 : 1.0),
+            bottom: BorderSide(color: Colors.black12, width:isLast ? 2.0 : 1.0),
+            left: BorderSide(color: Colors.transparent, width: 1.0),
+            right: BorderSide(color: Colors.transparent, width: 1.0),
+          )
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          LearninkNetworkImage(chapter.chapterImageUrl),
+          Column(
+            children: <Widget>[
+              Text(chapter.chapterTitle,style: TextStyle(color: Colors.black,fontSize: 20.0,),),
+              Text('${chapter.chapterPopularityRating}',style: TextStyle(color: Colors.black,fontSize: 18.0,),)
+            ],
+          ),
+
+          Icon(MyFlutterIcons.tick,
+                size:25,
+                color:isSelected?Colors.greenAccent:Colors.black12),
+        ],
+      ),
+    );
+  }
+}
+
 
 class SubjectDetailHeader implements SliverPersistentHeaderDelegate {
   SubjectDetailHeader({this.subject, this.maxExtent, this.minExtent});
@@ -60,8 +103,9 @@ class SubjectDetailHeader implements SliverPersistentHeaderDelegate {
   OverScrollHeaderStretchConfiguration get stretchConfiguration => null;
 }
 
-class SubjectDetailBody extends StatelessWidget {
-  SubjectDetailBody({this.subject, this.chapters});
+class SubjectDetail extends StatelessWidget {
+
+  SubjectDetail({this.subject, this.chapters});
 
   final Subject subject;
   final List<Chapter> chapters;
@@ -139,11 +183,10 @@ class SubjectDetailBody extends StatelessWidget {
                   itemExtent: 120.0,
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
-                      return Padding(
-                        padding: EdgeInsets.all(8),
-                        child:Container(
-                          child: Text('Grade: ${chapters[index].gradeId} Title: ${chapters[index].chapterTitle}', style: TextStyle(color: Colors.redAccent),),
-                        ),
+                      return ChapterListItem(chapter:chapters[index],
+                          isFirst: index==0,
+                          isLast: index==chapters.length-1,
+                          isSelected: true,
                       );
                     },
                     childCount: chapters.length,
@@ -177,39 +220,3 @@ class SubjectDetailBody extends StatelessWidget {
   }
 }
 
-class SubjectDetail extends StatelessWidget {
-  SubjectDetail({this.subject, this.chapters});
-
-  final Subject subject;
-  final List<Chapter> chapters;
-
-  @override
-  Widget build(BuildContext context) {
-    print("Chapters length ${chapters.length} ${subject.subjectId}");
-    return SubjectDetailBody(subject: subject, chapters: chapters,);
-//    final Database database=Provider.of<Database>(context);
-//    return StreamBuilder(
-//      stream: database.chaptersStream(),
-//      builder:(context,snapshot) {
-//        if (snapshot.hasData) {
-//          final List<Chapter> chapters = snapshot.data;
-//          if (chapters.isNotEmpty) {
-//            return SubjectDetailBody(subject: subject, chapters: chapters,);
-//          }
-//          return SizedBox(
-//              height: 20.0,
-//              child: Text(
-//                'Nothing to show here', style: TextStyle(color: Colors.black),)
-//          );
-//        }
-//        if (snapshot.hasError) {
-//          return Center(
-//            child: Text('Some error has ocurred',
-//              style: TextStyle(color: Colors.black,),),);
-//        }
-//
-//        return CircularProgressIndicator();
-//      }
-//    );
-  }
-}

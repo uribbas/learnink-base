@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:learnink/src/widgets/learnink_network_image.dart';
-import 'package:learnink/src/widgets/my_flutter_icons.dart';
+import 'package:learnink/src/models/subject.dart';
+import '../services/database.dart';
+import '../widgets/learnink_network_image.dart';
+import '../widgets/my_flutter_icons.dart';
 import '../models/grade.dart';
+import 'grade_detail.dart';
 
 
 class GradePageListItem extends StatelessWidget {
@@ -11,6 +14,7 @@ class GradePageListItem extends StatelessWidget {
     this.isLast,
     this.onSelectItem,
     this.isSelected,
+    this.database,
   });
 
   final Grade grade;
@@ -18,7 +22,9 @@ class GradePageListItem extends StatelessWidget {
   final bool isSelected;
   final bool isFirst;
   final bool isLast;
-@override
+  final Database database;
+
+  @override
   Widget build(BuildContext context) {
     //print('onSelectet Class ${widget.grade.gradeId} ${widget.isCleared}');
     return Container(
@@ -26,26 +32,63 @@ class GradePageListItem extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(
             top: BorderSide(color: Colors.black12, width: isFirst ? 2.0 : 1.0),
-            bottom: BorderSide(color: Colors.black12, width:isLast ? 2.0 : 1.0),
+            bottom: BorderSide(
+                color: Colors.black12, width: isLast ? 2.0 : 1.0),
             left: BorderSide(color: Colors.transparent, width: 1.0),
             right: BorderSide(color: Colors.transparent, width: 1.0),
           )
       ),
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            LearninkNetworkImage(grade.gradeImageUrl),
-            Text('Class ${grade.gradeId}',style:TextStyle(color:Colors.black,),),
-            IconButton(padding:EdgeInsets.all(0),
-                icon:Icon(MyFlutterIcons.tick,
-                             size:25,
-                         color:isSelected?Colors.greenAccent:Colors.black12),
-              onPressed:onSelectItem,
-            ),
-          ],
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          FlatButton(
+            padding: EdgeInsets.all(0.0),
+            child: LearninkNetworkImage(grade.gradeImageUrl),
+            onPressed: () => _onGradeDetailView(context),),
+          Text(
+            'Class ${grade.gradeId}', style: TextStyle(color: Colors.black,),),
+          IconButton(padding: EdgeInsets.all(0),
+            icon: Icon(MyFlutterIcons.tick,
+                size: 25,
+                color: isSelected ? Colors.greenAccent : Colors.black12),
+            onPressed: onSelectItem,
+          ),
+        ],
       ),
     );
   }
-}
+
+  void _onGradeDetailView(BuildContext context) async {
+    final subjectRef=await database.getCollectionRef('subjects');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          print('Inside onViewGradeDetail');
+          return StreamBuilder(
+            stream: database.selectedSubjectsRefStream(
+                subjectRef.where('gradeId', isEqualTo: grade.gradeId)
+            ),
+            builder: (context, snapshot) {
+              if(snapshot.hasData) {
+                final List<Subject> subjects = snapshot.data;
+                print('onViewSubjectDetail chapters ${subjects.length}');
+                return GradeDetail(grade: grade, subjects: subjects,database: database,);
+              }
+              if(snapshot.hasError){
+                print('onViewSubjectDetail ${snapshot.error}');
+                return Container(color:Colors.white,
+                  child: Center(child: Text('${snapshot.error}', style: TextStyle(fontSize: 14.0),)),
+                );
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  }
+
 

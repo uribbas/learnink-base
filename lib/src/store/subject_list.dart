@@ -35,22 +35,13 @@ class SubjectIcon extends StatelessWidget {
             ],
           ),
         ),
-        onPressed: ()=>onViewSubjectDetail(context,subject),
+        onPressed: ()=>_onViewSubjectDetail(context,subject),
       ),
     );
   }
 
-//  void onViewSubjectDetail(BuildContext context,Subject subject) async {
-//    Navigator.of(context).push(MaterialPageRoute(
-//     builder:(context)=>SubjectDetail(subject:subject),
-//    fullscreenDialog: true,
-//    ),);
-//
-//  }
 
-  void onViewSubjectDetail(BuildContext context,Subject subject) async {
-//    Database database;
-//    await Future.delayed(Duration.zero,(){database=Provider.of<Database>(context,listen:false);});
+  void _onViewSubjectDetail(BuildContext context,Subject subject) async {
     final Database database=Provider.of<Database>(context,listen:false);
     final chapterRef=await database.getCollectionRef('chapters');
     Navigator.of(context).push(

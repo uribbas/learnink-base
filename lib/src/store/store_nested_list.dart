@@ -38,7 +38,7 @@ class StoreNestedList extends StatelessWidget {
             builder: (context, snapshot) {
               if(snapshot.hasData) {
                 final List<Grade> grades = snapshot.data;
-                return GradePage(grades: grades);
+                return GradePage(grades: grades,database: database,);
               }
               if(snapshot.hasError){
                 return Container(color:Colors.white);
@@ -47,6 +47,7 @@ class StoreNestedList extends StatelessWidget {
             },
           );
         },
+        fullscreenDialog: true,
       ),
     );
   }
@@ -62,7 +63,7 @@ class StoreNestedList extends StatelessWidget {
             builder: (context, snapshot) {
               if(snapshot.hasData) {
                 final List<Subject> subjects = snapshot.data;
-                return SubjectPage(subjects: subjects);
+                return SubjectPage(subjects: subjects,database: database,);
               }
               if(snapshot.hasError){
                 return Container(color:Colors.white);

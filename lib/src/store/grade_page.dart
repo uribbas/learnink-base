@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:learnink/src/services/database.dart';
 import 'grade_page_list_item.dart';
 import 'search_list_item_bar.dart';
 import '../models/grade.dart';
@@ -21,8 +22,9 @@ class GradePageModel{
 }
 
 class GradePage extends StatefulWidget {
-  GradePage({ this.grades});
+  GradePage({ this.grades,this.database});
   final List<Grade> grades;
+  final Database database;
 
   @override
   _GradePageState createState() => _GradePageState();
@@ -157,7 +159,8 @@ class _GradePageState extends State<GradePage> {
                                  isFirst: index==0,
                                  isLast: index == widget.grades.length -1,
                                  onSelectItem:()=>_onSelectItem(index),
-                                 isSelected:_selectedList.contains(index),),
+                                 isSelected:_selectedList.contains(index),
+                               database: widget.database,),
                              );
                            },
                            childCount: widget.grades.length,

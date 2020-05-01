@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:learnink/src/services/database.dart';
 import 'package:learnink/src/store/search_list_item_bar.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
@@ -23,9 +24,10 @@ class SubjectPageModel{
 
 
 class SubjectPage extends StatefulWidget {
-  SubjectPage({this.subjects});
+  SubjectPage({this.subjects,this.database});
 
   final List<Subject> subjects;
+  final Database database;
 
   @override
   _SubjectPageState createState() => _SubjectPageState();
@@ -160,8 +162,9 @@ class _SubjectPageState extends State<SubjectPage> {
                               isFirst: index==0,
                               isLast: index == widget.subjects.length -1,
                               onSelectItem:()=>_onSelectItem(index),
-                              isSelected:_selectedList.contains(index),),
-                          );
+                              isSelected:_selectedList.contains(index),
+                               database:widget.database,
+                          ),);
                         },
                         childCount: widget.subjects.length,
                       ),
@@ -191,6 +194,6 @@ class _SubjectPageState extends State<SubjectPage> {
         ),
       ),
     ]);
-    ;
+    
   }
 }
