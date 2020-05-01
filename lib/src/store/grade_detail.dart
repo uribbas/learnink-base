@@ -54,15 +54,26 @@ class GradeDetailHeader implements SliverPersistentHeaderDelegate {
   OverScrollHeaderStretchConfiguration get stretchConfiguration => null;
 }
 
-class GradeDetail extends StatelessWidget {
+class GradeDetail extends StatefulWidget {
   GradeDetail({this.grade, this.subjects,this.database});
 
   final Grade grade;
   final List<Subject> subjects;
-  List<int> _selected = [];
   final Database database;
+
+  @override
+  _GradeDetailState createState() => _GradeDetailState();
+}
+
+class _GradeDetailState extends State<GradeDetail> {
+  List<int> _selected = [];
   StreamController<List<int>> _selectedController = StreamController();
 
+  @override
+  void dispose(){
+    super.dispose();
+    _selectedController.close;
+  }
   void _onSelectItem(int index) {
     List<int> selectedList = _selected;
     selectedList.contains(index)
@@ -111,7 +122,7 @@ class GradeDetail extends StatelessWidget {
             elevation: 0.0,
             centerTitle: true,
             backgroundColor: Colors.transparent,
-            title: Text('Class ${grade.gradeId}'),
+            title: Text('Class ${widget.grade.gradeId}'),
             actions: <Widget>[
               NotificationIconButton(
                 size: 50,
@@ -155,7 +166,7 @@ class GradeDetail extends StatelessWidget {
                     SliverPersistentHeader(
                       pinned: false,
                       delegate: GradeDetailHeader(
-                        grade: grade,
+                        grade: widget.grade,
                         maxExtent: 250.0,
                         minExtent: 250.0,
                       ),
@@ -165,15 +176,15 @@ class GradeDetail extends StatelessWidget {
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return SubjectPageListItem(
-                            subject: subjects[index],
+                            subject: widget.subjects[index],
                             isFirst: index == 0,
-                            isLast: index == subjects.length - 1,
+                            isLast: index == widget.subjects.length - 1,
                             isSelected: _selectedList.contains(index),
                             onSelectItem: () => _onSelectItem(index),
-                            database: database,
+                            database: widget.database,
                           );
                         },
-                        childCount: subjects.length,
+                        childCount: widget.subjects.length,
                       ),
                     ),
                     SliverFillRemaining(

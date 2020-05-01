@@ -194,6 +194,6 @@ class _SubjectPageState extends State<SubjectPage> {
         ),
       ),
     ]);
-    
+
   }
 }
