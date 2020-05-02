@@ -77,7 +77,7 @@ class Account extends StatelessWidget {
         'subjectName': 'Subject ${_s}',
         'subjectDescription': 'This is the decription of the subjec to have some descriptive text',
         'subjectImageUrl': 'https://picsum.photos/400/400',
-        'subjectKeyWords': ['Class ${gradeId} ${_s}','Subject ${_s}'],
+        'subjectKeyWords': ['Class${gradeId} ${_s}','${_s}'],
         'subjectPopularityRating': 3.0,
         'price': {'inr': 500.00, 'usd': 10.0},
         'validityPeriod': 365,
@@ -91,7 +91,7 @@ class Account extends StatelessWidget {
           'chapterId': '${c}',
           'chapterTitle': '${_s} Chapter ${c}',
           'chapterImageUrl': 'https://picsum.photos/400/400',
-          'chapterKeyWords': ['Class ${gradeId} ${_s}','Capter ${c}'],
+          'chapterKeyWords': ['Class${gradeId}','${_s}','Chapter${c}'],
           'chapterPopularityRating': 4.0,
         };
         chapterReference.setData(chapter);
