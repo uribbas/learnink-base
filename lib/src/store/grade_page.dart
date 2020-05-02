@@ -30,15 +30,15 @@ class _GradePageState extends State<GradePage> {
     _selectedController.close();
   }
 
-  void _onSelectItem(int index){
-    List<int> selectedList=_model.selected;
-    selectedList.contains(index)?selectedList.remove(index):selectedList.add(index);
+  void _onSelectItem(String documentId){
+    List<String> selectedList=_model.selected;
+    selectedList.contains(documentId)?selectedList.remove(documentId):selectedList.add(documentId);
     _model=_model.copyWith(selected:selectedList,isSelected: false);
     _selectedController.add(_model);
    }
 
   void _onSelectAll(bool newValue){
-    List<int> selectedList=newValue?List<int>.generate(widget.grades.length, (i) => i ):[];
+    List<String> selectedList=newValue?List<String>.generate(widget.grades.length, (i) => widget.grades[i].documentId ):[];
     _model=_model.copyWith(selected:selectedList,isSelected:newValue);
     _selectedController.add(_model);
   }
@@ -112,7 +112,7 @@ class _GradePageState extends State<GradePage> {
                  stream:_selectedController.stream,
                  initialData:_model,
                  builder:(context,snapshot){
-                   List<int> _selectedList=[];
+                   List<String> _selectedList=[];
                    if(snapshot.hasData){
                      print('snapshot value ${snapshot.data}');
                      _selectedList=List.from(snapshot.data.selected);
@@ -124,7 +124,7 @@ class _GradePageState extends State<GradePage> {
                    return CustomScrollView(
                      slivers: <Widget>[
                        SliverFixedExtentList(
-                         itemExtent: 95.0,
+                         itemExtent: 60.0,
                          delegate: SliverChildBuilderDelegate(
                                (BuildContext context, int index) {
                              return Padding(
@@ -132,6 +132,8 @@ class _GradePageState extends State<GradePage> {
                                child: SearchListItemBar(
                                  onClick:_onSelectAll,
                                  isSelected: snapshot.data.isSelected,
+                                 showSearch: false,
+                                 showSelectAll: true,
                                ),
                              );
                            },
@@ -147,8 +149,8 @@ class _GradePageState extends State<GradePage> {
                                child: GradePageListItem(grade:widget.grades[index],
                                  isFirst: index==0,
                                  isLast: index == widget.grades.length -1,
-                                 onSelectItem:()=>_onSelectItem(index),
-                                 isSelected:_selectedList.contains(index),
+                                 onSelectItem:()=>_onSelectItem(widget.grades[index].documentId),
+                                 isSelected:_selectedList.contains(widget.grades[index].documentId),
                                database: widget.database,),
                              );
                            },

@@ -14,6 +14,8 @@ class SubjectPage extends StatefulWidget {
 
   final List<Subject> subjects;
   final Database database;
+  List<String> searchText=[];
+  List<Subject> filteredSubjects;
 
   @override
   _SubjectPageState createState() => _SubjectPageState();
@@ -30,15 +32,28 @@ class _SubjectPageState extends State<SubjectPage> {
     _selectedController.close();
   }
 
-  void _onSelectItem(int index){
-    List<int> selectedList=_model.selected;
-    selectedList.contains(index)?selectedList.remove(index):selectedList.add(index);
+  void _onSearch(String searchText){
+    String cleanText = searchText.trim().replaceAll(RegExp(r' +'), ' ');
+    print("cleanText $cleanText");
+    // This is just to reset the select All checkbox while searching new values
+    if(_model.isSelected) {
+      _model = _model.copyWith(selected: _model.selected, isSelected: false);
+      _selectedController.add(_model);
+    }
+    setState(() {
+      widget.searchText= cleanText=='' ? [] : cleanText.split(' ');
+    });
+  }
+
+  void _onSelectItem(String documentId){
+    List<String> selectedList=_model.selected;
+    selectedList.contains(documentId)?selectedList.remove(documentId):selectedList.add(documentId);
     _model=_model.copyWith(selected:selectedList,isSelected: false);
     _selectedController.add(_model);
   }
 
   void _onSelectAll(bool newValue){
-    List<int> selectedList=newValue?List<int>.generate(widget.subjects.length, (i) => i ):[];
+    List<String> selectedList=newValue?List<String>.generate(widget.filteredSubjects.length, (i) => widget.filteredSubjects[i].documentId ):[];
     _model=_model.copyWith(selected:selectedList,isSelected:newValue);
     _selectedController.add(_model);
   }
@@ -49,8 +64,21 @@ class _SubjectPageState extends State<SubjectPage> {
     _selectedController.add(_model);
   }
 
+  bool _checkKeywords(List<String> keyWords){
+    print("No of searchText ${widget.searchText.length}");
+    return widget.searchText.length > 0 ?
+          keyWords.where((tag)=>
+                    widget.searchText.where((i)=> i.trim()=='' ? false : tag.toLowerCase().startsWith(i.trim().toLowerCase())).toList().length >0
+                  ).toList().length > 0
+          :
+          true
+    ;
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    widget.filteredSubjects = widget.subjects.where((s) =>_checkKeywords(s.subjectKeyWords)).toList();
     return Stack(fit: StackFit.expand, children: <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -112,7 +140,7 @@ class _SubjectPageState extends State<SubjectPage> {
               stream:_selectedController.stream,
               initialData:_model,
               builder:(context,snapshot){
-                List<int> _selectedList=[];
+                List<String> _selectedList=[];
                 if(snapshot.hasData){
                   print('snapshot value ${snapshot.data}');
                   _selectedList=List.from(snapshot.data.selected);
@@ -124,7 +152,7 @@ class _SubjectPageState extends State<SubjectPage> {
                 return CustomScrollView(
                   slivers: <Widget>[
                     SliverFixedExtentList(
-                      itemExtent: 95.0,
+                      itemExtent: widget.searchText.length > 0 && widget.filteredSubjects.length > 0 ? 95.0 : 50.0,
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                           return Padding(
@@ -132,6 +160,9 @@ class _SubjectPageState extends State<SubjectPage> {
                             child: SearchListItemBar(
                               onClick:_onSelectAll,
                               isSelected: snapshot.data.isSelected,
+                              onSearch: _onSearch,
+                              showSearch: true,
+                              showSelectAll: widget.searchText.length > 0 && widget.filteredSubjects.length > 0 ? true: false,
                             ),
                           );
                         },
@@ -144,15 +175,15 @@ class _SubjectPageState extends State<SubjectPage> {
                             (BuildContext context, int index) {
                           return Padding(
                             padding:EdgeInsets.all(0),
-                            child: SubjectPageListItem(subject:widget.subjects[index],
+                            child: SubjectPageListItem(subject:widget.filteredSubjects[index],
                               isFirst: index==0,
-                              isLast: index == widget.subjects.length -1,
-                              onSelectItem:()=>_onSelectItem(index),
-                              isSelected:_selectedList.contains(index),
+                              isLast: index == widget.filteredSubjects.length -1,
+                              onSelectItem:()=>_onSelectItem(widget.filteredSubjects[index].documentId),
+                              isSelected:_selectedList.contains(widget.filteredSubjects[index].documentId),
                                database:widget.database,
                           ),);
                         },
-                        childCount: widget.subjects.length,
+                        childCount: widget.filteredSubjects.length,
                       ),
                     ),
                     SliverFillRemaining(

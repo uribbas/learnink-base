@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 
 class SearchListItemBar extends StatelessWidget {
-  SearchListItemBar({this.isSelected,this.onClick});
+  SearchListItemBar({this.isSelected,this.onClick, this.onSearch, this.showSearch, this.showSelectAll});
 
   final bool isSelected;
   final ValueChanged<bool> onClick;
+  final ValueChanged<String> onSearch;
+  final bool showSelectAll;
+  final bool showSearch;
 
  @override
   Widget build(BuildContext context) {
@@ -14,6 +17,7 @@ class SearchListItemBar extends StatelessWidget {
 //      crossAxisAlignment: CrossAxisAlignment.stretch,
 //      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
+        showSearch ?
         Container(
           height: 36.0,
             decoration: BoxDecoration(
@@ -23,7 +27,11 @@ class SearchListItemBar extends StatelessWidget {
               ),
             ),
             child: _buildSearchBox()
-        ),
+        )
+        :
+        SizedBox(height: 0.0,)
+        ,
+        showSelectAll ?
         CheckboxListTile(
               title: Container(
                 alignment: Alignment.centerRight,
@@ -37,7 +45,10 @@ class SearchListItemBar extends StatelessWidget {
               activeColor: isSelected? Colors.greenAccent : Colors.black12,
               onChanged: onClick,
               controlAffinity: ListTileControlAffinity.trailing
-        ),
+        )
+        :
+        SizedBox(height: 0.0,)
+        ,
       ],
     );
   }
@@ -65,7 +76,8 @@ class SearchListItemBar extends StatelessWidget {
           onPressed: () {},
         ),
       ),
-      textInputAction: TextInputAction.next,
+      onChanged: onSearch,
+      textInputAction: TextInputAction.go,
     );
   }
 
