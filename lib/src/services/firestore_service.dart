@@ -33,6 +33,16 @@ class FirestoreService{
 
   }
 
+  Stream<T> documentStream<T>({@required String path,@required String docId,
+    @required T builder(Map<String,dynamic> data,String documentId)}) {
+    final documentReference=Firestore.instance.document(path);
+    final snapshots= documentReference.snapshots();
+    return snapshots.map((snapshot)=>
+        builder(snapshot.data,docId)
+        );
+
+  }
+
   //  Stream data based on reference provide, this will be for the use cases where .where conditions
   //  are applied on the collection as per the data requirement
   Stream<List<T>> collectionRefStream<T>({@required CollectionReference ref,

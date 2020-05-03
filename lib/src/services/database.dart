@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/subject.dart';
 import '../models/grade.dart';
 import '../models/chapter.dart';
+import '../models/cart.dart';
 import '../models/job.dart';
 import '../models/user.dart';
 import 'api_path.dart';
@@ -22,6 +23,8 @@ abstract class Database {
   Stream<List<Subject>> selectedSubjectsRefStream(Query query);
   Stream<List<Chapter>> chaptersStream();
   Stream<List<Chapter>> selectedChaptersRefStream(Query query);
+  Stream<Cart> userCartStream();
+  Future<void> setCart(Cart cart);
 }
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -75,6 +78,24 @@ class FirestoreDatabase implements Database {
     builder: (data,documentId) => Chapter.fromMap(data,documentId),
   );
 
+  //carts related methods
+  Stream<Cart> userCartStream() => _service.documentStream(
+      path: 'carts/' + uid , docId: uid,
+      builder: (data,documentId) => Cart.fromMap(data,documentId),);
+
+
+  Future<void> setCart(Cart cart) async {
+    Cart _cart=Cart (
+      total: cart.total,
+      uid: uid,
+      items: cart.items,
+      documentId: uid,
+    );
+    await _service.setData(
+      path: APIPath.cart(uid),
+      data: _cart.toMap(),
+    );
+  }
   //  User management related methods
 
   Future<void> addUser(LearninkUserInfo userinfo) async => await _service.addData(

@@ -57,7 +57,7 @@ class StoreNestedList extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          print('Inside _onGradeView');
+          print('Inside _onSubjectView');
           return StreamBuilder(
             stream: database.subjectsStream(),
             builder: (context, snapshot) {

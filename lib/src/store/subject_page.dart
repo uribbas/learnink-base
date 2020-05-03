@@ -6,15 +6,17 @@ import 'package:learnink/src/widgets/custom_outline_button.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 import 'package:learnink/src/widgets/notification_icon_button.dart';
 import '../models/subject.dart';
+import '../models/cart.dart';
+import '../services/database.dart';
 import 'subject_page_list_item.dart';
 import 'subject_page_model.dart';
+import 'package:provider/provider.dart';
 
 class SubjectPage extends StatefulWidget {
   SubjectPage({this.subjects,this.database});
 
   final List<Subject> subjects;
   final Database database;
-  List<String> searchText=[];
   List<Subject> filteredSubjects;
 
   @override
@@ -24,7 +26,10 @@ class SubjectPage extends StatefulWidget {
 class _SubjectPageState extends State<SubjectPage> {
 
   StreamController<SubjectPageModel> _selectedController=StreamController<SubjectPageModel>();
-  SubjectPageModel _model=SubjectPageModel(selected: [],isSelected: false);
+  SubjectPageModel _model=SubjectPageModel(selected: [],isSelected: false, searchText: []);
+
+  StreamSubscription _userCart;
+  Cart _userCartData;
 
   @override
   void dispose() {
@@ -35,41 +40,60 @@ class _SubjectPageState extends State<SubjectPage> {
   void _onSearch(String searchText){
     String cleanText = searchText.trim().replaceAll(RegExp(r' +'), ' ');
     print("cleanText $cleanText");
-    // This is just to reset the select All checkbox while searching new values
-    if(_model.isSelected) {
-      _model = _model.copyWith(selected: _model.selected, isSelected: false);
-      _selectedController.add(_model);
-    }
-    setState(() {
-      widget.searchText= cleanText=='' ? [] : cleanText.split(' ');
-    });
+
+    _model = _model.copyWith(selected: _model.selected,
+                            isSelected: _model.isSelected ? false : _model.isSelected,
+                            searchText: cleanText=='' ? [] : cleanText.split(' ')
+                            );
+    _selectedController.add(_model);
+
+    setState(() {});
   }
 
-  void _onSelectItem(String documentId){
-    List<String> selectedList=_model.selected;
-    selectedList.contains(documentId)?selectedList.remove(documentId):selectedList.add(documentId);
-    _model=_model.copyWith(selected:selectedList,isSelected: false);
+  void _onSelectItem(Subject subject){
+//    print("Calling subject ${subject.subjectName} ${subject.documentId} " );
+    List<Subject> selectedList=_model.selected;
+    selectedList.indexWhere((s)=>s.documentId == subject.documentId) == -1 ?
+                selectedList.add(subject)
+                :
+                selectedList.removeWhere((s) => s.documentId == subject.documentId);
+//    print("selected lenth post check ${selectedList.length}");
+    _model=_model.copyWith(selected:selectedList,isSelected: false, searchText: _model.searchText);
     _selectedController.add(_model);
   }
 
   void _onSelectAll(bool newValue){
-    List<String> selectedList=newValue?List<String>.generate(widget.filteredSubjects.length, (i) => widget.filteredSubjects[i].documentId ):[];
-    _model=_model.copyWith(selected:selectedList,isSelected:newValue);
+    List<Subject> selectedList=newValue?List<Subject>.generate(widget.filteredSubjects.length, (i) => widget.filteredSubjects[i] ):[];
+    _model=_model.copyWith(selected:selectedList,isSelected:newValue, searchText: _model.searchText);
     _selectedController.add(_model);
   }
 
-  void _onAddtoBag()
-  {
-    _model=_model.copyWith(selected: [],isSelected: false);
+  void _onAddtoBag(Database database)
+  async {
+    //  First create the cart items then set the cart
+    List<Subject> _newItems=_userCartData.items;
+    _model.selected.forEach((s){
+      _newItems.indexWhere((i)=>i.documentId==s.documentId) == -1 ?
+          _newItems.add(s)
+          :
+          null;
+    });
+    await database.setCart(Cart (
+            total: _newItems.length,
+            items: _newItems,
+          ));
+    _model=_model.copyWith(selected: [],isSelected: false, searchText: []);
     _selectedController.add(_model);
   }
 
   bool _checkKeywords(List<String> keyWords){
-    print("No of searchText ${widget.searchText.length}");
-    return widget.searchText.length > 0 ?
-          keyWords.where((tag)=>
-                    widget.searchText.where((i)=> i.trim()=='' ? false : tag.toLowerCase().startsWith(i.trim().toLowerCase())).toList().length >0
-                  ).toList().length > 0
+    // print("No of searchText ${_model.searchText}");
+    return _model.searchText.length > 0 ?
+          keyWords.indexWhere((tag)=>
+              _model.searchText.indexWhere((i)=>
+                      i.trim()=='' ? false : tag.toLowerCase().startsWith(i.trim().toLowerCase())
+                    ) != -1
+          ) != -1
           :
           true
     ;
@@ -78,6 +102,9 @@ class _SubjectPageState extends State<SubjectPage> {
 
   @override
   Widget build(BuildContext context) {
+//    print("searchbar stream ${_model.selected.length} => ${_model.selected}");
+    final Database database = Provider.of<Database>(context,listen: false);
+    _userCart = database.userCartStream().listen((data)=>_userCartData=data);
     widget.filteredSubjects = widget.subjects.where((s) =>_checkKeywords(s.subjectKeyWords)).toList();
     return Stack(fit: StackFit.expand, children: <Widget>[
       Container(
@@ -140,9 +167,9 @@ class _SubjectPageState extends State<SubjectPage> {
               stream:_selectedController.stream,
               initialData:_model,
               builder:(context,snapshot){
-                List<String> _selectedList=[];
+                List<Subject> _selectedList=[];
                 if(snapshot.hasData){
-                  print('snapshot value ${snapshot.data}');
+                  print('snapshot value ${snapshot.data.selected.length}');
                   _selectedList=List.from(snapshot.data.selected);
                 }
 
@@ -152,7 +179,7 @@ class _SubjectPageState extends State<SubjectPage> {
                 return CustomScrollView(
                   slivers: <Widget>[
                     SliverFixedExtentList(
-                      itemExtent: widget.searchText.length > 0 && widget.filteredSubjects.length > 0 ? 95.0 : 50.0,
+                      itemExtent: _model.searchText.length > 0 && widget.filteredSubjects.length > 0 ? 95.0 : 50.0,
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                           return Padding(
@@ -162,7 +189,7 @@ class _SubjectPageState extends State<SubjectPage> {
                               isSelected: snapshot.data.isSelected,
                               onSearch: _onSearch,
                               showSearch: true,
-                              showSelectAll: widget.searchText.length > 0 && widget.filteredSubjects.length > 0 ? true: false,
+                              showSelectAll: _model.searchText.length > 0 && widget.filteredSubjects.length > 0 ? true: false,
                             ),
                           );
                         },
@@ -173,13 +200,14 @@ class _SubjectPageState extends State<SubjectPage> {
                       itemExtent: 120.0,
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
+                          Subject _subject = widget.filteredSubjects[index];
                           return Padding(
                             padding:EdgeInsets.all(0),
-                            child: SubjectPageListItem(subject:widget.filteredSubjects[index],
+                            child: SubjectPageListItem(subject:_subject,
                               isFirst: index==0,
                               isLast: index == widget.filteredSubjects.length -1,
-                              onSelectItem:()=>_onSelectItem(widget.filteredSubjects[index].documentId),
-                              isSelected:_selectedList.contains(widget.filteredSubjects[index].documentId),
+                              onSelectItem:()=>_onSelectItem(_subject),
+                              isSelected: _selectedList.indexWhere((s)=>s.documentId==_subject.documentId)!=-1,
                                database:widget.database,
                           ),);
                         },
@@ -199,7 +227,7 @@ class _SubjectPageState extends State<SubjectPage> {
                             ),
                             borderColor: Colors.black,
                             elevationColor: Colors.black,
-                            onPressed: _onAddtoBag,
+                            onPressed: ()=> _onAddtoBag(database),
                           ),
                         ),
                       ),

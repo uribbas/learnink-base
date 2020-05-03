@@ -11,6 +11,8 @@ class SearchListItemBar extends StatelessWidget {
   final bool showSelectAll;
   final bool showSearch;
 
+  final TextEditingController _searchController = TextEditingController();
+
  @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,7 +56,7 @@ class SearchListItemBar extends StatelessWidget {
   }
   TextField _buildSearchBox() {
     return TextField(
-//      controller: _passwordController,
+//      controller: _searchController,
       style: TextStyle(
         color: Colors.black,
       ),
@@ -71,13 +73,16 @@ class SearchListItemBar extends StatelessWidget {
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.transparent, ) ,
         ),
-        suffixIcon: IconButton(
-          icon: Icon(Icons.search,color:Colors.black,),
-          onPressed: () {},
-        ),
+        suffixIcon: Icon(Icons.search,color:Colors.black,),
+//        IconButton(
+//          icon: Icon(Icons.search,color:Colors.black,),
+//          onPressed: () {},
+//        ),
       ),
       onChanged: onSearch,
-      textInputAction: TextInputAction.go,
+      textInputAction: TextInputAction.search,
+//      onSubmitted: onSearchComplete,
+//      onEditingComplete: _onEdditComplete,
     );
   }
 
