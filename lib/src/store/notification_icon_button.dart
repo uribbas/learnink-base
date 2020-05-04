@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:align_positioned/align_positioned.dart';
 import 'package:provider/provider.dart';
 import '../services/database.dart';
+import 'cart_page.dart';
 
 class NotificationIconButton extends StatelessWidget {
 
@@ -9,12 +10,12 @@ NotificationIconButton({
   this.size,
   this.icon,
   this.color,
-  this.onPressed});
+  });
 
   final double size;
   final IconData icon;
   final Color color;
-  final VoidCallback onPressed;
+
 
 
   @override
@@ -53,7 +54,7 @@ NotificationIconButton({
                          color: color,
                          size:newSize*0.75,
                        ),
-                       onPressed: onPressed),
+                       onPressed: ()=>_openCart(context),),
                  ),
                  counter!=0?AlignPositioned(
                    alignment: Alignment.topRight,
@@ -87,5 +88,11 @@ NotificationIconButton({
            );
          }
      );
+  }
+  void _openCart(BuildContext context){
+    Navigator.of(context).push(MaterialPageRoute(
+      builder:(context)=>CartPage(),
+    fullscreenDialog: true),
+    );
   }
 }

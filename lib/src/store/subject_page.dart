@@ -4,7 +4,7 @@ import 'package:learnink/src/services/database.dart';
 import 'package:learnink/src/store/search_list_item_bar.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
-import 'package:learnink/src/widgets/notification_icon_button.dart';
+import 'package:learnink/src/store/notification_icon_button.dart';
 import '../models/subject.dart';
 import '../models/cart.dart';
 import '../services/database.dart';
@@ -147,7 +147,7 @@ class _SubjectPageState extends State<SubjectPage> {
               size:50,
               icon:MyFlutterIcons.shopping_cart,
               color:Colors.white,
-              onPressed: (){},),
+              ),
           ],
         ),
         backgroundColor: Colors.transparent,

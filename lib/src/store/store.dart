@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learnink/src/widgets/notification_icon_button.dart';
+import 'package:learnink/src/store/notification_icon_button.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 import 'store_nested_list.dart';
 
@@ -47,7 +47,7 @@ class Store extends StatelessWidget {
                 size:50,
                 icon:MyFlutterIcons.shopping_cart,
             color:Colors.white,
-            onPressed: (){},),
+            ),
             ],
         ),
         backgroundColor: Colors.transparent,
