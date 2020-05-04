@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learnink/src/services/database.dart';
 import 'grade_page_list_item.dart';
 import 'search_list_item_bar.dart';
 import '../models/grade.dart';
+import '../models/subject.dart';
+import '../models/cart.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../widgets/notification_icon_button.dart';
 import '../widgets/custom_outline_button.dart';
@@ -24,6 +27,9 @@ class _GradePageState extends State<GradePage> {
   StreamController<GradePageModel> _selectedController=StreamController<GradePageModel>();
   GradePageModel _model=GradePageModel(selected: [],isSelected: false);
 
+  StreamSubscription _userCart;
+  Cart _userCartData;
+
   @override
   void dispose(){
     super.dispose();
@@ -43,14 +49,43 @@ class _GradePageState extends State<GradePage> {
     _selectedController.add(_model);
   }
 
-  void _onAddtoBag()
+
+  void _onAddtoBag() async
   {
+    // Get the existing userCartstream then add all subjects linked to the grade
+    //  First create the cart items then set the cart
+    final subjectRef=await widget.database.getCollectionRef('subjects');
+    List<Subject> _newItems= _userCartData != null ? _userCartData.items : [];
+    // used for loop instead of forEach as we need to use the async function for geting subjects for the selected grade
+    for(int i=0; i < widget.grades.length; i++ ){
+      Grade _grade = widget.grades[i];
+      if(_model.selected.contains(_grade.gradeId)){
+        List<Subject> _gradeSubjects = await widget.database.selectedSubjectsRefList(subjectRef.where('gradeId', isEqualTo: _grade.gradeId));
+        // print("Processing grade ${_grade.gradeId}  : ${_gradeSubjects}");
+        _gradeSubjects.forEach((s){
+          _newItems.indexWhere((i)=>i.documentId==s.documentId) == -1 ?
+          _newItems.add(s)
+              :
+          null;
+        });
+        // print("Processing grade ${_grade.gradeId}  newItems : ${_newItems}");
+      }
+    }
+    // print("New list of items in cart is ${_newItems.length}");
+
+    await widget.database.setCart(Cart (
+      total: _newItems.length,
+      items: _newItems,
+    ));
     _model=_model.copyWith(selected: [],isSelected: false);
     _selectedController.add(_model);
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    _userCart = widget.database.userCartStream().listen((data)=>_userCartData=data);
     return Stack(fit: StackFit.expand, children: <Widget>[
       Container(
         decoration: BoxDecoration(

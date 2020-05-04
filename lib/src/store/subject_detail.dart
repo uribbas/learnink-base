@@ -1,11 +1,16 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
 import 'package:learnink/src/widgets/learnink_network_image.dart';
 import '../models/subject.dart';
 import '../models/chapter.dart';
+import '../models/cart.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../widgets/notification_icon_button.dart';
+import '../services/database.dart';
+import 'package:provider/provider.dart';
 
 class ChapterListItem extends StatelessWidget {
   ChapterListItem({
@@ -121,8 +126,27 @@ class SubjectDetail extends StatelessWidget {
   final Subject subject;
   final List<Chapter> chapters;
 
+  StreamSubscription _userCart;
+  Cart _userCartData;
+
+  void _onAddtoBag(Database database)
+  async {
+    //  First create the cart items then set the cart
+    List<Subject> _newItems=_userCartData !=null ? _userCartData.items : [];
+    _newItems.indexWhere((i)=>i.documentId==subject.documentId) == -1 ?
+    _newItems.add(subject)
+        :
+    null;
+    await database.setCart(Cart (
+      total: _newItems.length,
+      items: _newItems,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Database database = Provider.of<Database>(context,listen: false);
+    _userCart = database.userCartStream().listen((data)=>_userCartData=data);
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
@@ -217,7 +241,7 @@ class SubjectDetail extends StatelessWidget {
                         ),
                         borderColor: Colors.black,
                         elevationColor: Colors.black,
-                        onPressed: () {},
+                        onPressed: ()=>_onAddtoBag(database),
                       ),
                     ),
                   ),

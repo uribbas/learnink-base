@@ -71,7 +71,7 @@ class _SubjectPageState extends State<SubjectPage> {
   void _onAddtoBag(Database database)
   async {
     //  First create the cart items then set the cart
-    List<Subject> _newItems=_userCartData.items;
+    List<Subject> _newItems=_userCartData !=null ? _userCartData.items : [];
     _model.selected.forEach((s){
       _newItems.indexWhere((i)=>i.documentId==s.documentId) == -1 ?
           _newItems.add(s)

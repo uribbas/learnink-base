@@ -8,8 +8,10 @@ import '../models/grade.dart';
 import '../widgets/custom_outline_button.dart';
 import '../widgets/learnink_network_image.dart';
 import '../models/subject.dart';
+import '../models/cart.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../widgets/notification_icon_button.dart';
+import 'subject_page_model.dart';
 
 class GradeDetailHeader implements SliverPersistentHeaderDelegate {
   GradeDetailHeader({
@@ -66,25 +68,51 @@ class GradeDetail extends StatefulWidget {
 }
 
 class _GradeDetailState extends State<GradeDetail> {
-  List<int> _selected = [];
-  StreamController<List<int>> _selectedController = StreamController();
+
+  StreamController<SubjectPageModel> _selectedController=StreamController<SubjectPageModel>();
+  SubjectPageModel _model=SubjectPageModel(selected: [],isSelected: false, searchText: []);
+
+  StreamSubscription _userCart;
+  Cart _userCartData;
 
   @override
   void dispose(){
     super.dispose();
     _selectedController.close;
   }
-  void _onSelectItem(int index) {
-    List<int> selectedList = _selected;
-    selectedList.contains(index)
-        ? selectedList.remove(index)
-        : selectedList.add(index);
-    _selected = List.from(selectedList);
-    _selectedController.add(_selected);
+  void _onSelectItem(Subject subject) {
+    //    print("Calling subject ${subject.subjectName} ${subject.documentId} " );
+    List<Subject> selectedList=_model.selected;
+    selectedList.indexWhere((s)=>s.documentId == subject.documentId) == -1 ?
+    selectedList.add(subject)
+        :
+    selectedList.removeWhere((s) => s.documentId == subject.documentId);
+//    print("selected lenth post check ${selectedList.length}");
+    _model=_model.copyWith(selected:selectedList,isSelected: false, searchText: _model.searchText);
+    _selectedController.add(_model);
+  }
+
+  void _onAddtoBag()
+  async {
+    //  First create the cart items then set the cart
+    List<Subject> _newItems=_userCartData !=null ? _userCartData.items : [];
+    _model.selected.forEach((s){
+      _newItems.indexWhere((i)=>i.documentId==s.documentId) == -1 ?
+      _newItems.add(s)
+          :
+      null;
+    });
+    await widget.database.setCart(Cart (
+      total: _newItems.length,
+      items: _newItems,
+    ));
+    _model=_model.copyWith(selected: [],isSelected: false, searchText: []);
+    _selectedController.add(_model);
   }
 
   @override
   Widget build(BuildContext context) {
+    _userCart = widget.database.userCartStream().listen((data)=>_userCartData=data);
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
@@ -135,12 +163,12 @@ class _GradeDetailState extends State<GradeDetail> {
           backgroundColor: Colors.transparent,
           body: StreamBuilder(
             stream: _selectedController.stream,
-            initialData: _selected,
+            initialData: _model,
             builder: (context, snapshot) {
-              List<int> _selectedList = [];
+              List<Subject> _selectedList = [];
               if (snapshot.hasData) {
                 print('snapshot value ${snapshot.data}');
-                _selectedList = List.from(snapshot.data);
+                _selectedList = List.from(snapshot.data.selected);
               }
 
               if (snapshot.hasError) {
@@ -175,12 +203,13 @@ class _GradeDetailState extends State<GradeDetail> {
                       itemExtent: 120.0,
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
+                          Subject _subject = widget.subjects[index];
                           return SubjectPageListItem(
                             subject: widget.subjects[index],
                             isFirst: index == 0,
                             isLast: index == widget.subjects.length - 1,
-                            isSelected: _selectedList.contains(index),
-                            onSelectItem: () => _onSelectItem(index),
+                            isSelected: _selectedList.indexWhere((s)=>s.documentId==_subject.documentId)!=-1,
+                            onSelectItem: ()=>_onSelectItem(_subject),
                             database: widget.database,
                           );
                         },
@@ -201,7 +230,7 @@ class _GradeDetailState extends State<GradeDetail> {
                             ),
                             borderColor: Colors.black,
                             elevationColor: Colors.black,
-                            onPressed: () {},
+                            onPressed: _onAddtoBag,
                           ),
                         ),
                       ),

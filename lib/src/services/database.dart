@@ -21,6 +21,7 @@ abstract class Database {
   Stream<List<Grade>> gradesStream();
   Stream<List<Subject>> subjectsStream();
   Stream<List<Subject>> selectedSubjectsRefStream(Query query);
+  Future<List<Subject>> selectedSubjectsRefList(Query query);
   Stream<List<Chapter>> chaptersStream();
   Stream<List<Chapter>> selectedChaptersRefStream(Query query);
   Stream<Cart> userCartStream();
@@ -54,6 +55,11 @@ class FirestoreDatabase implements Database {
   );
 
   Stream<List<Subject>> selectedSubjectsRefStream(Query query) => _service.queryStream(
+    query: query,
+    builder: (data,documentId) => Subject.fromMap(data,documentId),
+  );
+
+  Future<List<Subject>> selectedSubjectsRefList(Query query)  async =>  await _service.collectionRefList(
     query: query,
     builder: (data,documentId) => Subject.fromMap(data,documentId),
   );
