@@ -1,6 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:learnink/src/models/cart.dart';
 import 'package:learnink/src/models/subject.dart';
 import 'package:learnink/src/widgets/learnink_network_image.dart';
+import '../services/database.dart';
+import 'package:provider/provider.dart';
 
 class CartPageListItem extends StatelessWidget {
   CartPageListItem({
@@ -15,8 +19,13 @@ class CartPageListItem extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
 
+  StreamSubscription _userCart;
+  Cart _userCartData;
+
   @override
   Widget build(BuildContext context) {
+    final Database database=Provider.of<Database>(context,listen:false);
+    _userCart = database.userCartStream().listen((data)=>_userCartData=data);
     return Container(
       padding: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
@@ -51,12 +60,13 @@ class CartPageListItem extends StatelessWidget {
           Material(
             child: Ink(
               padding: EdgeInsets.all(0.0),
-              decoration: BoxDecoration(shape: BoxShape.circle, color:Colors.red),
+              decoration: BoxDecoration(shape: BoxShape.rectangle, color:Colors.white),
               child: IconButton(padding:EdgeInsets.all(0),
-                icon:Icon(Icons.remove,
-                    size:25,
-                    color:Colors.white),
-                onPressed:()=>_checkOut(context),
+                icon:Icon(Icons.delete,
+                    size:22,
+                    color:Colors.redAccent,
+                ),
+                onPressed:()=>_checkOut(database),
               ),
             ),
           ),
@@ -65,8 +75,14 @@ class CartPageListItem extends StatelessWidget {
     );
   }
 
-void _checkOut(BuildContext context){
-
-}
+  void _checkOut(Database database) async {
+    //  First remove item from the cart items then set the cart
+    List<Subject> _newItems= _userCartData.items;
+    _newItems.removeWhere((i)=>i.documentId==subject.documentId);
+    await database.setCart(Cart (
+      total: _newItems.length,
+      items: _newItems,
+    ));
+  }
 
 }

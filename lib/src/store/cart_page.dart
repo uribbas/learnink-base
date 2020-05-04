@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:learnink/src/models/cart.dart';
 import 'package:learnink/src/models/subject.dart';
 import 'package:learnink/src/services/database.dart';
 import 'package:learnink/src/store/cart_page_list_item.dart';
@@ -10,6 +9,7 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Database database=Provider.of<Database>(context);
+    double _totalAmount = 0.00;
     return Stack(fit: StackFit.expand, children: <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -65,10 +65,12 @@ class CartPage extends StatelessWidget {
               stream:database.userCartStream(),
               builder:(context,snapshot){
                 List<Subject> cartList=[];
+                _totalAmount = 0.00;
                 if(snapshot.hasData) {
                   print('snapshot value ${snapshot.data}');
                   if (snapshot.data != null) {
                     cartList=snapshot.data.items;
+                    cartList.forEach((s)=>_totalAmount = _totalAmount + s.price['inr']);
                   }
                 }
 
@@ -82,14 +84,30 @@ class CartPage extends StatelessWidget {
                       itemExtent: 120.0,
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
-                          return Padding(
-                            padding:EdgeInsets.all(0),
-                            child: CartPageListItem(subject: cartList[index],
-                            isFirst: index==0,
-                            isLast: index==cartList.length-1,),
-                          );
+                              return Padding(
+                                padding:EdgeInsets.all(0),
+                                child: CartPageListItem(subject: cartList[index],
+                                  isFirst: index==0,
+                                  isLast: index==cartList.length-1,),
+                              );
                         },
                         childCount: cartList.length,
+                      ),
+                    ),
+                    SliverFixedExtentList(
+                      itemExtent: 45.0,
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          return Center(
+                            child: Padding(
+                              padding:EdgeInsets.all(10),
+                              child: Text( _totalAmount > 0 ? 'Total Cart Value   \u{20B9}  ${_totalAmount}' : 'No items in the cart',
+                                style:TextStyle(color:Colors.green,fontSize: 20.0,),
+                              ),
+                            ),
+                          );
+                        },
+                        childCount: 1,
                       ),
                     ),
                     SliverFillRemaining(
@@ -99,14 +117,14 @@ class CartPage extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Padding(
                           padding: const EdgeInsets.only(top:10.0),
-                          child: CustomOutlineButton(
-                            child:Text('Check Out',
+                          child: _totalAmount > 0 ? CustomOutlineButton(
+                            child: Text('Check Out',
                               style:TextStyle(color:Colors.black),
                             ),
                             borderColor: Colors.black,
                             elevationColor: Colors.black,
                             onPressed: (){},
-                          ),
+                          ) : Container(),
                         ),
                       ),
                     )
