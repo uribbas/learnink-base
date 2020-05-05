@@ -106,9 +106,8 @@ class _GradeDetailState extends State<GradeDetail> {
     await widget.database.setCart(Cart (
       total: _newItems.length,
       items: _newItems,
-    )).then((res){
-      ToastMessage.showToast("${_model.selected.length} ${_model.selected.length>1 ? "items" : "item"} added to cart", Colors.greenAccent,);
-    });
+    ));
+    ToastMessage.showToast("${_model.selected.length} ${_model.selected.length>1 ? "items" : "item"} added to cart", Color(0xff8bc34a),);
     _model=_model.copyWith(selected: [],isSelected: false, searchText: []);
     _selectedController.add(_model);
   }

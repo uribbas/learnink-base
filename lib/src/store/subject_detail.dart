@@ -141,9 +141,8 @@ class SubjectDetail extends StatelessWidget {
     await database.setCart(Cart (
       total: _newItems.length,
       items: _newItems,
-    )).then((res){
-      ToastMessage.showToast("${subject.subjectName} of class ${subject.gradeId} added to cart", Colors.greenAccent,);
-    });
+    ));
+    ToastMessage.showToast("${subject.subjectName} of class ${subject.gradeId} added to cart", Color(0xff8bc34a),);
   }
 
   @override

@@ -84,10 +84,9 @@ class CartPageListItem extends StatelessWidget {
     await database.setCart(Cart (
       total: _newItems.length,
       items: _newItems,
-    ))
-    .then((res){
-      ToastMessage.showToast("Removed ${subject.subjectName} of class ${subject.gradeId} from cart", Color(0xffff8a80),);
-    });
+    ));
+    ToastMessage.showToast("Removed ${subject.subjectName} of class ${subject.gradeId} from cart", Color(0xffff8a80),);
+
   }
 
 }
