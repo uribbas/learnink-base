@@ -11,6 +11,7 @@ import '../widgets/my_flutter_icons.dart';
 import 'notification_icon_button.dart';
 import '../widgets/custom_outline_button.dart';
 import 'grade_page_model.dart';
+import '../services/toastMessage.dart';
 
 
 class GradePage extends StatefulWidget {
@@ -76,7 +77,9 @@ class _GradePageState extends State<GradePage> {
     await widget.database.setCart(Cart (
       total: _newItems.length,
       items: _newItems,
-    ));
+    )).then((res){
+      ToastMessage.showToast("${_model.selected.length} ${_model.selected.length >1 ? "itemss" : "item"} added to cart", Colors.greenAccent,);
+    });
     _model=_model.copyWith(selected: [],isSelected: false);
     _selectedController.add(_model);
   }

@@ -11,6 +11,7 @@ import '../services/database.dart';
 import 'subject_page_list_item.dart';
 import 'subject_page_model.dart';
 import 'package:provider/provider.dart';
+import '../services/toastMessage.dart';
 
 class SubjectPage extends StatefulWidget {
   SubjectPage({this.subjects,this.database});
@@ -81,7 +82,10 @@ class _SubjectPageState extends State<SubjectPage> {
     await database.setCart(Cart (
             total: _newItems.length,
             items: _newItems,
-          ));
+          ))
+        .then((res){
+          ToastMessage.showToast("${_model.selected.length} ${_model.selected.length>1 ? "items" : "item"} added to cart", Colors.greenAccent,);
+        });
     _model=_model.copyWith(selected: [],isSelected: false, searchText: []);
     _selectedController.add(_model);
   }

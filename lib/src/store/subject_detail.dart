@@ -11,6 +11,7 @@ import '../widgets/my_flutter_icons.dart';
 import 'notification_icon_button.dart';
 import '../services/database.dart';
 import 'package:provider/provider.dart';
+import '../services/toastMessage.dart';
 
 class ChapterListItem extends StatelessWidget {
   ChapterListItem({
@@ -140,7 +141,9 @@ class SubjectDetail extends StatelessWidget {
     await database.setCart(Cart (
       total: _newItems.length,
       items: _newItems,
-    ));
+    )).then((res){
+      ToastMessage.showToast("${subject.subjectName} of class ${subject.gradeId} added to cart", Colors.greenAccent,);
+    });
   }
 
   @override

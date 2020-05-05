@@ -5,6 +5,7 @@ import 'package:learnink/src/models/subject.dart';
 import 'package:learnink/src/widgets/learnink_network_image.dart';
 import '../services/database.dart';
 import 'package:provider/provider.dart';
+import '../services/toastMessage.dart';
 
 class CartPageListItem extends StatelessWidget {
   CartPageListItem({
@@ -58,13 +59,14 @@ class CartPageListItem extends StatelessWidget {
                    style:TextStyle(color:Colors.green,fontSize: 20.0,),),],),
 
           Material(
+            color: Colors.white,
             child: Ink(
               padding: EdgeInsets.all(0.0),
-              decoration: BoxDecoration(shape: BoxShape.rectangle, color:Colors.white),
+              decoration: BoxDecoration(shape: BoxShape.circle, color:Colors.white),
               child: IconButton(padding:EdgeInsets.all(0),
                 icon:Icon(Icons.delete,
-                    size:22,
-                    color:Colors.redAccent,
+                    size:25,
+                    color:Color(0xffff8a80),
                 ),
                 onPressed:()=>_checkOut(database),
               ),
@@ -82,7 +84,10 @@ class CartPageListItem extends StatelessWidget {
     await database.setCart(Cart (
       total: _newItems.length,
       items: _newItems,
-    ));
+    ))
+    .then((res){
+      ToastMessage.showToast("Removed ${subject.subjectName} of class ${subject.gradeId} from cart", Color(0xffff8a80),);
+    });
   }
 
 }

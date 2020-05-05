@@ -12,6 +12,7 @@ import '../models/cart.dart';
 import '../widgets/my_flutter_icons.dart';
 import 'notification_icon_button.dart';
 import 'subject_page_model.dart';
+import '../services/toastMessage.dart';
 
 class GradeDetailHeader implements SliverPersistentHeaderDelegate {
   GradeDetailHeader({
@@ -105,7 +106,9 @@ class _GradeDetailState extends State<GradeDetail> {
     await widget.database.setCart(Cart (
       total: _newItems.length,
       items: _newItems,
-    ));
+    )).then((res){
+      ToastMessage.showToast("${_model.selected.length} ${_model.selected.length>1 ? "items" : "item"} added to cart", Colors.greenAccent,);
+    });
     _model=_model.copyWith(selected: [],isSelected: false, searchText: []);
     _selectedController.add(_model);
   }
