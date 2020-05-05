@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:align_positioned/align_positioned.dart';
 import 'package:provider/provider.dart';
 import '../services/database.dart';
-import 'cart_page.dart';
+import 'cart_page_animated.dart';
 
 class NotificationIconButton extends StatelessWidget {
 

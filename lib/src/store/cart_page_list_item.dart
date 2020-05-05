@@ -13,12 +13,16 @@ class CartPageListItem extends StatelessWidget {
     this.isFirst,
     this.isLast,
     this.isSelected,
+    this.animation,
+    this.remove,
   });
 
   final Subject subject;
   final bool isSelected;
   final bool isFirst;
   final bool isLast;
+  final Animation<double> animation;
+  final VoidCallback remove;
 
   StreamSubscription _userCart;
   Cart _userCartData;
@@ -28,6 +32,7 @@ class CartPageListItem extends StatelessWidget {
     final Database database=Provider.of<Database>(context,listen:false);
     _userCart = database.userCartStream().listen((data)=>_userCartData=data);
     return Container(
+
       padding: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
           border: Border(
@@ -37,47 +42,55 @@ class CartPageListItem extends StatelessWidget {
             right: BorderSide(color: Colors.transparent, width: 1.0),
           )
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          LearninkNetworkImage(subject.subjectImageUrl),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:[
-              Text('Class ${subject.gradeId}',style:TextStyle(color:Colors.black,),),
-              Text(subject.subjectName,style: TextStyle(color:Colors.black87,fontSize: 15.0,),),
-              Flexible(child: Container(
-                width:120,
-                child: Text(subject.subjectDescription,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  maxLines: 4,
-                  style: TextStyle(color:Color(0xff999999),fontSize:12.0,),),
-              ),),
-               Text('\u{20B9}  ${subject.price["inr"]}',
-                   style:TextStyle(color:Colors.green,fontSize: 20.0,),),],),
+      child: SizeTransition(
+        axis: Axis.vertical,
+        sizeFactor: animation,
+        child: Container(
+          height:100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              LearninkNetworkImage(subject.subjectImageUrl),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:[
+                  Text('Class ${subject.gradeId}',style:TextStyle(color:Colors.black,),),
+                  Text(subject.subjectName,style: TextStyle(color:Colors.black87,fontSize: 15.0,),),
+                  Flexible(child: Container(
+                    width:120,
+                    child: Text(subject.subjectDescription,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      maxLines: 4,
+                      style: TextStyle(color:Color(0xff999999),fontSize:12.0,),),
+                  ),),
+                   Text('\u{20B9}  ${subject.price["inr"]}',
+                       style:TextStyle(color:Colors.green,fontSize: 20.0,),),],),
 
-          Material(
-            color: Colors.white,
-            child: Ink(
-              padding: EdgeInsets.all(0.0),
-              decoration: BoxDecoration(shape: BoxShape.circle, color:Colors.white),
-              child: IconButton(padding:EdgeInsets.all(0),
-                icon:Icon(Icons.delete,
-                    size:25,
-                    color:Color(0xffff8a80),
+              Material(
+                color: Colors.white,
+                child: Ink(
+                  padding: EdgeInsets.all(0.0),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color:Colors.white),
+                  child: IconButton(padding:EdgeInsets.all(0),
+                    icon:Icon(Icons.delete,
+                        size:25,
+                        color:Color(0xffff8a80),
+                    ),
+                    onPressed:()=>_delete(database),
+                  ),
                 ),
-                onPressed:()=>_checkOut(database),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  void _checkOut(Database database) async {
+  Future<void> _delete(Database database) async {
+    remove();
     //  First remove item from the cart items then set the cart
     List<Subject> _newItems= _userCartData.items;
     _newItems.removeWhere((i)=>i.documentId==subject.documentId);
