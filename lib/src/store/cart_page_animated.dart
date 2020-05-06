@@ -30,19 +30,21 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> initCartStream() async {
   await Future.delayed(Duration.zero,(){_database=Provider.of<Database>(context,listen:false);});
-  _cartListStream=_database.userCartStream().listen((data){
-    print('Inside userCartStreamListener, ${data}');
-    _cart=data;
-    print('Inside userCartStreamListener, ${_cart.total}');
-    setState(() {
-      _list= CartPageListModel<Subject>(
-        listKey: _listKey,
-        initialItems: _cart.items,
-        removedItemBuilder: _buildRemovedItem,
-      );
-    });
-
+  _cartListStream=_database.userCartStream().listen((data) {
+      print('Inside userCartStreamListener, ${data}');
+      if(mounted){
+        _cart=data;
+        print('Inside userCartStreamListener, ${_cart.total}');
+        setState(() {
+          _list= CartPageListModel<Subject>(
+            listKey: _listKey,
+            initialItems: _cart.items,
+            removedItemBuilder: _buildRemovedItem,
+          );
+        });
+      }
   });
+
 
   print('Inside intiCartStream ${_list==null}');
 }
@@ -64,7 +66,8 @@ class _CartPageState extends State<CartPage> {
         isLast: index == _list.length,
         remove: () {
           _list.removeAt(index);
-          setState((){});
+          if(mounted){ setState((){});}
+
         }
 
     );
@@ -72,7 +75,7 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    Database database=Provider.of<Database>(context);
+    print('Inside build _totalAmount ...');
     double _totalAmount = 0.00;
     return Stack(fit: StackFit.expand, children: <Widget>[
       Container(
@@ -127,30 +130,30 @@ class _CartPageState extends State<CartPage> {
             //color: Colors.white,
             child: CustomScrollView(
                   slivers: <Widget>[
-                    SliverAnimatedList(
+                    _list!=null ? SliverAnimatedList(
                       key: _listKey,
                       initialItemCount: _list.length,
                       itemBuilder: _buildItem,
+                    )
+                    :
+                    SliverFixedExtentList(
+                      itemExtent: 200.0,
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          return Center(
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        },
+                        childCount: 1,
+                      ),
                     ),
-
-//                  SliverFixedExtentList(
-//                      itemExtent: 120.0,
-//                      delegate: SliverChildBuilderDelegate(
-//                            (BuildContext context, int index) {
-//                          return Padding(
-//                            padding:EdgeInsets.all(0),
-//                            child: CartPageListItem(subject: _list[index],
-//                              isFirst: index==0,
-//                              isLast: index==_list.length-1,),
-//                          );
-//                        },
-//                        childCount: _list.length,
-//                      ),
-//                    ),
                     SliverFixedExtentList(
                       itemExtent: 45.0,
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
+                              if(_cart!=null){
+                                _cart.items.forEach((s)=>_totalAmount = _totalAmount + s.price['inr']);
+                              }
                           return Center(
                             child: Padding(
                               padding:EdgeInsets.all(10),
@@ -170,7 +173,7 @@ class _CartPageState extends State<CartPage> {
                         alignment: Alignment.bottomCenter,
                         child: Padding(
                           padding: const EdgeInsets.only(top:10.0),
-                          child: _totalAmount > 0 ? CustomOutlineButton(
+                          child: _cart != null && _cart.items.length > 0 ? CustomOutlineButton(
                             child: Text('Check Out',
                               style:TextStyle(color:Colors.black),
                             ),
