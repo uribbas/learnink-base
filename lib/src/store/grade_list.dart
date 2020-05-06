@@ -1,73 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:learnink/src/models/subject.dart';
-import 'package:learnink/src/store/grade_detail.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import '../services/database.dart';
 import 'package:provider/provider.dart';
 import '../models/grade.dart';
-import '../widgets/learnink_network_image.dart';
-class GradeIcon extends StatelessWidget {
-
-  GradeIcon({this.grade, this.parentSize}) ;
-  final Grade grade;
-  final double parentSize;
-
-  @override
-  Widget build(BuildContext context) {
-    double edgeSize =2.0;
-    double itemSize = parentSize - edgeSize * 2.0;
-    return Container(
-      padding: EdgeInsets.all(edgeSize),
-      child: FlatButton(
-        padding: EdgeInsets.all(0.0),
-        child: SizedBox(
-          width: itemSize,
-          child:Column(
-           children: <Widget>[
-             LearninkNetworkImage(grade.gradeImageUrl),
-             SizedBox(height:5),
-             Text('Class ${grade.gradeId}' ,style:TextStyle(color:Colors.black),),
-           ],
-            ),
-          ),
-        onPressed: ()=>_onViewGradeDetail(context,grade),
-      ),
-      );
-  }
-
-  void _onViewGradeDetail(BuildContext context,Grade grade) async {
-    final Database database=Provider.of<Database>(context,listen:false);
-    final subjectRef=await database.getCollectionRef('subjects');
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          print('Inside onViewGradeDetail');
-          return StreamBuilder(
-            stream: database.selectedSubjectsRefStream(
-                subjectRef.where('gradeId', isEqualTo: grade.gradeId)
-            ),
-            builder: (context, snapshot) {
-              if(snapshot.hasData) {
-                final List<Subject> subjects = snapshot.data;
-                print('onViewSubjectDetail chapters ${subjects.length}');
-                return GradeDetail(grade: grade, subjects: subjects,database: database,);
-              }
-              if(snapshot.hasError){
-                print('onViewSubjectDetail ${snapshot.error}');
-                return Container(color:Colors.white,
-                  child: Center(child: Text('${snapshot.error}', style: TextStyle(fontSize: 14.0),)),
-                );
-              }
-              return Center(child: CircularProgressIndicator());
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-
-
+import 'grade_icon.dart';
 
 class GradeList extends StatelessWidget {
   double height = 160.0;
@@ -102,7 +38,7 @@ class GradeList extends StatelessWidget {
               child:Text('Some error has ocurred',style:TextStyle(color:Colors.black,),),);
         }
 
-        return CircularProgressIndicator();
+        return LearninkLoadingIndicator(color:Colors.green);
       },
     );
   }

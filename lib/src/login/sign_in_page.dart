@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../services/toastMessage.dart';
+import '../widgets/learnink_loading_indicator.dart';
 import 'phone_signin_page.dart';
 import 'package:provider/provider.dart';
 import 'email_sign_in_page.dart';
 import 'sign_in_manager.dart';
 import '../widgets/social_sign_in_button.dart';
-import 'platform_exception_alert_dialog.dart';
 import 'auth.dart';
 
 class SignInPage extends StatelessWidget {
@@ -30,9 +31,7 @@ class SignInPage extends StatelessWidget {
 
   void _showSignInError(BuildContext context, PlatformException exception) {
     if (exception.code != 'ERROR_ABORTED_BY_USER') {
-      PlatformExceptionAlertDialog(
-              title: 'Sign in falied', exception: exception)
-          .show(context);
+      ToastMessage.showToast('Sign in falied', Colors.red);
     }
   }
 
@@ -174,7 +173,7 @@ class SignInPage extends StatelessWidget {
     print(isLoading);
     if (isLoading) {
       return Center(
-        child: CircularProgressIndicator(),
+        child: LearninkLoadingIndicator(),
       );
     }
 

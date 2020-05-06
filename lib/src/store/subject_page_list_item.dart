@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:learnink/src/models/chapter.dart';
 import 'package:learnink/src/services/database.dart';
-import 'package:learnink/src/store/subject_detail.dart';
+import 'package:learnink/src/store/subject_detail_page.dart';
+import 'package:learnink/src/widgets/learnink_empty_content.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import 'package:learnink/src/widgets/learnink_network_image.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 import 'package:learnink/src/widgets/white_page_template.dart';
@@ -88,12 +90,12 @@ class SubjectPageListItem extends StatelessWidget {
               }
               if(snapshot.hasError){
                 print('onViewSubjectDetail ${snapshot.error}');
-                return WhitePageTemplate(title:'Error!',
-                    child:Text('Some error has occured',
-                      style: TextStyle(color:Colors.red,fontSize: 20.0,),),);
+                return WhitePageTemplate(title:'',
+                    child:LearninkEmptyContent(text:'Some error has occured',
+                      imageUrl: 'assets/icons/evs.png',),);
               }
-              return WhitePageTemplate(title:'Laoding...',
-                child:Center(child:CircularProgressIndicator(),),);
+              return WhitePageTemplate(title:'',
+                child:Center(child:LearninkLoadingIndicator(color:Colors.green),),);
             },
           );
         },

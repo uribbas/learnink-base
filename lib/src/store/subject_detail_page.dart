@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
+import 'package:learnink/src/widgets/learnink_empty_content.dart';
 import 'package:learnink/src/widgets/learnink_network_image.dart';
 import '../models/subject.dart';
 import '../models/chapter.dart';
@@ -12,63 +12,7 @@ import 'notification_icon_button.dart';
 import '../services/database.dart';
 import 'package:provider/provider.dart';
 import '../services/toastMessage.dart';
-
-class ChapterListItem extends StatelessWidget {
-  ChapterListItem({
-    this.chapter,
-    this.isFirst,
-    this.isLast,
-    this.isSelected,
-  });
-
-  final Chapter chapter;
-  final bool isSelected;
-  final bool isFirst;
-  final bool isLast;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Colors.black12, width: isFirst ? 2.0 : 1.0),
-            bottom: BorderSide(color: Colors.black12, width:isLast ? 2.0 : 1.0),
-            left: BorderSide(color: Colors.transparent, width: 1.0),
-            right: BorderSide(color: Colors.transparent, width: 1.0),
-          )
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          LearninkNetworkImage(chapter.chapterImageUrl,),
-          Column(
-            children: <Widget>[
-              Container(
-                width:120,
-                child: Text(chapter.chapterTitle,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  maxLines: 3,
-                  style: TextStyle(color: Colors.black,fontSize: 15.0,),),
-              ),
-              Container(
-                  width:120,
-                  alignment: Alignment.centerLeft,
-                  child: Text('${chapter.chapterPopularityRating}',style: TextStyle(color: Colors.black,fontSize: 15.0,),)
-              )
-            ],
-          ),
-
-          Icon(MyFlutterIcons.tick,
-                size:25,
-                color:isSelected?Colors.greenAccent:Colors.black12),
-        ],
-      ),
-    );
-  }
-}
-
+import 'chapter_list_item.dart';
 
 class SubjectDetailHeader implements SliverPersistentHeaderDelegate {
   SubjectDetailHeader({this.subject, this.maxExtent, this.minExtent});
@@ -187,6 +131,12 @@ class SubjectDetail extends StatelessWidget {
             centerTitle: true,
             backgroundColor: Colors.transparent,
             title: Text('${subject.subjectName}'),
+            leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
+                onPressed: () => Navigator.of(context).pop()),
             actions: <Widget>[
               NotificationIconButton(
                 size: 50,
@@ -209,51 +159,58 @@ class SubjectDetail extends StatelessWidget {
               ),
             ),
             //color: Colors.white,
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverPersistentHeader(
-                  pinned: false,
-                  delegate: SubjectDetailHeader(
-                      subject: subject, maxExtent: 350.0, minExtent: 350.0),
+            child: chapters.isNotEmpty
+                ?_buildCustomScrollView(database)
+                :LearninkEmptyContent(text:'Nothing to show',
+               imageUrl: 'assets/icons/evs.png',)
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _buildCustomScrollView(Database database){
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverPersistentHeader(
+          pinned: false,
+          delegate: SubjectDetailHeader(
+              subject: subject, maxExtent: 350.0, minExtent: 350.0),
+        ),
+        SliverFixedExtentList(
+          itemExtent: 120.0,
+          delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+              return ChapterListItem(chapter:chapters[index],
+                isFirst: index==0,
+                isLast: index==chapters.length-1,
+                isSelected: true,
+              );
+            },
+            childCount: chapters.length,
+          ),
+        ),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          // fillOverscroll: true, // Set true to change overscroll behavior. Purely preference.
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: CustomOutlineButton(
+                child: Text(
+                  'Add to Bag',
+                  style: TextStyle(color: Colors.black),
                 ),
-                SliverFixedExtentList(
-                  itemExtent: 120.0,
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return ChapterListItem(chapter:chapters[index],
-                          isFirst: index==0,
-                          isLast: index==chapters.length-1,
-                          isSelected: true,
-                      );
-                    },
-                    childCount: chapters.length,
-                  ),
-                ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  // fillOverscroll: true, // Set true to change overscroll behavior. Purely preference.
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: CustomOutlineButton(
-                        child: Text(
-                          'Add to Bag',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        borderColor: Colors.black,
-                        elevationColor: Colors.black,
-                        onPressed: ()=>_onAddtoBag(database),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                borderColor: Colors.black,
+                elevationColor: Colors.black,
+                onPressed: ()=>_onAddtoBag(database),
+              ),
             ),
           ),
         ),
       ],
     );
+
   }
 }
 

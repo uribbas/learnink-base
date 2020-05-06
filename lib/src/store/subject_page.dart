@@ -144,6 +144,12 @@ class _SubjectPageState extends State<SubjectPage> {
           centerTitle: true,
           backgroundColor: Colors.transparent,
           title: Text('All Subjects'),
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onPressed: () => Navigator.of(context).pop()),
           actions: <Widget>[
             NotificationIconButton(
               size:50,

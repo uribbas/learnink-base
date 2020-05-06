@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:learnink/src/widgets/learnink_empty_content.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import '../services/database.dart';
 import 'subject_page_list_item.dart';
 import '../models/grade.dart';
@@ -153,6 +155,12 @@ class _GradeDetailState extends State<GradeDetail> {
             centerTitle: true,
             backgroundColor: Colors.transparent,
             title: Text('Class ${widget.grade.gradeId}'),
+            leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
+                onPressed: () => Navigator.of(context).pop()),
             actions: <Widget>[
               NotificationIconButton(
                 size: 50,
@@ -168,13 +176,17 @@ class _GradeDetailState extends State<GradeDetail> {
             initialData: _model,
             builder: (context, snapshot) {
               List<Subject> _selectedList = [];
+              bool _loading=true;
+              bool _error= false;
               if (snapshot.hasData) {
                 print('snapshot value ${snapshot.data}');
                 _selectedList = List.from(snapshot.data.selected);
+                _loading=false;
               }
 
               if (snapshot.hasError) {
                 _selectedList = [];
+                _error=true;
               }
 
               return Container(
@@ -191,54 +203,13 @@ class _GradeDetailState extends State<GradeDetail> {
                   ),
                 ),
                 //color: Colors.white,
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverPersistentHeader(
-                      pinned: false,
-                      delegate: GradeDetailHeader(
-                        grade: widget.grade,
-                        maxExtent: 250.0,
-                        minExtent: 250.0,
-                      ),
-                    ),
-                    SliverFixedExtentList(
-                      itemExtent: 120.0,
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          Subject _subject = widget.subjects[index];
-                          return SubjectPageListItem(
-                            subject: widget.subjects[index],
-                            isFirst: index == 0,
-                            isLast: index == widget.subjects.length - 1,
-                            isSelected: _selectedList.indexWhere((s)=>s.documentId==_subject.documentId)!=-1,
-                            onSelectItem: ()=>_onSelectItem(_subject),
-                            database: widget.database,
-                          );
-                        },
-                        childCount: widget.subjects.length,
-                      ),
-                    ),
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      // fillOverscroll: true, // Set true to change overscroll behavior. Purely preference.
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: CustomOutlineButton(
-                            child: Text(
-                              'Add to Bag',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            borderColor: Colors.black,
-                            elevationColor: Colors.black,
-                            onPressed: _onAddtoBag,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                child: !_loading
+                       ?( !_error
+                            ? _buildCustomScrollView( _selectedList )
+                            : LearninkEmptyContent(text:'Check your connectivity.',
+                                imageUrl: 'assets/icons/evs.png',)
+                        )
+                       :Center(child:LearninkLoadingIndicator(color:Colors.green),)
               );
             },
           ),
@@ -246,4 +217,59 @@ class _GradeDetailState extends State<GradeDetail> {
       ],
     );
   }
+  
+  Widget _buildCustomScrollView( List<Subject> selectedList ){
+    return widget.subjects.isEmpty
+        ?LearninkEmptyContent(text:'This class currently has no subject being offerred.',
+          imageUrl: 'assets/icons/evs.png',)
+        :CustomScrollView(
+         slivers: <Widget>[
+          SliverPersistentHeader(
+          pinned: false,
+          delegate: GradeDetailHeader(
+            grade: widget.grade,
+            maxExtent: 250.0,
+            minExtent: 250.0,
+          ),
+        ),
+         SliverFixedExtentList(
+          itemExtent: 120.0,
+          delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+              Subject _subject = widget.subjects[index];
+              return SubjectPageListItem(
+                subject: widget.subjects[index],
+                isFirst: index == 0,
+                isLast: index == widget.subjects.length - 1,
+                isSelected: selectedList.indexWhere((s)=>s.documentId==_subject.documentId)!=-1,
+                onSelectItem: ()=>_onSelectItem(_subject),
+                database: widget.database,
+              );
+            },
+            childCount: widget.subjects.length,
+          ),
+        ),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          // fillOverscroll: true, // Set true to change overscroll behavior. Purely preference.
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: CustomOutlineButton(
+                child: Text(
+                  'Add to Bag',
+                  style: TextStyle(color: Colors.black),
+                ),
+                borderColor: Colors.black,
+                elevationColor: Colors.black,
+                onPressed: _onAddtoBag,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  
 }

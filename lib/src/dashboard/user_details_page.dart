@@ -3,7 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learnink/src/login/auth.dart';
 import 'package:learnink/src/models/user.dart';
+import 'package:learnink/src/services/toastMessage.dart';
+import 'package:learnink/src/widgets/blue_page_template.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import 'package:provider/provider.dart';
 import '../services/database.dart';
 import 'dashboard_landing.dart';
@@ -39,6 +42,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
   String _phoneNumber;
   String _subscriberId;
   Timestamp _userCreationTimeStamp;
+  bool _submited=false;
 
   final FocusNode _nameFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();
@@ -84,11 +88,14 @@ class _UserDetailPageState extends State<UserDetailPage> {
   }
 
   Future<void> _submit(BuildContext context) async {
+
+
     final form=_formKey.currentState;
    try {
      final Database database=Provider.of<Database>(context,listen:false);
      if (_validateAndSaveForm()) {
        form.deactivate();
+       setState((){_submited=true;});
        //      set the existing document
        // Check changes in the form fields and then add the values
        LearninkUserInfo user= widget.user.copyWith(
@@ -107,12 +114,16 @@ class _UserDetailPageState extends State<UserDetailPage> {
      }
    } on PlatformException catch(e){
 
+     setState((){_submited=true;});
+     ToastMessage.showToast('Your details were not updated because of error. Please try again'
+         , Colors.red);
+
    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(fit: StackFit.expand, children: <Widget>[
+    return _submited? Stack(fit: StackFit.expand, children: <Widget>[
       Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -161,7 +172,9 @@ class _UserDetailPageState extends State<UserDetailPage> {
         body: _buildContents(context),
         backgroundColor: Colors.transparent,
       ),
-    ]);
+    ],
+    )
+    :BluePageTemplate(child:Center(child:LearninkLoadingIndicator(),),);
   }
 
   Widget _buildContents(BuildContext context) {
@@ -283,6 +296,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
         initialValue: _email,
         focusNode: _emailFocusNode,
         textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.emailAddress,
         onEditingComplete: ()=>widget.authSource==AuthSource.phone?
                                _submit(context):
                               _emailEditingComplete(context),

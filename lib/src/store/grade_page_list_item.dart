@@ -5,7 +5,7 @@ import '../services/database.dart';
 import '../widgets/learnink_network_image.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../models/grade.dart';
-import 'grade_detail.dart';
+import 'grade_detail_page.dart';
 
 
 class GradePageListItem extends StatelessWidget {

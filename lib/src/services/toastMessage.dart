@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ToastMessage {
 
-  static showToast(message, Color color) {
+  static void showToast(message, Color color) {
     print(message);
     Fluttertoast.showToast(
         msg: message,

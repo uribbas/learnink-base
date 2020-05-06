@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:learnink/src/models/cart.dart';
 import 'package:learnink/src/models/subject.dart';
@@ -7,6 +6,7 @@ import 'package:learnink/src/services/database.dart';
 import 'package:learnink/src/store/cart_page_list_item.dart';
 import 'package:learnink/src/store/cart_page_list_model.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatefulWidget {
@@ -32,16 +32,15 @@ class _CartPageState extends State<CartPage> {
   await Future.delayed(Duration.zero,(){_database=Provider.of<Database>(context,listen:false);});
   _cartListStream=_database.userCartStream().listen((data) {
       print('Inside userCartStreamListener, ${data}');
+      _cart=data;
+      _list= CartPageListModel<Subject>(
+        listKey: _listKey,
+        initialItems: _cart.items,
+        removedItemBuilder: _buildRemovedItem,
+      );
       if(mounted){
-        _cart=data;
         print('Inside userCartStreamListener, ${_cart.total}');
-        setState(() {
-          _list= CartPageListModel<Subject>(
-            listKey: _listKey,
-            initialItems: _cart.items,
-            removedItemBuilder: _buildRemovedItem,
-          );
-        });
+        setState(() {});
       }
   });
 
@@ -65,9 +64,7 @@ class _CartPageState extends State<CartPage> {
         isFirst: index == 0,
         isLast: index == _list.length,
         remove: () {
-          _list.removeAt(index);
-          if(mounted){ setState((){});}
-
+          if(mounted){ setState((){_list.removeAt(index);});}
         }
 
     );
@@ -113,6 +110,12 @@ class _CartPageState extends State<CartPage> {
           centerTitle: true,
           backgroundColor: Colors.transparent,
           title: Text('Cart'),
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onPressed: () => Navigator.of(context).pop()),
 
         ),
         backgroundColor: Colors.transparent,
@@ -140,9 +143,9 @@ class _CartPageState extends State<CartPage> {
                       itemExtent: 200.0,
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
-                          return Center(
-                            child: Center(child: CircularProgressIndicator()),
-                          );
+                          return  Center(child: LearninkLoadingIndicator(
+                            color:Colors.green,
+                          ),);
                         },
                         childCount: 1,
                       ),

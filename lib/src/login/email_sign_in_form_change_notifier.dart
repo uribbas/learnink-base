@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import '../widgets/custom_outline_button.dart';
 import 'package:provider/provider.dart';
 import 'auth.dart';

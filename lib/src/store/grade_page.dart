@@ -125,6 +125,12 @@ class _GradePageState extends State<GradePage> {
           centerTitle: true,
           backgroundColor: Colors.transparent,
           title: Text('All Classes'),
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onPressed: () => Navigator.of(context).pop()),
           actions: <Widget>[
             NotificationIconButton(
               size:50,
