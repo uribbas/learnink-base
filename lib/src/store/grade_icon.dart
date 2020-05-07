@@ -62,7 +62,7 @@ class GradeIcon extends StatelessWidget {
                     imageUrl:'assets/icons/evs.png',),);
               }
               return WhitePageTemplate(title:'',
-                child: LearninkLoadingIndicator(color:Colors.green),);
+                child: LearninkLoadingIndicator(color:Color(0xff004fe0)),);
             },
           );
         },

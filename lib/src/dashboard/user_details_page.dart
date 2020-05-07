@@ -114,7 +114,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
      }
    } on PlatformException catch(e){
 
-     setState((){_submited=true;});
+     setState((){_submited=false;});
      ToastMessage.showToast('Your details were not updated because of error. Please try again'
          , Colors.red);
 
@@ -123,7 +123,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _submited? Stack(fit: StackFit.expand, children: <Widget>[
+    return !_submited? Stack(fit: StackFit.expand, children: <Widget>[
       Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

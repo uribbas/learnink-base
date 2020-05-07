@@ -144,7 +144,7 @@ class _CartPageState extends State<CartPage> {
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                           return  Center(child: LearninkLoadingIndicator(
-                            color:Colors.green,
+                            color:Color(0xff004fe0),
                           ),);
                         },
                         childCount: 1,

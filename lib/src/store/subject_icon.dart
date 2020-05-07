@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/subject.dart';
 import '../models/chapter.dart';
 import '../widgets/learnink_network_image.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 
 class SubjectIcon extends StatelessWidget {
 
@@ -66,7 +67,7 @@ class SubjectIcon extends StatelessWidget {
                   child: Center(child: Text('${snapshot.error}', style: TextStyle(fontSize: 14.0),)),
                 );
               }
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LearninkLoadingIndicator(color:Color(0xff004fe0)));
             },
           );
         },

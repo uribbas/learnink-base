@@ -12,6 +12,7 @@ import 'notification_icon_button.dart';
 import '../widgets/custom_outline_button.dart';
 import 'grade_page_model.dart';
 import '../services/toastMessage.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 
 
 class GradePage extends StatefulWidget {
@@ -26,7 +27,7 @@ class GradePage extends StatefulWidget {
 class _GradePageState extends State<GradePage> {
 
   StreamController<GradePageModel> _selectedController=StreamController<GradePageModel>();
-  GradePageModel _model=GradePageModel(selected: [],isSelected: false);
+  GradePageModel _model=GradePageModel(selected: [],isSelected: false, isBeingAddedToBag: false);
 
   StreamSubscription _userCart;
   Cart _userCartData;
@@ -40,13 +41,13 @@ class _GradePageState extends State<GradePage> {
   void _onSelectItem(String documentId){
     List<String> selectedList=_model.selected;
     selectedList.contains(documentId)?selectedList.remove(documentId):selectedList.add(documentId);
-    _model=_model.copyWith(selected:selectedList,isSelected: false);
+    _model=_model.copyWith(selected:selectedList,isSelected: false, isBeingAddedToBag: false);
     _selectedController.add(_model);
    }
 
   void _onSelectAll(bool newValue){
     List<String> selectedList=newValue?List<String>.generate(widget.grades.length, (i) => widget.grades[i].documentId ):[];
-    _model=_model.copyWith(selected:selectedList,isSelected:newValue);
+    _model=_model.copyWith(selected:selectedList,isSelected:newValue, isBeingAddedToBag: false);
     _selectedController.add(_model);
   }
 
@@ -55,6 +56,8 @@ class _GradePageState extends State<GradePage> {
   {
     // Get the existing userCartstream then add all subjects linked to the grade
     //  First create the cart items then set the cart
+    _model=_model.copyWith(selected:_model.selected,isSelected:_model.isSelected, isBeingAddedToBag: true);
+    _selectedController.add(_model);
     final subjectRef=await widget.database.getCollectionRef('subjects');
     List<Subject> _newItems= _userCartData != null ? _userCartData.items : [];
     // used for loop instead of forEach as we need to use the async function for geting subjects for the selected grade
@@ -80,7 +83,7 @@ class _GradePageState extends State<GradePage> {
     ));
     ToastMessage.showToast("${_model.selected.length} ${_model.selected.length >1 ? "itemss" : "item"} added to cart", Color(0xff8bc34a),);
 
-    _model=_model.copyWith(selected: [],isSelected: false);
+    _model=_model.copyWith(selected: [],isSelected: false, isBeingAddedToBag: false);
     _selectedController.add(_model);
   }
 
@@ -158,7 +161,7 @@ class _GradePageState extends State<GradePage> {
                  builder:(context,snapshot){
                    List<String> _selectedList=[];
                    if(snapshot.hasData){
-                     print('snapshot value ${snapshot.data}');
+                     print('snapshot value ${snapshot.data} ${snapshot.data.isBeingAddedToBag}');
                      _selectedList=List.from(snapshot.data.selected);
                    }
 

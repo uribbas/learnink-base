@@ -6,6 +6,7 @@ import '../widgets/learnink_network_image.dart';
 import '../widgets/my_flutter_icons.dart';
 import '../models/grade.dart';
 import 'grade_detail_page.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 
 
 class GradePageListItem extends StatelessWidget {
@@ -85,7 +86,9 @@ class GradePageListItem extends StatelessWidget {
                     ),),);
               }
               return WhitePageTemplate(title:'Laoding...',
-                child:Center(child:CircularProgressIndicator(),),);
+                child:Center(child:LearninkLoadingIndicator(
+                  color:Color(0xff004fe0),
+                ),),);
             },
           );
         },

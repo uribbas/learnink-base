@@ -209,7 +209,7 @@ class _GradeDetailState extends State<GradeDetail> {
                             : LearninkEmptyContent(text:'Check your connectivity.',
                                 imageUrl: 'assets/icons/evs.png',)
                         )
-                       :Center(child:LearninkLoadingIndicator(color:Colors.green),)
+                       :Center(child:LearninkLoadingIndicator(color:Color(0xff004fe0)),)
               );
             },
           ),
