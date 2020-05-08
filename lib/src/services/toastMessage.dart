@@ -113,6 +113,8 @@ class ToastWidget extends StatelessWidget {
   }
 }
 
+enum AniProps {opacity,y}
+
 class ToastMessageAnimation extends StatelessWidget {
   final Widget child;
 
@@ -120,35 +122,39 @@ class ToastMessageAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tween = MultiTrackTween([
-      Track("translateY")
-          .add(
-        Duration(milliseconds: 250),
-        Tween(begin: 100.0, end: 0.0),
-        curve: Curves.easeOut,
-      )
-          .add(Duration(seconds: 1, milliseconds: 250),
-          Tween(begin: 0.0, end: 0.0))
-          .add(Duration(milliseconds: 250),
-          Tween(begin: 0.0, end: 100.0),
-          curve: Curves.easeIn),
-      Track("opacity")
-          .add(Duration(milliseconds: 500),
-          Tween(begin: 0.0, end: 1.0))
-          .add(Duration(seconds: 1),
-          Tween(begin: 1.0, end: 1.0))
-          .add(Duration(milliseconds: 500),
-          Tween(begin: 1.0, end: 0.0)),
-    ]);
+    final _tween = MultiTween<AniProps>()
+        ..add(AniProps.y,Tween(begin:50.0,end:0.0),
+        Duration(milliseconds:250),
+          Curves.easeIn
+        )
+       ..add( AniProps.y,Tween(begin:0.0,end:0.0),
+           Duration(seconds: 1, milliseconds: 250),
+          Curves.easeIn)
+          ..add(AniProps.y,
+              Tween(begin:0.0,end:50.0),
+              Duration(milliseconds: 250),
+           Curves.easeIn)
+          ..add( AniProps.opacity,
+            Tween(begin:0.0,end:1.0),
+           Duration(milliseconds: 500),
+          )
+          ..add(AniProps.opacity,
+            Tween(begin:1.0,end:1.0),
+            Duration(seconds: 1),
+          )
+          ..add(AniProps.opacity,
+          Tween(begin:1.0,end:0.0),
+        Duration(milliseconds: 500),
+    );
 
-    return ControlledAnimation(
-      duration: tween.duration,
-      tween: tween,
+    return PlayAnimation(
+      duration: _tween.duration,
+      tween:_tween,
       child: child,
-      builderWithChild: (context, child, animation) => Opacity(
-        opacity: animation["opacity"],
+      builder: (context, child, value) => Opacity(
+        opacity: value.get(AniProps.opacity),
         child: Transform.translate(
-            offset: Offset(0, animation["translateY"]),
+            offset: Offset(0, value.get(AniProps.y)),
             child: child),
       ),
     );
