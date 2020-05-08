@@ -38,52 +38,57 @@ NotificationIconButton({
                ),
              );
            }
-           return Container(
-             height: newSize,
-             width: newSize,
-             child: Stack(
-               fit: StackFit.expand,
-               children: <Widget>[
-                 Padding(
-                   padding:EdgeInsets.only(top:5.0,right:20.0,bottom:20.0),
-                   child: IconButton(
-                       padding: EdgeInsets.all(0),
-                       alignment: Alignment.center,
-                       icon: Icon(
-                         icon,
-                         color: color,
-                         size:newSize*0.75,
-                       ),
-                       onPressed: ()=>_openCart(context),),
-                 ),
-                 counter!=0?AlignPositioned(
-                   alignment: Alignment.topRight,
-                   //touch: Touch.inside,
-                   child: Container(
-                     height:newSize*0.4,
-                     width:newSize*0.4,
-                     padding: EdgeInsets.all(2),
-                     decoration: new BoxDecoration(
-                       color: Colors.red,
-                       borderRadius: BorderRadius.circular(newSize*0.2),
-                     ),
-                     constraints: BoxConstraints(
-                       minWidth: 15,
-                       minHeight: 15,
-                     ),
-                     child: Center(
-                       child: Text(
-                         '$counter',
-                         style: TextStyle(
-                           color: Colors.white,
-                           fontSize: 10,
+           return Padding(
+             padding:EdgeInsets.only(right:20.0),
+             child: Container(
+               //padding:EdgeInsets.only(right:20.0),
+               height: newSize,
+               width: newSize,
+               child: Stack(
+                 fit: StackFit.expand,
+                 children: <Widget>[
+                   Padding(
+                     padding:EdgeInsets.only(top:5.0,right:20.0,bottom:20.0),
+                     child: IconButton(
+                         padding: EdgeInsets.all(0),
+                         alignment: Alignment.center,
+                         icon: Icon(
+                           icon,
+                           color: color,
+                           size:newSize*0.75,
                          ),
-                         textAlign: TextAlign.center,
+                         onPressed: ()=>_openCart(context),),
+                   ),
+                   counter!=0?AlignPositioned(
+                     alignment: Alignment.topRight,
+                     //touch: Touch.inside,
+                     child: Container(
+                       height:newSize*0.4,
+                       width:newSize*0.4,
+                       padding: EdgeInsets.all(2),
+                       decoration: new BoxDecoration(
+                         color: Colors.red,
+                         borderRadius: BorderRadius.circular(newSize*0.2),
+                         border:Border.all(color:Colors.white,)
+                       ),
+                       constraints: BoxConstraints(
+                         minWidth: 15,
+                         minHeight: 15,
+                       ),
+                       child: Center(
+                         child: Text(
+                           '$counter',
+                           style: TextStyle(
+                             color: Colors.white,
+                             fontSize: 10,
+                           ),
+                           textAlign: TextAlign.center,
+                         ),
                        ),
                      ),
-                   ),
-                 ):Container(),
-               ],
+                   ):Container(),
+                 ],
+               ),
              ),
            );
          }

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:learnink/src/widgets/learnink_empty_content.dart';
@@ -206,7 +205,7 @@ class _GradeDetailState extends State<GradeDetail> {
                 child: !_loading
                        ?( !_error
                             ? _buildCustomScrollView( _selectedList )
-                            : LearninkEmptyContent(text:'Check your connectivity.',
+                            : LearninkEmptyContent(primaryText:'Check your connectivity.',
                                 imageUrl: 'assets/icons/evs.png',)
                         )
                        :Center(child:LearninkLoadingIndicator(color:Color(0xff004fe0)),)
@@ -220,7 +219,7 @@ class _GradeDetailState extends State<GradeDetail> {
   
   Widget _buildCustomScrollView( List<Subject> selectedList ){
     return widget.subjects.isEmpty
-        ?LearninkEmptyContent(text:'This class currently has no subject being offerred.',
+        ?LearninkEmptyContent(primaryText:'This class currently has no subject being offerred.',
           imageUrl: 'assets/icons/evs.png',)
         :CustomScrollView(
          slivers: <Widget>[

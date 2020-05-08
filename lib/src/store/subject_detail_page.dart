@@ -161,7 +161,7 @@ class SubjectDetail extends StatelessWidget {
             //color: Colors.white,
             child: chapters.isNotEmpty
                 ?_buildCustomScrollView(database)
-                :LearninkEmptyContent(text:'Nothing to show',
+                :LearninkEmptyContent(primaryText:'Nothing to show',
                imageUrl: 'assets/icons/evs.png',)
           ),
         ),

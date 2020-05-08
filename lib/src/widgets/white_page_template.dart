@@ -44,6 +44,12 @@ class WhitePageTemplate extends StatelessWidget {
           centerTitle: true,
           backgroundColor: Colors.transparent,
           title: Text(title),
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onPressed: () => Navigator.of(context).pop()),
 
     ),
         backgroundColor: Colors.transparent,

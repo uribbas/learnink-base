@@ -91,7 +91,7 @@ class SubjectPageListItem extends StatelessWidget {
               if(snapshot.hasError){
                 print('onViewSubjectDetail ${snapshot.error}');
                 return WhitePageTemplate(title:'',
-                    child:LearninkEmptyContent(text:'Some error has occured',
+                    child:LearninkEmptyContent(primaryText:'Some error has occured',
                       imageUrl: 'assets/icons/evs.png',),);
               }
               return WhitePageTemplate(title:'',

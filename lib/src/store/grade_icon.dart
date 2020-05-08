@@ -58,7 +58,8 @@ class GradeIcon extends StatelessWidget {
               if(snapshot.hasError){
                 print('onViewSubjectDetail ${snapshot.error}');
                 return WhitePageTemplate(title:'',
-                  child: LearninkEmptyContent(text:'Some error occured',
+                  child: LearninkEmptyContent(primaryText:'Some error occured',
+                    primaryTextColor: Colors.red,
                     imageUrl:'assets/icons/evs.png',),);
               }
               return WhitePageTemplate(title:'',
