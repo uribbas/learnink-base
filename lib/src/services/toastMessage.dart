@@ -4,20 +4,23 @@ import 'package:simple_animations/simple_animations.dart';
 
 class ToastMessage {
   static final int lengthShort = 1;
-  static final int lengthLong = 2;
+  static final int lengthLong = 5;
   static final int bottom = 0;
   static final int center = 1;
   static final int top = 2;
 
   static void showToast(String msg, BuildContext context,
-      {int duration = 1,
-        int gravity = 0,
+      {Widget widget,
+        int duration = 1,
+        int gravity = 1,
         Color backgroundColor = const Color(0xAA000000),
         textStyle = const TextStyle(fontSize: 15, color: Colors.white),
-        double backgroundRadius = 0,
+        double backgroundRadius = 6,
         Border border}) {
+    Widget toastWidget = widget ?? Text(msg, softWrap: true, style: textStyle);
+    bool isMargin = msg==null || msg=='' ? false : true;
     ToastView.dismiss();
-    ToastView.createView(msg, context, duration, gravity, backgroundColor,
+    ToastView.createView(toastWidget, isMargin, context, duration , gravity, backgroundColor,
         textStyle, backgroundRadius, border);
   }
 }
@@ -36,7 +39,8 @@ class ToastView {
   static bool _isVisible = false;
 
   static void createView(
-      String msg,
+      Widget toastWidget,
+      bool isMargin,
       BuildContext context,
       int duration,
       int gravity,
@@ -52,6 +56,7 @@ class ToastView {
 
     _overlayEntry = new OverlayEntry(
       builder: (BuildContext context) => ToastWidget(
+          duration: duration,
           widget: Container(
               width: MediaQuery.of(context).size.width,
               child: Container(
@@ -63,9 +68,9 @@ class ToastView {
                       borderRadius: BorderRadius.circular(backgroundRadius),
                       border: border,
                     ),
-                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    margin: EdgeInsets.symmetric(horizontal: isMargin ? 20 : 0),
                     padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                    child: Text(msg, softWrap: true, style: textStyle),
+                    child: toastWidget,
                   )),
             ),
 
@@ -74,7 +79,7 @@ class ToastView {
     _isVisible = true;
     overlayState.insert(_overlayEntry);
     await new Future.delayed(
-        Duration(seconds: duration == null ? ToastMessage.lengthShort : duration));
+        Duration(seconds: duration == null ? ToastMessage.lengthShort : duration, milliseconds: 500));
     dismiss();
   }
 
@@ -92,10 +97,12 @@ class ToastWidget extends StatelessWidget {
     Key key,
     @required this.widget,
     @required this.gravity,
+    @required this.duration,
   }) : super(key: key);
 
   final Widget widget;
   final int gravity;
+  final int duration;
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +112,10 @@ class ToastWidget extends StatelessWidget {
           bottom: gravity == 0 ? MediaQuery.of(context).viewInsets.bottom + 50 : null,
           child: ToastMessageAnimation(
             Material(
-            color: Colors.transparent,
-            child: widget,
-          ),
+              color: Colors.transparent,
+              child: widget,
+            ),
+            duration,
        ),
     );
   }
@@ -117,8 +125,9 @@ enum AniProps {opacity,y}
 
 class ToastMessageAnimation extends StatelessWidget {
   final Widget child;
+  final int duration;
 
-  ToastMessageAnimation(this.child);
+  ToastMessageAnimation(this.child, this.duration);
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +137,7 @@ class ToastMessageAnimation extends StatelessWidget {
           Curves.easeIn
         )
        ..add( AniProps.y,Tween(begin:0.0,end:0.0),
-           Duration(seconds: 1, milliseconds: 250),
+           Duration(seconds: duration - 1, milliseconds: 500),
           Curves.easeIn)
           ..add(AniProps.y,
               Tween(begin:0.0,end:50.0),
@@ -136,15 +145,15 @@ class ToastMessageAnimation extends StatelessWidget {
            Curves.easeIn)
           ..add( AniProps.opacity,
             Tween(begin:0.0,end:1.0),
-           Duration(milliseconds: 500),
+           Duration(milliseconds: 250),
           )
           ..add(AniProps.opacity,
             Tween(begin:1.0,end:1.0),
-            Duration(seconds: 1),
+            Duration(seconds: duration - 1, milliseconds: 500),
           )
           ..add(AniProps.opacity,
           Tween(begin:1.0,end:0.0),
-        Duration(milliseconds: 500),
+        Duration(milliseconds: 250),
     );
 
     return PlayAnimation(
