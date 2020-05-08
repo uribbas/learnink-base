@@ -52,7 +52,7 @@ class _GradePageState extends State<GradePage> {
   }
 
 
-  void _onAddtoBag() async
+  void _onAddtoBag(BuildContext context) async
   {
     // Get the existing userCartstream then add all subjects linked to the grade
     //  First create the cart items then set the cart
@@ -81,7 +81,10 @@ class _GradePageState extends State<GradePage> {
       total: _newItems.length,
       items: _newItems,
     ));
-    ToastMessage.showToast("${_model.selected.length} ${_model.selected.length >1 ? "itemss" : "item"} added to cart", Color(0xff8bc34a),);
+    ToastMessage.showToast(
+      "${_model.selected.length} ${_model.selected.length >1 ? "itemss" : "item"} added to cart"
+      , context,
+      backgroundColor: Color(0xff8bc34a),);
 
     _model=_model.copyWith(selected: [],isSelected: false, isBeingAddedToBag: false);
     _selectedController.add(_model);
@@ -217,7 +220,7 @@ class _GradePageState extends State<GradePage> {
                                ),
                                borderColor: Colors.black,
                                elevationColor: Colors.black,
-                               onPressed: _onAddtoBag,
+                               onPressed:()=> _onAddtoBag(context),
                              ),
                            ),
                          ),

@@ -78,7 +78,7 @@ class CartPageListItem extends StatelessWidget {
                         size:25,
                         color:Color(0xffff8a80),
                     ),
-                    onPressed:()=>_delete(database),
+                    onPressed:()=>_delete(context),
                   ),
                 ),
               ),
@@ -89,7 +89,8 @@ class CartPageListItem extends StatelessWidget {
     );
   }
 
-  Future<void> _delete(Database database) async {
+  Future<void> _delete(BuildContext context) async {
+    Database database=Provider.of<Database>(context,listen:false);
     remove();
     //  First remove item from the cart items then set the cart
     List<Subject> _newItems= _userCartData.items;
@@ -98,7 +99,10 @@ class CartPageListItem extends StatelessWidget {
       total: _newItems.length,
       items: _newItems,
     ));
-    ToastMessage.showToast("Removed ${subject.subjectName} of class ${subject.gradeId} from cart", Color(0xffff8a80),);
+    ToastMessage.showToast(
+      "Removed ${subject.subjectName} of class ${subject.gradeId} from cart",
+      context,
+      backgroundColor:Color(0xffff8a80),);
 
   }
 

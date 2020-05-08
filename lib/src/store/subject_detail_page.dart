@@ -74,8 +74,9 @@ class SubjectDetail extends StatelessWidget {
   StreamSubscription _userCart;
   Cart _userCartData;
 
-  void _onAddtoBag(Database database)
+  void _onAddtoBag(BuildContext context)
   async {
+    Database database =Provider.of<Database>(context,listen:false);
     //  First create the cart items then set the cart
     List<Subject> _newItems=_userCartData !=null ? _userCartData.items : [];
     _newItems.indexWhere((i)=>i.documentId==subject.documentId) == -1 ?
@@ -86,7 +87,11 @@ class SubjectDetail extends StatelessWidget {
       total: _newItems.length,
       items: _newItems,
     ));
-    ToastMessage.showToast("${subject.subjectName} of class ${subject.gradeId} added to cart", Color(0xff8bc34a),);
+    ToastMessage.showToast(
+      "${subject.subjectName} of class ${subject.gradeId} added to cart",
+      context,
+      backgroundColor:
+      Color(0xff8bc34a),);
   }
 
   @override
@@ -160,7 +165,7 @@ class SubjectDetail extends StatelessWidget {
             ),
             //color: Colors.white,
             child: chapters.isNotEmpty
-                ?_buildCustomScrollView(database)
+                ?_buildCustomScrollView(context)
                 :LearninkEmptyContent(primaryText:'Nothing to show',
                imageUrl: 'assets/icons/evs.png',)
           ),
@@ -168,7 +173,7 @@ class SubjectDetail extends StatelessWidget {
       ],
     );
   }
-  Widget _buildCustomScrollView(Database database){
+  Widget _buildCustomScrollView(BuildContext context){
     return CustomScrollView(
       slivers: <Widget>[
         SliverPersistentHeader(
@@ -203,7 +208,7 @@ class SubjectDetail extends StatelessWidget {
                 ),
                 borderColor: Colors.black,
                 elevationColor: Colors.black,
-                onPressed: ()=>_onAddtoBag(database),
+                onPressed: ()=>_onAddtoBag(context),
               ),
             ),
           ),

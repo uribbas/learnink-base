@@ -31,7 +31,7 @@ class SignInPage extends StatelessWidget {
 
   void _showSignInError(BuildContext context, PlatformException exception) {
     if (exception.code != 'ERROR_ABORTED_BY_USER') {
-      ToastMessage.showToast('Sign in falied', Colors.red);
+      ToastMessage.showToast('Sign in falied', context,backgroundColor:Colors.red);
     }
   }
 

@@ -115,8 +115,10 @@ class _UserDetailPageState extends State<UserDetailPage> {
    } on PlatformException catch(e){
 
      setState((){_submited=false;});
-     ToastMessage.showToast('Your details were not updated because of error. Please try again'
-         , Colors.red);
+     ToastMessage.showToast(
+         'Your details were not updated because of error. Please try again'
+         ,context
+         , backgroundColor:Colors.red);
 
    }
   }

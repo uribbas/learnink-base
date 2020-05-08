@@ -94,7 +94,7 @@ class _GradeDetailState extends State<GradeDetail> {
     _selectedController.add(_model);
   }
 
-  void _onAddtoBag()
+  void _onAddtoBag(BuildContext context)
   async {
     //  First create the cart items then set the cart
     List<Subject> _newItems=_userCartData !=null ? _userCartData.items : [];
@@ -108,7 +108,11 @@ class _GradeDetailState extends State<GradeDetail> {
       total: _newItems.length,
       items: _newItems,
     ));
-    ToastMessage.showToast("${_model.selected.length} ${_model.selected.length>1 ? "items" : "item"} added to cart", Color(0xff8bc34a),);
+    ToastMessage.showToast(
+      "${_model.selected.length} ${_model.selected.length>1 ? "items" : "item"} added to cart"
+      ,context
+      , backgroundColor:Color(0xff8bc34a),
+    );
     _model=_model.copyWith(selected: [],isSelected: false, searchText: []);
     _selectedController.add(_model);
   }
@@ -262,7 +266,7 @@ class _GradeDetailState extends State<GradeDetail> {
                 ),
                 borderColor: Colors.black,
                 elevationColor: Colors.black,
-                onPressed: _onAddtoBag,
+                onPressed: ()=>_onAddtoBag(context),
               ),
             ),
           ),
