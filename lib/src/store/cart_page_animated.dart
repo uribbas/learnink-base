@@ -6,6 +6,7 @@ import 'package:learnink/src/services/database.dart';
 import 'package:learnink/src/store/cart_page_list_item.dart';
 import 'package:learnink/src/store/cart_page_list_model.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
+import 'package:learnink/src/widgets/learnink_empty_content.dart';
 import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -160,9 +161,11 @@ class _CartPageState extends State<CartPage> {
                           return Center(
                             child: Padding(
                               padding:EdgeInsets.all(10),
-                              child: Text( _totalAmount > 0 ? 'Total Cart Value   \u{20B9}  ${_totalAmount}' : 'No items in the cart',
-                                style:TextStyle(color:Colors.green,fontSize: 20.0,),
-                              ),
+                              child: _totalAmount > 0
+                                  ?Text( 'Total Cart Value   \u{20B9}  ${_totalAmount}',
+                                  style:TextStyle(color:Colors.green,fontSize: 20.0,),)
+                              : Container(),
+
                             ),
                           );
                         },
@@ -183,7 +186,9 @@ class _CartPageState extends State<CartPage> {
                             borderColor: Colors.black,
                             elevationColor: Colors.black,
                             onPressed: (){},
-                          ) : Container(),
+                          ) :LearninkEmptyContent(primaryText: 'No item in your cart',
+                              primaryTextColor: Colors.green,
+                              imageUrl: 'assets/icons/evs.png'),
                         ),
                       ),
                     )
