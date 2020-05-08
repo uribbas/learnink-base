@@ -21,6 +21,7 @@ class _CartPageState extends State<CartPage> {
   Database _database;
   CartPageListModel<Subject> _list;
   final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey=GlobalKey<ScaffoldState>();
 
   @override
   void initState(){
@@ -28,6 +29,13 @@ class _CartPageState extends State<CartPage> {
     initCartStream();
 
   }
+
+  @override
+  void dispose() {
+    _cartListStream.cancel();
+    super.dispose();
+  }
+
 
   Future<void> initCartStream() async {
   await Future.delayed(Duration.zero,(){_database=Provider.of<Database>(context,listen:false);});
@@ -55,7 +63,7 @@ class _CartPageState extends State<CartPage> {
       isFirst: false,
       isLast:false,
       animation: animation,
-     );
+      );
   }
 
   Widget _buildItem(BuildContext context, int index, Animation<double> animation) {
@@ -65,7 +73,8 @@ class _CartPageState extends State<CartPage> {
         isFirst: index == 0,
         isLast: index == _list.length,
         remove: () {
-          if(mounted){ setState((){_list.removeAt(index);});}
+          _list.removeAt(index);
+          if(mounted){ setState((){});}
         }
 
     );
@@ -106,6 +115,7 @@ class _CartPageState extends State<CartPage> {
         ),
       ),
       Scaffold(
+        key:_scaffoldKey,
         appBar: AppBar(
           elevation: 0.0,
           centerTitle: true,

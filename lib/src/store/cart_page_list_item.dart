@@ -15,7 +15,7 @@ class CartPageListItem extends StatelessWidget {
     this.isSelected,
     this.animation,
     this.remove,
-  });
+   });
 
   final Subject subject;
   final bool isSelected;
@@ -23,6 +23,7 @@ class CartPageListItem extends StatelessWidget {
   final bool isLast;
   final Animation<double> animation;
   final VoidCallback remove;
+  BuildContext listContext;
 
   StreamSubscription _userCart;
   Cart _userCartData;
@@ -30,6 +31,7 @@ class CartPageListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Database database=Provider.of<Database>(context,listen:false);
+    listContext=Scaffold.of(context).context;
     _userCart = database.userCartStream().listen((data)=>_userCartData=data);
     return Container(
 
@@ -95,13 +97,17 @@ class CartPageListItem extends StatelessWidget {
     //  First remove item from the cart items then set the cart
     List<Subject> _newItems= _userCartData.items;
     _newItems.removeWhere((i)=>i.documentId==subject.documentId);
+    String toastMessage="Removed ${subject.subjectName} of class ${subject.gradeId} from cart";
+    //BuildContext oldContext=context;
     await database.setCart(Cart (
       total: _newItems.length,
       items: _newItems,
     ));
+    //ScaffoldState parentState=Scaffold.of(context);
+
     ToastMessage.showToast(
-      "Removed ${subject.subjectName} of class ${subject.gradeId} from cart",
-      context,
+      toastMessage,
+      listContext,
       backgroundColor:Color(0xffff8a80),);
 
   }
