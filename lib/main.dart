@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 import 'src/landing_page.dart';
-import 'src/login/auth.dart';
+import 'src/services/auth.dart';
 import 'package:provider/provider.dart';
+import 'src/services/learnink_connection_status_real.dart';
 
 
-void main() => runApp(MyApp());
+void main(){
+  WidgetsFlutterBinding.ensureInitialized();
+  LearninkConnectionStatus.instance.initialize();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider<AuthBase>(
-      create:(context)=>Auth(),
+    return MultiProvider(
+      providers: [
+        Provider<AuthBase>(create:(context)=>Auth()),
+        Provider<LearninkConnectionStatus>(create:(context)=>LearninkConnectionStatus.instance)
+      ],
+
       child: MaterialApp(
           title:'Learnink',
           theme:ThemeData(

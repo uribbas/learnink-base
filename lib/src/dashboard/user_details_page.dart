@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learnink/src/login/auth.dart';
+import 'package:learnink/src/services/auth.dart';
 import 'package:learnink/src/models/user.dart';
 import 'package:learnink/src/services/toastMessage.dart';
 import 'package:learnink/src/widgets/blue_page_template.dart';

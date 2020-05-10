@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'auth.dart';
+import '../services/auth.dart';
 
 class SignInManager {
   SignInManager({@required this.auth,@required this.isLoading});

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'validators.dart';
-import 'auth.dart';
+import '../services/auth.dart';
 import '../services/database.dart';
 import '../models/user.dart';
 

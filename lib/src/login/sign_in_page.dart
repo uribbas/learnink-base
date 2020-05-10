@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../services/learnink_connection_status_real.dart';
 import '../services/toastMessage.dart';
 import '../widgets/learnink_loading_indicator.dart';
 import 'phone_signin_page.dart';
@@ -7,12 +10,16 @@ import 'package:provider/provider.dart';
 import 'email_sign_in_page.dart';
 import 'sign_in_manager.dart';
 import '../widgets/social_sign_in_button.dart';
-import 'auth.dart';
+import '../services/auth.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({@required this.manager, @required this.isLoading});
+  SignInPage({@required this.manager, @required this.isLoading});
   final SignInManager manager;
   final bool isLoading;
+
+  StreamSubscription _connection;
+  bool _connectionStatus;
+
   static Widget create(BuildContext context) {
     final auth = Provider.of<AuthBase>(context);
     return ChangeNotifierProvider<ValueNotifier<bool>>(
@@ -31,7 +38,8 @@ class SignInPage extends StatelessWidget {
 
   void _showSignInError(BuildContext context, PlatformException exception) {
     if (exception.code != 'ERROR_ABORTED_BY_USER') {
-      ToastMessage.showToast('Sign in falied', context,backgroundColor:Colors.red);
+      ToastMessage.showToast('Sign in falied', context,
+          backgroundColor: Colors.red);
     }
   }
 
@@ -43,7 +51,7 @@ class SignInPage extends StatelessWidget {
   }
 
   void _signInWithPhone(BuildContext context) {
-     Navigator.of(context).push(MaterialPageRoute<void>(
+    Navigator.of(context).push(MaterialPageRoute<void>(
       fullscreenDialog: true,
       builder: (context) => PhoneSignInPage(),
     ));
@@ -68,6 +76,12 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final learninkConnection=Provider.of<LearninkConnectionStatus>(context);
+    _connection = learninkConnection.connectionStatus.listen((status) {
+      _connectionStatus = status;
+    });
+    //learninkConnection.initialize();
+
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -89,7 +103,7 @@ class SignInPage extends StatelessWidget {
             top: 0,
             left: 0,
             child: SafeArea(
-              top:true,
+              top: true,
               child: Container(
                 color: Colors.transparent,
 //                height: 50,
@@ -105,12 +119,11 @@ class SignInPage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-              onPressed:()=>Navigator.of(context).pop()
-            ),
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
+                onPressed: () => Navigator.of(context).pop()),
             title: Text(
               'Sign In',
               style: TextStyle(
@@ -144,7 +157,16 @@ class SignInPage extends StatelessWidget {
               image: 'assets/icons/google.png',
               textColor: Colors.white,
               color: Colors.transparent,
-              onPressed: isLoading ? null : () => _signInWithGoogle(context),
+              onPressed: isLoading
+                  ? null
+                  : () {
+                      if (_connectionStatus) {
+                        _signInWithGoogle(context);
+                      } else {
+                        ToastMessage.showToast(
+                            'You are not conncted to internet', context);
+                      }
+                    },
             ),
             SizedBox(height: 8.0),
             SocialSignInButton(
@@ -152,16 +174,33 @@ class SignInPage extends StatelessWidget {
               image: 'assets/icons/phone.png',
               textColor: Colors.white,
               color: Colors.transparent,
-              onPressed: isLoading?null:()=>_signInWithPhone(context),
+              onPressed: isLoading
+                  ? null
+                  : () {
+                      if (_connectionStatus) {
+                        _signInWithPhone(context);
+                      } else {
+                        ToastMessage.showToast(
+                            'You are not conncted to internet', context);
+                      }
+                    },
             ),
             SizedBox(height: 8.0),
             SocialSignInButton(
-              text: 'Sign in with Email',
-              image: 'assets/icons/email.png',
-              textColor: Colors.white,
-              color: Colors.transparent,
-              onPressed: isLoading?null:()=>_signInWithEmail(context),
-            ),
+                text: 'Sign in with Email',
+                image: 'assets/icons/email.png',
+                textColor: Colors.white,
+                color: Colors.transparent,
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        if (_connectionStatus) {
+                          _signInWithEmail(context);
+                        } else {
+                          ToastMessage.showToast(
+                              'You are not conncted to internet', context);
+                        }
+                      }),
             SizedBox(height: 8.0),
           ],
         ),

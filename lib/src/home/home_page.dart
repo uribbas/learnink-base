@@ -77,7 +77,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
                   fontSize: 20.0,
                 ),
               ),
-              onPressed: () {
+              onPressed:() {
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     fullscreenDialog: true,
@@ -206,16 +206,6 @@ class HeroPage extends StatelessWidget implements HasLayoutGroup {
   final LayoutGroup layoutGroup;
   final VoidCallback onLayoutToggle;
 
-//  final List<String> assetNames = [
-//    'assets/icons/assistive-learning.png',
-//    'assets/icons/create-test.png',
-//    'assets/icons/daily-dose.png',
-//    'assets/icons/wild-choice.png',
-//    'assets/icons/progress-report.png',
-//    'assets/icons/truly-adaptive.png',
-//    'assets/icons/percentage.png',
-//    'assets/icons/math.png',
-//  ];
 
   final List<Widget> assetNames = [
     InfoIcons(

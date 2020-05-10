@@ -3,7 +3,7 @@ import 'package:learnink/src/services/database.dart';
 import 'package:provider/provider.dart';
 import 'dashboard/dashboard_landing.dart';
 import 'home/home_page.dart';
-import 'login/auth.dart';
+import 'services/auth.dart';
 
 class LandingPage extends StatelessWidget {
   @override

@@ -6,7 +6,7 @@ import 'dashboard.dart';
 import 'user_details_page.dart';
 import 'package:provider/provider.dart';
 import '../services/database.dart';
-import '../login/auth.dart';
+import '../services/auth.dart';
 import '../models/user.dart';
 
 enum AuthSource { email, phone }

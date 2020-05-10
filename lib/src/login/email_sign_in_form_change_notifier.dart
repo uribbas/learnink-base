@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import '../widgets/custom_outline_button.dart';
 import 'package:provider/provider.dart';
-import 'auth.dart';
+import '../services/auth.dart';
 import 'package:flutter/services.dart';
 import 'email_signin_change_model.dart';
 
