@@ -5,7 +5,7 @@ import 'package:learnink/src/models/subject.dart';
 import 'package:learnink/src/widgets/learnink_network_image.dart';
 import '../services/database.dart';
 import 'package:provider/provider.dart';
-import '../services/toastMessage.dart';
+import '../services/toast_message.dart';
 
 class CartPageListItem extends StatelessWidget {
   CartPageListItem({

@@ -3,6 +3,7 @@ import '../widgets/custom_outline_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'otp_input.dart';
+import '../services/toast_message.dart';
 
 class OTPScreenPage extends StatefulWidget {
   final String mobileNumber;
@@ -118,7 +119,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                           if (pin.length == 6) {
                             _onFormSubmitted();
                           } else {
-                            showToast("Invalid OTP", Colors.red);
+                            ToastMessage.showToast('Invalid OTP', context,backgroundColor:Colors.red);
                           }
                         },
                       ),
@@ -138,7 +139,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                           if (_pinEditingController.text.length == 6) {
                             _onFormSubmitted();
                           } else {
-                            showToast("Invalid OTP", Colors.red);
+                            ToastMessage.showToast('Invalid OTP', context,backgroundColor:Colors.red);
                           }
                         },
                       ),
@@ -154,17 +155,6 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
     );
   }
 
-  void showToast(message, Color color) {
-    print(message);
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        //timeInSecForIos: 2,
-        backgroundColor: color,
-        textColor: Colors.white,
-        fontSize: 16.0);
-  }
 
   void _onVerifyCode() async {
     setState(() {
@@ -189,16 +179,17 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
 //              (Route<dynamic> route) => false);
           Navigator.of(context).popUntil((route) => route.isFirst);
         } else {
-          showToast("Error validating OTP, try again", Colors.red);
+          ToastMessage.showToast('Error validating OTP, try again', context,backgroundColor:Colors.red);
         }
       }).catchError((error) {
-        showToast("Try again in sometime", Colors.red);
+        ToastMessage.showToast('Try again in sometime', context,backgroundColor: Colors.red,);
+
       });
     };
 
     final PhoneVerificationFailed verificationFailed =
         (AuthException authException) {
-      showToast(authException.message, Colors.red);
+         ToastMessage.showToast(authException.message, context,backgroundColor: Colors.red,);
 
       setState(() {
         isCodeSent = false;
@@ -246,10 +237,14 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
         print(value.user.phoneNumber);
         Navigator.of(context).popUntil((route) => route.isFirst);
       } else {
-        showToast("Error validating OTP, try again", Colors.red);
+
+        ToastMessage.showToast("Error validating OTP, try again", context,backgroundColor:Colors.red);
+
       }
     }).catchError((error) {
-      showToast("Something went wrong", Colors.red);
+
+      ToastMessage.showToast("Something went wrong", context,backgroundColor: Colors.red);
+
     });
   }
 }

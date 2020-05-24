@@ -11,7 +11,7 @@ import '../widgets/my_flutter_icons.dart';
 import 'notification_icon_button.dart';
 import '../widgets/custom_outline_button.dart';
 import 'grade_page_model.dart';
-import '../services/toastMessage.dart';
+import '../services/toast_message.dart';
 import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 
 
