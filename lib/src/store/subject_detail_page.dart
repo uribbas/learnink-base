@@ -13,6 +13,8 @@ import '../services/database.dart';
 import 'package:provider/provider.dart';
 import '../services/toastMessage.dart';
 import 'chapter_list_item.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
+
 
 class SubjectDetailHeader implements SliverPersistentHeaderDelegate {
   SubjectDetailHeader({this.subject, this.maxExtent, this.minExtent});
@@ -76,6 +78,11 @@ class SubjectDetail extends StatelessWidget {
 
   void _onAddtoBag(BuildContext context)
   async {
+    ToastMessage.showToast(
+        '',
+        context,
+        widget: Center(child: LearninkLoadingIndicator(color:Color(0xff004fe0))),
+        backgroundColor: Colors.white70,duration: 20);
     Database database =Provider.of<Database>(context,listen:false);
     //  First create the cart items then set the cart
     List<Subject> _newItems=_userCartData !=null ? _userCartData.items : [];

@@ -38,7 +38,7 @@ class GradeList extends StatelessWidget {
               child:Text('Some error has ocurred',style:TextStyle(color:Colors.black,),),);
         }
 
-        return LearninkLoadingIndicator(color:Color(0xff004fe0));
+        return Container(child: Center(child: LearninkLoadingIndicator(color:Color(0xff004fe0))));
       },
     );
   }

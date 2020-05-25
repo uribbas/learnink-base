@@ -6,6 +6,7 @@ import 'package:learnink/src/widgets/learnink_network_image.dart';
 import '../services/database.dart';
 import 'package:provider/provider.dart';
 import '../services/toastMessage.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 
 class CartPageListItem extends StatelessWidget {
   CartPageListItem({
@@ -92,6 +93,11 @@ class CartPageListItem extends StatelessWidget {
   }
 
   Future<void> _delete(BuildContext context) async {
+    ToastMessage.showToast(
+        '',
+        context,
+        widget: Center(child: LearninkLoadingIndicator(color:Color(0xff004fe0))),
+        backgroundColor: Colors.white70,duration: 20);
     Database database=Provider.of<Database>(context,listen:false);
     remove();
     //  First remove item from the cart items then set the cart

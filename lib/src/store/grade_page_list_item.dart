@@ -85,7 +85,7 @@ class GradePageListItem extends StatelessWidget {
                       fontSize: 20.0,
                     ),),);
               }
-              return WhitePageTemplate(title:'Laoding...',
+              return WhitePageTemplate(title:'',
                 child:Center(child:LearninkLoadingIndicator(
                   color:Color(0xff004fe0),
                 ),),);

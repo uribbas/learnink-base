@@ -12,6 +12,7 @@ import 'subject_page_list_item.dart';
 import 'subject_page_model.dart';
 import 'package:provider/provider.dart';
 import '../services/toastMessage.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 
 class SubjectPage extends StatefulWidget {
   SubjectPage({this.subjects,this.database});
@@ -71,25 +72,42 @@ class _SubjectPageState extends State<SubjectPage> {
 
   void _onAddtoBag(BuildContext context)
   async {
-    Database database=Provider.of<Database>(context,listen:false);
-    //  First create the cart items then set the cart
-    List<Subject> _newItems=_userCartData !=null ? _userCartData.items : [];
-    _model.selected.forEach((s){
-      _newItems.indexWhere((i)=>i.documentId==s.documentId) == -1 ?
-          _newItems.add(s)
-          :
-          null;
-    });
-    await database.setCart(Cart (
-            total: _newItems.length,
-            items: _newItems,
-          ));
-    ToastMessage.showToast(
-      "${_model.selected.length} ${_model.selected.length>1 ? "items" : "item"} added to cart"
-      ,context
-      , backgroundColor:Color(0xff8bc34a),);
-    _model=_model.copyWith(selected: [],isSelected: false, searchText: []);
-    _selectedController.add(_model);
+    if(_model.selected.length > 0 ){
+      ToastMessage.showToast(
+          '',
+          context,
+          widget: Center(child: LearninkLoadingIndicator(color:Color(0xff004fe0))),
+          backgroundColor: Colors.white70,duration: 20);
+      Database database=Provider.of<Database>(context,listen:false);
+      //  First create the cart items then set the cart
+      List<Subject> _newItems=_userCartData !=null ? _userCartData.items : [];
+      _model.selected.forEach((s){
+        _newItems.indexWhere((i)=>i.documentId==s.documentId) == -1 ?
+        _newItems.add(s)
+            :
+        null;
+      });
+      await database.setCart(Cart (
+        total: _newItems.length,
+        items: _newItems,
+      ));
+      if(mounted){
+        ToastMessage.showToast(
+          "${_model.selected.length} ${_model.selected.length>1 ? "items" : "item"} added to cart"
+          ,context
+          , backgroundColor:Color(0xff8bc34a),);
+        _model=_model.copyWith(selected: [],isSelected: false, searchText: []);
+        _selectedController.add(_model);
+      }
+    } else {
+      ToastMessage.showToast(
+        "No item selected. Please select item(s) to be added to cart"
+        , context,
+        backgroundColor: Colors.amber,
+        duration: 2,
+      );
+    }
+
   }
 
   bool _checkKeywords(List<String> keyWords){

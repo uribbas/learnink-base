@@ -54,48 +54,60 @@ class _GradePageState extends State<GradePage> {
 
   void _onAddtoBag(BuildContext context) async
   {
-    ToastMessage.showToast(
-        '',
-        context,
-        widget: Center(child: LearninkLoadingIndicator(color:Color(0xff004fe0))),
-        backgroundColor: Colors.white70,duration: 20);
-    // Get the existing userCartstream then add all subjects linked to the grade
-    //  First create the cart items then set the cart
-    _model=_model.copyWith(selected:_model.selected,isSelected:_model.isSelected, isBeingAddedToBag: true);
-    _selectedController.add(_model);
-    final subjectRef=await widget.database.getCollectionRef('subjects');
-    List<Subject> _newItems= _userCartData != null ? _userCartData.items : [];
-    // used for loop instead of forEach as we need to use the async function for geting subjects for the selected grade
-    for(int i=0; i < widget.grades.length; i++ ){
-      Grade _grade = widget.grades[i];
-      if(_model.selected.contains(_grade.gradeId)){
-        List<Subject> _gradeSubjects = await widget.database.selectedSubjectsRefList(subjectRef.where('gradeId', isEqualTo: _grade.gradeId));
-        // print("Processing grade ${_grade.gradeId}  : ${_gradeSubjects}");
-        _gradeSubjects.forEach((s){
-          _newItems.indexWhere((i)=>i.documentId==s.documentId) == -1 ?
-          _newItems.add(s)
-              :
-          null;
-        });
-        // print("Processing grade ${_grade.gradeId}  newItems : ${_newItems}");
-      }
-    }
-    // print("New list of items in cart is ${_newItems.length}");
-
-    await widget.database.setCart(Cart (
-      total: _newItems.length,
-      items: _newItems,
-    ));
-
-    if(mounted){
+    if(_model.selected.length > 0){
       ToastMessage.showToast(
-        "${_model.selected.length} ${_model.selected.length >1 ? "itemss" : "item"} added to cart"
-        , context,
-        backgroundColor: Color(0xff8bc34a),);
-
-      _model=_model.copyWith(selected: [],isSelected: false, isBeingAddedToBag: false);
+          '',
+          context,
+          widget: Center(child: LearninkLoadingIndicator(color:Color(0xff004fe0))),
+          backgroundColor: Colors.white70,duration: 20);
+      // Get the existing userCartstream then add all subjects linked to the grade
+      //  First create the cart items then set the cart
+      _model=_model.copyWith(selected:_model.selected,isSelected:_model.isSelected, isBeingAddedToBag: true);
       _selectedController.add(_model);
+      final subjectRef=await widget.database.getCollectionRef('subjects');
+      List<Subject> _newItems= _userCartData != null ? _userCartData.items : [];
+      // used for loop instead of forEach as we need to use the async function for geting subjects for the selected grade
+      for(int i=0; i < widget.grades.length; i++ ){
+        Grade _grade = widget.grades[i];
+        if(_model.selected.contains(_grade.gradeId)){
+          List<Subject> _gradeSubjects = await widget.database.selectedSubjectsRefList(subjectRef.where('gradeId', isEqualTo: _grade.gradeId));
+          // print("Processing grade ${_grade.gradeId}  : ${_gradeSubjects}");
+          _gradeSubjects.forEach((s){
+            _newItems.indexWhere((i)=>i.documentId==s.documentId) == -1 ?
+            _newItems.add(s)
+                :
+            null;
+          });
+          // print("Processing grade ${_grade.gradeId}  newItems : ${_newItems}");
+        }
+      }
+      // print("New list of items in cart is ${_newItems.length}");
+
+      await widget.database.setCart(Cart (
+        total: _newItems.length,
+        items: _newItems,
+      ));
+
+      if(mounted){
+        ToastMessage.showToast(
+          "${_model.selected.length} ${_model.selected.length >1 ? "itemss" : "item"} added to cart"
+          , context,
+          backgroundColor: Color(0xff8bc34a),);
+
+        _model=_model.copyWith(selected: [],isSelected: false, isBeingAddedToBag: false);
+        _selectedController.add(_model);
+      }
+
+    } else {
+      ToastMessage.showToast(
+        "No item selected. Please select item(s) to be added to cart"
+        , context,
+        backgroundColor: Colors.amber,
+        duration: 2,
+      );
     }
+
+
   }
 
 
