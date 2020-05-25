@@ -11,8 +11,8 @@ import '../services/database.dart';
 import 'subject_page_list_item.dart';
 import 'subject_page_model.dart';
 import 'package:provider/provider.dart';
-import '../services/toastMessage.dart';
 import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
+import '../services/toast_message.dart';
 
 class SubjectPage extends StatefulWidget {
   SubjectPage({this.subjects,this.database});

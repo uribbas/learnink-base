@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learnink/src/services/auth.dart';
 import 'package:learnink/src/models/user.dart';
-import 'package:learnink/src/services/toastMessage.dart';
+import 'package:learnink/src/services/toast_message.dart';
 import 'package:learnink/src/widgets/blue_page_template.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
 import 'package:learnink/src/widgets/learnink_loading_indicator.dart';

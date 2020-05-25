@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../services/learnink_connection_status_real.dart';
-import '../services/toastMessage.dart';
+import '../services/toast_message.dart';
 import '../widgets/learnink_loading_indicator.dart';
 import 'phone_signin_page.dart';
 import 'package:provider/provider.dart';

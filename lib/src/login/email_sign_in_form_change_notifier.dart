@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import '../widgets/custom_outline_button.dart';
@@ -8,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../services/auth.dart';
 import 'package:flutter/services.dart';
 import 'email_signin_change_model.dart';
+import '../services/toast_message.dart';
 
 class EmailSignInFormChangeNotifier extends StatefulWidget {
   EmailSignInFormChangeNotifier({@required this.model});
@@ -65,13 +65,14 @@ class _EmailSignInFormChangeNotifierState
     _passwordController.clear();
   }
 
-  void _submit() async {
+  void _submit(BuildContext context) async {
     try {
       print('Inside try _submit EmailSignInBlocBased:1');
       await model.submit();
       print('Inside try _submit EmailSignInBlocBased:2');
       if(model.formType==model.resetPassword){
-        showToast('Password reset email sent, please check your email',Colors.lime);
+        ToastMessage.showToast('Password reset email sent, please check your email',context,
+            backgroundColor: Colors.lime);
         _toggleFormType(toggleType: model.signin);
         print('Inside try _submit Reset password redirect to login :3');
       } else {
@@ -86,11 +87,14 @@ class _EmailSignInFormChangeNotifierState
         title: 'Sign in failed',
         exception: e,
       ).show(context);*/
-      showToast(e.message,Colors.red);
+
+      ToastMessage.showToast(e.message,context,
+          backgroundColor:Colors.red);
+
     }
   }
 
-  List<Widget> _buildChildren() {
+  List<Widget> _buildChildren(BuildContext context) {
     return [
       CircleAvatar(
         backgroundColor: Colors.white,
@@ -103,7 +107,7 @@ class _EmailSignInFormChangeNotifierState
       SizedBox(
         height: 8.0,
       ),
-      model.formType!=model.resetPassword ? _buildPasswordTextField() : SizedBox(height: 0.0,),
+      model.formType!=model.resetPassword ? _buildPasswordTextField(context) : SizedBox(height: 0.0,),
       SizedBox(
         height: model.formType!=model.resetPassword ? 8.0 : 0.0,
       ),
@@ -116,7 +120,7 @@ class _EmailSignInFormChangeNotifierState
             fontWeight: FontWeight.w600,
           ),
         ),
-        onPressed:_submit,
+        onPressed:()=>_submit(context),
       ),
       SizedBox(
         height: 20.0,
@@ -164,7 +168,7 @@ class _EmailSignInFormChangeNotifierState
     ];
   }
 
-  TextField _buildPasswordTextField() {
+  TextField _buildPasswordTextField(BuildContext context) {
     print(
         'Inside _buildPasswordTextField,errorText:${model.invalidPasswordErrorText}');
     return TextField(
@@ -203,7 +207,7 @@ class _EmailSignInFormChangeNotifierState
       obscureText: !_toggleVisibility,
       textInputAction: TextInputAction.next,
       focusNode: _passwordFocusNode,
-      onEditingComplete: _submit,
+      onEditingComplete: ()=>_submit(context),
       onChanged: model.updatePassword,
     );
   }
@@ -242,18 +246,6 @@ class _EmailSignInFormChangeNotifierState
     );
   }
 
-  void showToast(message, Color color) {
-    print(message);
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        //timeInSecForIos: 2,
-        backgroundColor: color,
-        textColor: Colors.white,
-        fontSize: 16.0);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -262,7 +254,7 @@ class _EmailSignInFormChangeNotifierState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
-          children: _buildChildren(),
+          children: _buildChildren(context),
         ),
       ),
     );
