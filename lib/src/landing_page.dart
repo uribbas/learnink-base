@@ -7,6 +7,7 @@ import 'package:learnink/src/widgets/blue_page_template.dart';
 import 'package:learnink/src/widgets/learnink_empty_content.dart';
 import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import 'package:learnink/src/widgets/white_page_template.dart';
+import 'package:learnink/src/widgets/blue_page_template.dart';
 import 'package:provider/provider.dart';
 import 'dashboard/dashboard_landing.dart';
 import 'home/home_page.dart';
@@ -68,12 +69,26 @@ class _LandingPageState extends State<LandingPage> {
               }
             },
           )
-        : WhitePageTemplate(
-            title: '',
-            child: LearninkEmptyContent(imageUrl: 'assets/icons/evs.png',
-            primaryText: 'You are not connected to internet',
-            primaryTextColor: Colors.red,)
-
+        : BluePageTemplate(
+            title: 'Network Issue',
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: LearninkLoadingIndicator(color:Colors.white)),
+                SizedBox(height: 80,),
+                Center(child: Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Text('Network issue detected, please ensure that your device is connected to internet',
+                    style: TextStyle(fontSize: 16.0,),
+//                    textAlign: TextAlign.justify,
+//                    softWrap: false,
+//                    maxLines: 4,
+//                    overflow: TextOverflow.ellipsis,
+                  ),
+                )),
+              ],
+            ),
+            leading: false,
           );
   }
 }

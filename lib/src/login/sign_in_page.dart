@@ -164,7 +164,11 @@ class SignInPage extends StatelessWidget {
                         _signInWithGoogle(context);
                       } else {
                         ToastMessage.showToast(
-                            'You are not conncted to internet', context);
+                          "You are not conncted to internet, please check connection settings."
+                          , context,
+                          backgroundColor: Colors.amber,
+                          duration: 2,
+                        );
                       }
                     },
             ),
@@ -181,7 +185,11 @@ class SignInPage extends StatelessWidget {
                         _signInWithPhone(context);
                       } else {
                         ToastMessage.showToast(
-                            'You are not conncted to internet', context);
+                          "You are not conncted to internet, please check connection settings."
+                          , context,
+                          backgroundColor: Colors.amber,
+                          duration: 2,
+                        );
                       }
                     },
             ),
@@ -198,7 +206,11 @@ class SignInPage extends StatelessWidget {
                           _signInWithEmail(context);
                         } else {
                           ToastMessage.showToast(
-                              'You are not conncted to internet', context);
+                            "You are not conncted to internet, please check connection settings."
+                            , context,
+                            backgroundColor: Colors.amber,
+                            duration: 2,
+                          );
                         }
                       }),
             SizedBox(height: 8.0),

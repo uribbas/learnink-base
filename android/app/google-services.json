@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "109503908146",
-    "firebase_url": "https://deb-learnink-dev.firebaseio.com",
-    "project_id": "deb-learnink-dev",
-    "storage_bucket": "deb-learnink-dev.appspot.com"
+    "project_number": "528863922705",
+    "firebase_url": "https://learnink-ffd82.firebaseio.com",
+    "project_id": "learnink-ffd82",
+    "storage_bucket": "learnink-ffd82.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:109503908146:android:89f4bc84fb58d5a386ef2b",
+        "mobilesdk_app_id": "1:528863922705:android:1c527147b0b1ff23f67fb0",
         "android_client_info": {
-          "package_name": "com.debmalya.dev.learnink"
+          "package_name": "com.suchibrata.learnink"
         }
       },
       "oauth_client": [
         {
-          "client_id": "109503908146-q24qoklh44r1fplsr7ce6onkbp0mvfrq.apps.googleusercontent.com",
+          "client_id": "528863922705-9m350ntcnk0gclfne15147rr3f03ppro.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.debmalya.dev.learnink",
-            "certificate_hash": "e163fab7bdb77dd81bef1573eefd118426f4c15c"
+            "package_name": "com.suchibrata.learnink",
+            "certificate_hash": "957ee71fd9ccf341bce6f7bdd12191c52c722d6e"
           }
         },
         {
-          "client_id": "109503908146-u23p1lfslk3k7e5aic370s3kgidt50r1.apps.googleusercontent.com",
+          "client_id": "528863922705-g4shaiho8l8lh8qlvmdq0d5jh74gn039.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBrTbG501UzdtWmw48PNhBbbnKSuxD32Dc"
+          "current_key": "AIzaSyBt6b20uGwK_woExvJ-go8bE0QXqYrO730"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "109503908146-u23p1lfslk3k7e5aic370s3kgidt50r1.apps.googleusercontent.com",
+              "client_id": "528863922705-g4shaiho8l8lh8qlvmdq0d5jh74gn039.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

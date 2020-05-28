@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class BluePageTemplate extends StatelessWidget {
-  BluePageTemplate({this.title, this.child});
+  BluePageTemplate({this.title, this.child, this.leading=true});
 
   final String title;
   final Widget child;
+  final bool leading;
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +45,13 @@ class BluePageTemplate extends StatelessWidget {
           centerTitle: true,
           backgroundColor: Colors.transparent,
           title: Text(title),
-          leading: IconButton(
+          leading: leading ? IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
                 color: Colors.white,
               ),
-              onPressed: () => Navigator.of(context).pop()),
+              onPressed: () => Navigator.of(context).pop())
+          : Container(),
         ),
         body: child,
         backgroundColor: Colors.transparent,
