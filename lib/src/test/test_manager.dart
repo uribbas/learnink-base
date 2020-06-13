@@ -63,6 +63,15 @@ class _TestManagerState extends State<TestManager> {
     setState(() {});
   }
 
+  void skip()
+  {
+    if(sequenceNumber < presentedQuestions.length-1){
+      setState(() {
+        sequenceNumber++;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
    Widget presenter=LearninkLoadingIndicator(color: Colors.blue,);
@@ -71,6 +80,7 @@ class _TestManagerState extends State<TestManager> {
         selectOption: selectOption,
         selectedOption: selectedOption,
         question:(presentedQuestions[sequenceNumber] as PresentedStandardQuestion),
+        skip:skip
       );
       lastAccessedNumber=sequenceNumber;
     }
