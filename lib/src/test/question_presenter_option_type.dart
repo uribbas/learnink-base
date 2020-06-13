@@ -7,11 +7,12 @@ import 'option.dart';
 
 class QuestionPresenterOptionType extends StatelessWidget {
 
-QuestionPresenterOptionType({this.question,this.selectedOption, this.selectOption});
+QuestionPresenterOptionType({this.question,this.selectedOption, this.selectOption,this.skip});
 
   final int selectedOption;
   final ValueChanged<int> selectOption;
   final PresentedStandardQuestion question;
+  final VoidCallback skip;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +31,14 @@ QuestionPresenterOptionType({this.question,this.selectedOption, this.selectOptio
                     Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CircleAvatar(),
-                      OutlineButton(color:Colors.red,
-                      child:Text('Skip',style:TextStyle(color:Colors.red,fontSize: 20.0),),
-                      onPressed: (){},),
+                       OutlineButton(
+                        child:Text('Skip',style:TextStyle(color:Colors.red,fontSize: 18.0),),
+                        borderSide: BorderSide(width: 1, color: Colors.red),
+                        shape: RoundedRectangleBorder(
+                          //side: BorderSide(width:1, color: Colors.red),
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
+                        ),
+                        onPressed: skip,),
                     ],)
                   ],
                 );
