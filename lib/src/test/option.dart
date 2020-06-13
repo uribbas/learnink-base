@@ -12,7 +12,7 @@ class Option extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      //mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.only(right:8.0),
@@ -21,9 +21,13 @@ class Option extends StatelessWidget {
           onPressed: selectOption),
         ),
 
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: child,
+      Container(
+        width:MediaQuery.of(context).size.width-120,
+
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: child,
+        ),
       )
       ],
     );

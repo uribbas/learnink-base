@@ -16,9 +16,11 @@ QuestionPresenterOptionType({this.question,this.selectedOption, this.selectOptio
 
   @override
   Widget build(BuildContext context) {
-    Widget questionPresenter=TeXView(renderingEngine:TeXViewRenderingEngine.katex(), child:TeXViewDocument(r"""<h2>Flutter \( \rm\\TeX \)</h2>""",
-        style: TeXViewStyle(textAlign: TeXViewTextAlign.Center)),);
-   // Widget questionPresenter=Text('This is a question',style:TextStyle(color:Colors.black),);
+    Widget questionPresenter=TeXView(renderingEngine:TeXViewRenderingEngine.katex(),
+      child:TeXViewDocument(question.question['text'],));
+    List<Widget> options=[];
+
+    // Widget questionPresenter=Text('This is a question',style:TextStyle(color:Colors.black),);
     return CustomScrollView(
         slivers: <Widget>[
           SliverList(
@@ -27,7 +29,9 @@ QuestionPresenterOptionType({this.question,this.selectedOption, this.selectOptio
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    questionPresenter,
+                    Padding(
+                       padding:EdgeInsets.all(40),
+                        child: questionPresenter),
                     Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CircleAvatar(),
@@ -54,14 +58,19 @@ QuestionPresenterOptionType({this.question,this.selectedOption, this.selectOptio
                   child: ListView.separated(
                      shrinkWrap: true,
                       itemBuilder: (BuildContext context,int index){
+                       print(question.presentedOptions[index]);
                         return Option(
-                          child:Text('Option ${index+1}',style: TextStyle(color: Colors.black),),
+                          child:TeXView(renderingEngine:TeXViewRenderingEngine.katex(),
+                            child:TeXViewDocument(question.presentedOptions[index],
+                              style: TeXViewStyle(
+                                margin: TeXViewMargin.all(10),
+                                ),),),
                           isSelected: index==selectedOption,
                           selectOption: ()=>selectOption(index),
                         );
                       },
                       separatorBuilder: (BuildContext context,int index)=>Divider(thickness:0.5,color:Colors.black),
-                      itemCount: 4),
+                      itemCount: question.presentedOptions.length),
                 );
               },
               childCount:1
