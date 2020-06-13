@@ -67,7 +67,7 @@ class LearninkConnectionStatus {
 
     //The connection status changed send out an update to all listeners
      _statusController.add(hasConnection);
-      print('Connection status has changed $hasConnection');
+      //print('Connection status has changed $hasConnection');
 
   }
 

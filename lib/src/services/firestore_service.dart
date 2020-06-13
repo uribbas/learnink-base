@@ -65,6 +65,15 @@ class FirestoreService{
                 ).toList();
 
   }
+  Future<List<T>> documentList<T>({@required path,
+    @required T builder(Map<String,dynamic> data,String documentId)}) async {
+    final reference=Firestore.instance.collection(path);;
+    final snapshots= await reference.getDocuments();
+    return snapshots.documents.map(
+            (snapshot)=> builder(snapshot.data,snapshot.documentID)
+    ).toList();
+
+  }
   //  Stream for the query based data snapshot
   Stream<List<T>> queryStream<T>({@required Query query,
     @required T builder(Map<String,dynamic> data,String documentId)}){

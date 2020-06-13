@@ -20,61 +20,32 @@ class StoreNestedList extends StatefulWidget {
 }
 
 class _StoreNestedListState extends State<StoreNestedList> {
-  StreamSubscription _connection;
-  bool _connectionStatus = false;
-  bool _previousStatus = false;
+
 
   @override
   Widget build(BuildContext context) {
     final learninkConnection = Provider.of<LearninkConnectionStatus>(context);
 
-    _connection = learninkConnection.connectionStatus.listen((status) {
-      _previousStatus = _connectionStatus;
-      _connectionStatus = status;
-      if (_previousStatus != _connectionStatus) {
-        setState(() {});
-      }
-    });
-
-    return _connectionStatus
-        ? Column(
+    return Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               SizedBox(height: 20),
               CustomDivider(
                 leadingText: 'Grades',
-                onMore: () => _connectionStatus
-                    ? _onGradeView(context)
-                    : ToastMessage.showToast(
-                        'You are not connected to internet',
-                        context,
-                        backgroundColor: Colors.red,
-                      ),
+                onMore: () =>  _onGradeView(context),
               ),
               GradeList(),
               SizedBox(height: 20),
               CustomDivider(
                   leadingText: 'Subjects',
-                  onMore: () => _connectionStatus
-                      ? _onSubjectView(context)
-                      : ToastMessage.showToast(
-                          'You are not connected to internet',
-                          context,
-                          backgroundColor: Colors.red,
-                        )),
+                  onMore: () =>_onSubjectView(context),
+              ),
               SubjectList(),
               SizedBox(height: 20),
               CustomDivider(leadingText: 'Featured'),
               _buildList(),
             ],
-          )
-        : WhitePageTemplate(
-            title: '',
-            child: LearninkEmptyContent(
-              imageUrl: 'assets/icons/evs.png',
-              primaryText: 'You are not connected to internet',
-              primaryTextColor: Colors.red,
-            ));
-    ;
+          );
   }
 
   void _onGradeView(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:learnink/src/models/question.dart';
 import '../models/subject.dart';
 import '../models/grade.dart';
 import '../models/chapter.dart';
@@ -26,6 +27,7 @@ abstract class Database {
   Stream<List<Chapter>> selectedChaptersRefStream(Query query);
   Stream<Cart> userCartStream();
   Future<void> setCart(Cart cart);
+  Future<List<Question>> questionList();
 }
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -46,6 +48,18 @@ class FirestoreDatabase implements Database {
   Stream<List<Job>> jobsStream() => _service.collectionStream(
         path: APIPath.jobs(uid),
         builder: (data,documentId) => Job.fromMap(data,documentId),
+      );
+
+  //question related methods
+
+  Future<List<Question>> questionList() async => await _service.documentList(
+      path: APIPath.questions(),
+      builder: (data,documentId) {
+        if (data['type'] == 'STANDARD') {
+          return StandardQuestion.fromMap(data, documentId);
+        }
+        return null;
+      }
       );
 
   //subject related methods
