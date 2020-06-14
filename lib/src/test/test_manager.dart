@@ -24,8 +24,18 @@ class _TestManagerState extends State<TestManager> {
 
   void selectOption(int index)
   {
+    print('SelectOption called');
     setState(() {
       selectedOption=(selectedOption??-1)==index?null:index;
+      (presentedQuestions[sequenceNumber] as PresentedStandardQuestion).givenAnswers=[];
+      if(selectedOption !=null) {
+        (presentedQuestions[sequenceNumber] as PresentedStandardQuestion)
+            .givenAnswers.add(
+            (presentedQuestions[sequenceNumber] as PresentedStandardQuestion)
+                .presentedOptions[selectedOption]
+        );
+        print('given Answer : ${(presentedQuestions[sequenceNumber] as PresentedStandardQuestion).givenAnswers}');
+      }
     });
   }
 
@@ -76,6 +86,11 @@ class _TestManagerState extends State<TestManager> {
   Widget build(BuildContext context) {
    Widget presenter=LearninkLoadingIndicator(color: Colors.blue,);
     if(presentedQuestions.isNotEmpty && presentedQuestions[sequenceNumber].type=='OPTIONS'){
+      String givenAnswer=
+      (presentedQuestions[sequenceNumber] as PresentedStandardQuestion).givenAnswers.isNotEmpty?
+      (presentedQuestions[sequenceNumber] as PresentedStandardQuestion).givenAnswers[0] :
+      null;
+      selectedOption=(presentedQuestions[sequenceNumber] as PresentedStandardQuestion).presentedOptions.indexOf(givenAnswer);
       presenter=QuestionPresenterOptionType(
         selectOption: selectOption,
         selectedOption: selectedOption,
