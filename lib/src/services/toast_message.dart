@@ -23,6 +23,9 @@ class ToastMessage {
     ToastView.createView(toastWidget, isMargin, context, duration , gravity, backgroundColor,
         textStyle, backgroundRadius, border);
   }
+  static void dismissToast(){
+    ToastView.dismiss();
+  }
 }
 
 class ToastView {

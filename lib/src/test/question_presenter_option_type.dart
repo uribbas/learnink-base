@@ -7,23 +7,45 @@ import 'option.dart';
 
 class QuestionPresenterOptionType extends StatelessWidget {
 
-QuestionPresenterOptionType({this.question,this.selectedOption, this.selectOption,this.skip});
+QuestionPresenterOptionType({
+  this.question,
+  this.selectedOption,
+  this.selectOption,
+  this.skip,
+  this.onRenderingComplete,
+  this.notifyBuildStart
+});
 
   final int selectedOption;
   final ValueChanged<int> selectOption;
   final PresentedStandardQuestion question;
   final VoidCallback skip;
+  final VoidCallback onRenderingComplete;
+  final VoidCallback notifyBuildStart;
+
+  int childRenderedCount=0;
+
+  void notifyChildRender(){
+    childRenderedCount++;
+    if(childRenderedCount==question.presentedOptions.length +1 ){
+      onRenderingComplete();
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     Widget questionPresenter=TeXView(renderingEngine:TeXViewRenderingEngine.katex(),
-      child:TeXViewDocument(question.question['text'],));
+      child:TeXViewDocument(question.question['text'],),
+    onRenderFinished: (height)=>notifyChildRender(),
+    onTeXViewCreated: (controller)=>notifyBuildStart(),);
     List<Widget> options=[];
 
     // Widget questionPresenter=Text('This is a question',style:TextStyle(color:Colors.black),);
     return CustomScrollView(
         slivers: <Widget>[
-          SliverList (
+          SliverList(
             delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                 return Column(
@@ -31,11 +53,7 @@ QuestionPresenterOptionType({this.question,this.selectedOption, this.selectOptio
                   children: [
                     Padding(
                        padding:EdgeInsets.all(40),
-                        child:
-//                        Text("With the code above, you can see that you are creating your children with delegate. There are basically two ways to create the list elements. You can either specify the whole list in the delegate by using SliverChildListDelegateor you can load them dynamically by using SliverChildBuilderDelegate",
-//                        style: TextStyle(color: Colors.black),)
-                        questionPresenter
-                    ),
+                        child: questionPresenter),
                     Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CircleAvatar(),

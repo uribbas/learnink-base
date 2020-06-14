@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 import 'package:learnink/src/models/presented_question.dart';
 import 'package:learnink/src/models/question.dart';
 import 'package:learnink/src/services/database.dart';
+import 'package:learnink/src/services/toast_message.dart';
 import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import 'question_presenter_option_type.dart';
 
@@ -82,9 +84,19 @@ class _TestManagerState extends State<TestManager> {
     }
   }
 
+  void notifyTeXViewBuildStart(BuildContext context){
+    ToastMessage.showToast('',context,widget:LearninkLoadingIndicator(color:Colors.blue));
+
+  }
+
+  void onRenderingComplete(){
+    ToastMessage.dismissToast();
+  }
+
   @override
   Widget build(BuildContext context) {
-   Widget presenter=LearninkLoadingIndicator(color: Colors.blue,);
+   //Widget presenter=LearninkLoadingIndicator(color: Colors.blue,);
+    Widget presenter =LearninkLoadingIndicator(color:Colors.blue);
     if(presentedQuestions.isNotEmpty && presentedQuestions[sequenceNumber].type=='OPTIONS'){
       String givenAnswer=
       (presentedQuestions[sequenceNumber] as PresentedStandardQuestion).givenAnswers.isNotEmpty?
@@ -95,7 +107,9 @@ class _TestManagerState extends State<TestManager> {
         selectOption: selectOption,
         selectedOption: selectedOption,
         question:(presentedQuestions[sequenceNumber] as PresentedStandardQuestion),
-        skip:skip
+        skip:skip,
+          onRenderingComplete: onRenderingComplete,
+        notifyBuildStart:()=> notifyTeXViewBuildStart(context),
       );
       lastAccessedNumber=sequenceNumber;
     }
