@@ -45,6 +45,7 @@ class FluttexView extends StatelessWidget {
     }
 
     int consumeSpaces(int index) {
+      print("Inside consume spaces:$index");
       while (!eos(index) && [' ', '\t'].contains(texString[index])) {
         index++;
       }
@@ -53,12 +54,13 @@ class FluttexView extends StatelessWidget {
 
     while (!eos(currIndex)) {
       print("$currIndex:${texString[currIndex]}");
+      //print("$startOfTexString:${texStartMarker},${doubleChar(currIndex)},${endMarkers[texStartMarker]}");
       currIndex = consumeSpaces(currIndex);
       if (eos(currIndex)) {
         continue;
       }
 
-      if (["\\(", "\\[", "\$\$"].contains(doubleChar(currIndex))) {
+      if (["\\(", "\\[", "\$\$"].contains(doubleChar(currIndex))&& startOfTexString==null) {
         if (startOfNormalString != null) {
           tokens.add(Token(
               tokenString: texString.substring(startOfNormalString, currIndex),
@@ -72,7 +74,7 @@ class FluttexView extends StatelessWidget {
         print("Inside start of Tex String:$startOfTexString");
 
         continue;
-      } else if (texString[currIndex] == '\$') {
+      } else if (texString[currIndex] == '\$' && startOfTexString==null) {
         if (startOfNormalString != null) {
           tokens.add(Token(
               tokenString: texString.substring(startOfNormalString, currIndex),
@@ -226,7 +228,7 @@ class FluttexView extends StatelessWidget {
     }
 
     int consumeSpaces(index) {
-      while ([" ", "\t"].contains(texString[index])) {
+      while (!eos(index) && [" ", "\t"].contains(texString[index])) {
         index++;
       }
       return index;
@@ -237,7 +239,7 @@ class FluttexView extends StatelessWidget {
       if (eos(currIndex)) {
         continue;
       }
-      print("Print of character:${texString[currIndex]}");
+      print("_charaterCount:Print of character:${texString[currIndex]}");
       if (scripts.contains(texString[currIndex])) {
         currIndex++;
         script = true;
@@ -252,7 +254,7 @@ class FluttexView extends StatelessWidget {
         factor = script ? 1 : factor;
       } else if (texString[currIndex] == "\\") {
         currIndex++;
-        while (!eos(currIndex) || !endOfWord.contains(texString[currIndex])) {
+        while (!eos(currIndex) && !endOfWord.contains(texString[currIndex])) {
           currIndex++;
         }
         count += factor;
@@ -265,6 +267,14 @@ class FluttexView extends StatelessWidget {
       }
     }
     return count;
+  }
+  double _calculateHeight(String texString){
+    if(texString.contains("\\frac")){
+      return 2;
+    }else if(texString.contains("\\over")){
+      return 2;
+    }
+    return 1;
   }
 
   @override
@@ -285,7 +295,7 @@ class FluttexView extends StatelessWidget {
       } else if (tok.tokenType == TokenType.TEXTEXT) {
         //print("CharacterCount:${tok.tokenString},${_characterCount(tok.tokenString)}");
         double maxWidth = _characterCount(tok.tokenString) * 16.0;
-        double maxHeight = 20;
+        double maxHeight = _calculateHeight(tok.tokenString)*20;
         _widgetSpan.add(WidgetSpan(
             child: ConstrainedBox(
                 constraints:
