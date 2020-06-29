@@ -31,6 +31,7 @@ dependencies:
   flutter_spinkit: ^4.1.2+1
   simple_animations: ^2.2.0
   flutter_tex: ^3.6.7+3
+  fluttex: ^0.0.2
 
 
 

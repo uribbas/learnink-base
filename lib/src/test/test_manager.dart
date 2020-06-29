@@ -43,6 +43,7 @@ class _TestManagerState extends State<TestManager> {
 
   @override
   void initState(){
+    print("Inside initState TestManager");
     formPresentableQuestions();
   }
 
@@ -96,6 +97,7 @@ class _TestManagerState extends State<TestManager> {
   @override
   Widget build(BuildContext context) {
    //Widget presenter=LearninkLoadingIndicator(color: Colors.blue,);
+    print("Inside build TestManager");
     Widget presenter =LearninkLoadingIndicator(color:Colors.blue);
     if(presentedQuestions.isNotEmpty && presentedQuestions[sequenceNumber].type=='OPTIONS'){
       String givenAnswer=
