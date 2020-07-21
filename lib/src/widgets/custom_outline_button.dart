@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 class CustomOutlineButton extends StatelessWidget {
   CustomOutlineButton({
     this.child,
-    this.color:Colors.transparent,
-    this.height:50.0,
-    this.radius:10.0,
-    this.borderColor:Colors.white,
-    this.borderWidth:1.0,
+    this.color: Colors.transparent,
+    this.height: 50.0,
+    this.radius: 10.0,
+    this.borderColor: Colors.white,
+    this.borderWidth: 1.0,
     this.highlightColor: Colors.indigoAccent,
-    this.elevationColor:Colors.white54,
-    this.highlightElevation:0.0,
+    this.elevationColor: Colors.white54,
+    this.highlightElevation: 0.0,
     this.onPressed,
   });
 
@@ -25,12 +25,15 @@ class CustomOutlineButton extends StatelessWidget {
   final Color elevationColor;
   final double highlightElevation;
   final VoidCallback onPressed;
+  double _width;
 
   @override
   Widget build(BuildContext context) {
+    //_width=MediaQuery.of(context).size.width-5;
     return SizedBox(
       height: height,
       child: Container(
+        // width:_width,
 //        padding: EdgeInsets.all(1.0),
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -38,17 +41,14 @@ class CustomOutlineButton extends StatelessWidget {
               Color(0x00FFFFFF),
               elevationColor,
             ],
-            stops: [0.9, 1.0],
+            stops: [0.88, 1.0],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             tileMode: TileMode.repeated,
           ),
           borderRadius: BorderRadius.all(Radius.circular(radius)),
           border: Border.all(
-              color: Colors.transparent,
-              width: 1.0,
-              style: BorderStyle.solid
-          ),
+              color: Colors.transparent, width: 1.0, style: BorderStyle.solid),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -57,8 +57,7 @@ class CustomOutlineButton extends StatelessWidget {
               child: Container(
                   padding: const EdgeInsets.all(5.0),
                   height: height - 8.0,
-                  child: Center(child: child)
-              ),
+                  child: Center(child: child)),
               color: color,
               highlightColor: highlightColor,
               highlightElevation: highlightElevation,

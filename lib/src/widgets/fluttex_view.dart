@@ -36,11 +36,10 @@ class FluttexView extends StatelessWidget {
       return !(index < texString.length);
     }
 
-    ;
-
     String doubleChar(int index) {
-      if (!eos(index + 1)) return texString.substring(index, index + 2);
-
+      if (!eos(index + 1)){
+        return texString.substring(index, index + 2);
+      }
       return null;
     }
 
@@ -120,13 +119,14 @@ class FluttexView extends StatelessWidget {
               subIndex++;
               startOfImgTag = subIndex;
               currIndex = subIndex;
-              if(texString.substring(startOfTexString, lastTexIndex+1).isNotEmpty) {
+              if(texString.substring(startOfTexString, lastTexIndex).isNotEmpty) {
                 tokens.add(Token(
                     tokenString: texString.substring(
                         startOfTexString, lastTexIndex),
                     tokenType: TokenType.TEXTEXT));
-                startOfTexString = null;
+
               }
+              startOfTexString = null;
               continue;
             }
           } else {
@@ -163,14 +163,14 @@ class FluttexView extends StatelessWidget {
           currIndex = subIndex;
           continue;
         }
-        String quoteCharacter=texString[subIndex];
+        //String quoteCharacter=texString[subIndex];
         if (["\"", "\'"].contains(texString[subIndex])) {
           String urlStartChar = texString[subIndex];
           int urlStartIndex = ++subIndex;
           while (!eos(subIndex) && texString[subIndex] != urlStartChar) {
             subIndex++;
           }
-          String imgUrl=texString.substring(urlStartIndex, subIndex);
+          //String imgUrl=texString.substring(urlStartIndex, subIndex);
           tokens.add(Token(
               tokenString: texString.substring(urlStartIndex, subIndex),
               tokenType: TokenType.IMAGE));
@@ -300,11 +300,11 @@ class FluttexView extends StatelessWidget {
             child: ConstrainedBox(
                 constraints:
                     BoxConstraints(maxWidth: maxWidth, maxHeight: maxHeight),
-                child: MathViewStatic(tex: tok.tokenString))));
+                child: MathViewStatic( key:UniqueKey(), tex: tok.tokenString))));
       }
       else if(tok.tokenType== TokenType.IMAGE){
         _widgetSpan.add(
-          WidgetSpan(child:LearninkNetworkImage(tok.tokenString))
+          WidgetSpan(child:LearninkNetworkImage(tok.tokenString),),
         );
       }
     }

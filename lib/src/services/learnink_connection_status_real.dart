@@ -49,21 +49,21 @@ class LearninkConnectionStatus {
 
   Future<bool> checkConnection() async {
     bool previousConnection = hasConnection;
-
-    try {
-      final result = await InternetAddress.lookup('firebase.google.com')
-          .timeout(Duration(seconds: 1),);
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        hasConnection = true;
-      } else {
-        hasConnection = false;
-      }
-    } on SocketException catch (_) {
-      hasConnection = false;
-    }
-    on TimeoutException catch (_) {
-      hasConnection = false;
-    }
+    hasConnection=true;
+//    try {
+//      final result = await InternetAddress.lookup('firebase.google.com')
+//          .timeout(Duration(seconds: 1),);
+//      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+//        hasConnection = true;
+//      } else {
+//        hasConnection = false;
+//      }
+//    } on SocketException catch (_) {
+//      hasConnection = false;
+//    }
+//    on TimeoutException catch (_) {
+//      hasConnection = false;
+//    }
 
     //The connection status changed send out an update to all listeners
      _statusController.add(hasConnection);

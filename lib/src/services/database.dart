@@ -63,10 +63,12 @@ class FirestoreDatabase implements Database {
       );
 
   //subject related methods
-  Stream<List<Subject>> subjectsStream() => _service.collectionStream(
+  Stream<List<Subject>> subjectsStream() {
+    print("Inside subjectStream");
+    return _service.collectionStream(
     path: APIPath.subjects(),
     builder: (data,documentId) => Subject.fromMap(data,documentId),
-  );
+  );}
 
   Stream<List<Subject>> selectedSubjectsRefStream(Query query) => _service.queryStream(
     query: query,
