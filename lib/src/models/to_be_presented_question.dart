@@ -1,10 +1,10 @@
 import 'question.dart';
 
-abstract class PresentedQuestion{
+abstract class ToBePresentedQuestion{
   String type;
 }
 
-class PresentedStandardQuestion extends PresentedQuestion {
+class PresentedStandardQuestion extends ToBePresentedQuestion {
   @override
   String type;
   String subjectId;

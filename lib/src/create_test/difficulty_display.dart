@@ -122,17 +122,30 @@ class _DifficultyDisplayState extends State<DifficultyDisplay> {
 
 
 
-    return Padding(
-      padding: const EdgeInsets.only(left:20.0,right:20,bottom:30,top:20),
-      child: ListView.separated(
-          shrinkWrap: true,
-          itemBuilder:(BuildContext context,int index){
-             return children[index];
-             },
-          separatorBuilder: (BuildContext context,int index){
-            return index<children.length-2?Divider(color: Colors.black45,):Container();
-          },
-          itemCount: children.length
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      alignment: Alignment.center,
+      color: Colors.black45,
+      child: Container(
+        width:MediaQuery.of(context).size.width-100,
+        color: Colors.transparent,
+        child: Card(
+          color: Colors.white,
+          elevation: 20.0,
+          child: Padding(
+            padding: const EdgeInsets.only(left:20.0,right:20,bottom:30,top:20),
+            child: ListView.separated(
+                shrinkWrap: true,
+                itemBuilder:(BuildContext context,int index){
+                   return children[index];
+                   },
+                separatorBuilder: (BuildContext context,int index){
+                  return index<children.length-2?Divider(color: Colors.black45,):Container();
+                },
+                itemCount: children.length
+            ),
+          ),
+        ),
       ),
     );;
   }

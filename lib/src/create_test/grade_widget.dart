@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 
 class GradeWidget extends StatefulWidget {
-  GradeWidget({this.selectedGrade,this.onGradeChange,this.gradeKey});
-  final ValueChanged<int> onGradeChange;
-  int selectedGrade;
+  GradeWidget({this.gradeList,this.selectedGrade,this.onGradeChange,this.gradeKey});
+  final ValueChanged<String> onGradeChange;
+  String selectedGrade;
+  List<String> gradeList;
   final GlobalKey<FormFieldState> gradeKey;
 
   @override
@@ -102,22 +103,22 @@ class _GradeWidgetState extends State<GradeWidget> {
                     ),
 
                 ),
-                  items: <int>[3, 4, 5, 6, 7, 8].map((int item) {
-                    return DropdownMenuItem<int>(
+                  items: widget.gradeList!=null? widget.gradeList.map((String item) {
+                    return DropdownMenuItem<String>(
                       child: Text(
-                        '$item',
+                        item,
                         style: TextStyle(color: Colors.black),
                       ),
                       value: item,
                     );
-                  }).toList(),
+                  }).toList():[],
                   selectedItemBuilder: (BuildContext context) {
-                    return <int>[3, 4, 5, 6, 7, 8].map<Widget>((int item) {
+                    return widget.gradeList!=null?widget.gradeList.map<Widget>((String item) {
                       return Text(
-                        '$item',
+                        item,
                         style: TextStyle(color: Colors.black),
                       );
-                    }).toList();
+                    }).toList():[];
                   },
                   onTap: (){widget.gradeKey.currentState.validate();},
                   onSaved: (value){},
@@ -128,7 +129,7 @@ class _GradeWidgetState extends State<GradeWidget> {
                     FocusScope.of(context).requestFocus(_focus);
                   },
                     validator: (value){
-                    if(value!=null){
+                    if(value!=null&& value.isNotEmpty){
                       print("Inside validator:value!=null");
                       _isValid=true;
                       return null;

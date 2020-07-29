@@ -5,27 +5,31 @@ class FirestoreService{
   FirestoreService._();
 
   static final instance=FirestoreService._();
+  final _firestore=Firestore.instance;
+
+  Firestore get firestoreInstance=>_firestore;
 
   Future<CollectionReference> getCollectionRef({String path}) async {
-    return Firestore.instance.collection(path);
+    return _firestore.collection(path);
   }
 
   Future<void> setData({String path, Map<String,dynamic> data} ) async {
-    final documentReference=Firestore.instance.document(path);
+    final documentReference=_firestore.document(path);
     //print('$uid:$data');
     await documentReference.setData(data);
   }
 
-  Future<void> addData({String path, Map<String,dynamic> data} ) async {
-    final collectionReference=Firestore.instance.collection(path);
+  Future<DocumentReference> addData({String path, Map<String,dynamic> data} ) async {
+    final collectionReference=_firestore.collection(path);
     //print('$uid:$data');
-    await collectionReference.add(data);
+   DocumentReference docRef= await collectionReference.add(data);
+   return docRef;
   }
 
   Stream<List<T>> collectionStream<T>({@required String path,
     @required T builder(Map<String,dynamic> data,String documentId)}){
     print("Inside collectionStream,path:$path");
-    final reference=Firestore.instance.collection(path);
+    final reference=_firestore.collection(path);
     final snapshots=reference.snapshots();
     return snapshots.map((snapshot)=>
         snapshot.documents.map(
@@ -38,7 +42,7 @@ class FirestoreService{
 
   Stream<T> documentStream<T>({@required String path,@required String docId,
     @required T builder(Map<String,dynamic> data,String documentId)}) {
-    final documentReference=Firestore.instance.document(path);
+    final documentReference=_firestore.document(path);
     final snapshots= documentReference.snapshots();
     return snapshots.map((snapshot)=>
         builder(snapshot.data,docId)
@@ -70,7 +74,7 @@ class FirestoreService{
   }
   Future<List<T>> documentList<T>({@required path,
     @required T builder(Map<String,dynamic> data,String documentId)}) async {
-    final reference=Firestore.instance.collection(path);;
+    final reference=_firestore.collection(path);;
     final snapshots= await reference.getDocuments();
     return snapshots.documents.map(
             (snapshot)=> builder(snapshot.data,snapshot.documentID)

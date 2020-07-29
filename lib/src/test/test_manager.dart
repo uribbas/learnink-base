@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
-import 'package:learnink/src/models/presented_question.dart';
+import 'package:learnink/src/models/to_be_presented_question.dart';
 import 'package:learnink/src/models/question.dart';
 import 'package:learnink/src/services/database.dart';
 import 'package:learnink/src/services/toast_message.dart';
@@ -21,7 +21,7 @@ class _TestManagerState extends State<TestManager> {
   int selectedOption;
   int sequenceNumber=0;
   int lastAccessedNumber=0;
-  List<PresentedQuestion> presentedQuestions=[];
+  List<ToBePresentedQuestion> presentedQuestions=[];
   Database get database=>widget.database;
 
   void selectOption(int index)

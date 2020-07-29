@@ -17,5 +17,15 @@ class APIPath{
   //cart collection
   static String cart(String documentId)=>'carts/$documentId';
   static String carts()=>'carts';
+
+  // test collection
+  static String tests()=>'tests';
+  //question collection
   static String questions()=>'questions';
+
+  //questionDistribution collection
+    static String questionDistribution()=>'questionDistribution';
+
+    // subscription collection
+  static String subsciptions()=> 'subscriptions';
 }

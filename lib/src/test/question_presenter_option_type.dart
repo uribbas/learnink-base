@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tex/flutter_tex.dart';
-import 'package:learnink/src/models/presented_question.dart';
+import 'package:learnink/src/models/to_be_presented_question.dart';
 import 'package:learnink/src/widgets/custom_outline_button.dart';
 import 'package:learnink/src/widgets/fluttex_view.dart';
 import 'option.dart';

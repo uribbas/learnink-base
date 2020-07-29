@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learnink/src/models/chapter.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 import 'chapter_list.dart';
 
@@ -11,8 +12,8 @@ class ChapterListWidget extends StatelessWidget {
     this.removeChapter,
     this.error,
   });
-  final List<String> chapters;
-  List<String> addedChapters;
+  final List<Chapter> chapters;
+  List<Chapter> addedChapters;
   final VoidCallback modifyWeights;
   final VoidCallback addChapters;
   final ValueChanged<int> removeChapter;

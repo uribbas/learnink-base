@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:learnink/src/models/chapter.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 
 
 class ChapterList extends StatelessWidget {
   ChapterList({ this.chapters,this.removeChapter,this.error});
 
-  final List<String> chapters;
+  final List<Chapter> chapters;
   final ValueChanged<int> removeChapter;
   final bool error;
   @override
@@ -13,7 +14,7 @@ class ChapterList extends StatelessWidget {
     List<InlineSpan> _widgetSpan=[];
 
     for(int i=0;i<chapters.length;i++){
-      String chapter=chapters[i];
+      Chapter chapter=chapters[i];
       _widgetSpan.add(WidgetSpan(
         child:Padding(
           padding: const EdgeInsets.only(left:4.0,right:4.0),
@@ -26,7 +27,7 @@ class ChapterList extends StatelessWidget {
             ),
           child: Row( mainAxisSize: MainAxisSize.min,
               children:[
-               Text('$chapter',style: TextStyle(color:Colors.black,fontSize: 14),),
+               Text('${chapter.chapterTitle}',style: TextStyle(color:Colors.black,fontSize: 14),),
                 Padding(
                   padding: const EdgeInsets.only(left:8.0),
                   child: Icon(MyFlutterIcons.cross,color:Colors.red,size:10),

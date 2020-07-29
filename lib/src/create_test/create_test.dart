@@ -1,8 +1,21 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:learnink/src/create_test/duration_widget.dart';
+import 'package:learnink/src/models/chapter.dart';
+import 'package:learnink/src/models/question.dart';
+import 'package:learnink/src/models/question_distribution.dart';
+import 'package:learnink/src/models/subject.dart';
+import 'package:learnink/src/models/subscription.dart';
+import 'package:learnink/src/models/test.dart';
+import 'package:learnink/src/services/auth.dart';
+import 'package:learnink/src/services/toast_message.dart';
+import 'package:learnink/src/widgets/learnink_loading_indicator.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 import 'package:learnink/src/widgets/platform_alert_dialog.dart';
+import 'package:provider/provider.dart';
 import 'number_of_question_widget.dart';
 import 'test_feature_widget.dart';
 import 'chapter_list_widget.dart';
@@ -24,30 +37,80 @@ class CreateTest extends StatefulWidget {
 }
 
 class _CreateTestState extends State<CreateTest> {
+  List<Subscription> _activeSubscriptions;
   String _title;
   GlobalKey<FormFieldState> _titleKey=GlobalKey<FormFieldState>();
-  int _grade;
+  String _grade;
+  List<String> _gradeList;
+  Map<String,List<String>>_gradeSubject={};
   GlobalKey<FormFieldState> _gradeKey=GlobalKey<FormFieldState>();
   GlobalKey<FormFieldState> _subjectKey = GlobalKey<FormFieldState>();
   String _subject;
-  List<String> _addedChapters = ['Integers'];
-  List<int> _addedChapterWeights=[100];
+  List<String> _subjectList;
+  List<Chapter> _addedChapters = [];
+  List<int> _addedChapterWeights=[];
   bool _chapterError=false;
-  List<String> _chapters=[];//['Integers','Fraction','Numbers','Decimal'];
+  List<Chapter> _chapters=[];//['Integers','Fraction','Numbers','Decimal'];
   Map<String,int> _difficultyWeightage={"easy":34,"moderate":33,"difficult":33,};
   int _numberOfQuestions=15;
   GlobalKey<FormFieldState> _noQKey=GlobalKey<FormFieldState>();
-  String _numberErrorText;
   bool _isAdaptive=false;
   bool _isTimed=true;
   int _duration=0;
+  User _user;
   GlobalKey<FormFieldState> _durationKey=GlobalKey<FormFieldState>();
   OverlayState _overlayState;
   OverlayEntry _overlayEntry;
 
   @override
+  void initState() {
+    super.initState();
+    _fetchSubscriptions();
+    print(_activeSubscriptions);
+  }
+
+  Future<void> _fetchCurrentUser(BuildContext context) async{
+    _user=await Provider.of<AuthBase>(context,listen: false).currentUser();
+  }
+
+  Future<void> _fetchSubscriptions() async{
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      ToastMessage.showToast('', context,
+          widget:LearninkLoadingIndicator(color:Colors.blue),duration: 20);
+      _fetchCurrentUser(context);
+    });
+
+    _activeSubscriptions=await widget.database.activeSubscriptionList();
+    _gradeList=[];
+    for(Subscription sub in _activeSubscriptions){
+      if(!_gradeList.contains(sub.gradeId)){
+        _gradeList.add(sub.gradeId);
+        _gradeSubject[sub.gradeId]=[];
+        _gradeSubject[sub.gradeId].add(sub.subjectId);
+      }else{
+        _gradeSubject[sub.gradeId].add(sub.subjectId);
+      }
+    }
+    if(_gradeList.length ==1){
+      _grade=_gradeList[0];
+      _subjectList=_gradeSubject[_grade];
+      if(_subjectList.length==1) {
+        _subject = _subjectList[0];
+        _chapters=await widget.database.selectedGradeSubjectChapters(_grade, _subject);
+      }
+      else{
+        _subject=null;
+      }
+    }
+    setState(() {
+      ToastMessage.dismissToast();
+    });
+
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
+     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
         Container(
@@ -119,6 +182,7 @@ class _CreateTestState extends State<CreateTest> {
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                         return GradeWidget(
+                          gradeList: _gradeList,
                           selectedGrade:_grade,
                           gradeKey: _gradeKey,
                           onGradeChange:_onGradeChange,
@@ -131,6 +195,7 @@ class _CreateTestState extends State<CreateTest> {
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                         return SubjectWidget(
+                          subjectList:_subjectList,
                           selectedSubject:_subject,
                           subjectKey: _subjectKey,
                           onSubjectChange:_onSubjectChange,
@@ -218,38 +283,46 @@ class _CreateTestState extends State<CreateTest> {
 //    }
   }
 
-  void _onGradeChange(int grade){
-    _grade=grade;
-    setState(() {});
+  Future<void> _onGradeChange(String grade) async {
+    String oldGrade=_grade;
+    if(oldGrade!=grade) {
+      _grade = grade;
+      _subjectList = _gradeSubject[grade];
+      _subject = _subjectList.length == 1 ? _subjectList[0] : null;
+      await _resetChapters();
+
+      setState(() {});
+    }
   }
   void _onWeightageChange(Map<String,int> weightage) {
     _overlayEntry?.remove();
-    String key = weightage.keys.toList()[0];
-    int value = weightage[key];
-
-    void adjust(bool isDifferencePositive, String key) {
-      if (isDifferencePositive) {
-        _difficultyWeightage[key] += 1;
-      } else {
-        _difficultyWeightage[key] -= 1;
-      }
-    }
-
-    _difficultyWeightage[key] = value;
-    int sum = _difficultyWeightage.values.toList().reduce((a, b) => a + b);
-    if (sum != 100) {
-      int difference = 100 - sum;
-      int differenceAbs=difference.abs();
-      List<String> wKeys=_difficultyWeightage.keys.toList();
-      for (int i = 0; i < differenceAbs; i++) {
-        String wKey=wKeys[i % wKeys.length];
-        if(key!=wKey){
-          adjust(difference>0,wKey);
-        }else{
-          differenceAbs++;
-        }
-      }
-    }
+//    String key = weightage.keys.toList()[0];
+//    int value = weightage[key];
+//
+//    void adjust(bool isDifferencePositive, String key) {
+//      if (isDifferencePositive) {
+//        _difficultyWeightage[key] += 1;
+//      } else {
+//        _difficultyWeightage[key] -= 1;
+//      }
+//    }
+//
+//    _difficultyWeightage[key] = value;
+//    int sum = _difficultyWeightage.values.toList().reduce((a, b) => a + b);
+//    if (sum != 100) {
+//      int difference = 100 - sum;
+//      int differenceAbs=difference.abs();
+//      List<String> wKeys=_difficultyWeightage.keys.toList();
+//      for (int i = 0; i < differenceAbs; i++) {
+//        String wKey=wKeys[i % wKeys.length];
+//        if(key!=wKey){
+//          adjust(difference>0,wKey);
+//        }else{
+//          differenceAbs++;
+//        }
+//      }
+//    }
+   _difficultyWeightage=weightage;
     setState(() {});
   }
 
@@ -277,7 +350,7 @@ class _CreateTestState extends State<CreateTest> {
                 TextStyle(color:Colors.black,fontSize: 16),),
                 borderColor:Colors.green,
                 elevationColor: Colors.green,
-                onPressed: (){},),
+                onPressed: _onSaveTest,),
             )
 
         ],),
@@ -324,30 +397,10 @@ class _CreateTestState extends State<CreateTest> {
       _overlayState = Overlay.of(context);
       _overlayEntry = OverlayEntry(
         builder: (BuildContext context) =>
-            Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
-              alignment: Alignment.center,
-              color: Colors.black45,
-
-              child: Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width - 100,
-                color: Colors.transparent,
-                child: Card(
-                  color: Colors.white,
-                  elevation: 20.0,
-                  child: ChapterWeightDisplay(
-                    chapters: _addedChapters,
-                    chapterWeights: _addedChapterWeights,
-                    onModifyWeights:_onModifyChapterWeights,
-                  ),
-                ),
-              ),
+            ChapterWeightDisplay(
+              chapters: _addedChapters,
+              chapterWeights: _addedChapterWeights,
+              onModifyWeights:_onModifyChapterWeights,
             ),
       );
       _overlayState.insert(_overlayEntry);
@@ -372,23 +425,9 @@ class _CreateTestState extends State<CreateTest> {
    } else {
       _overlayState=Overlay.of(context);
       _overlayEntry=  OverlayEntry(
-        builder: (BuildContext context) => Container(
-          width: MediaQuery.of(context).size.width,
-          alignment: Alignment.center,
-          color: Colors.black45,
-
-          child: Container(
-            width:MediaQuery.of(context).size.width-100,
-            color: Colors.transparent,
-            child: Card(
-              color: Colors.white,
-              elevation: 20.0,
-              child: DifficultyDisplay(
-                difficultyWeightage: _difficultyWeightage,
-                onWeightageChange: _onWeightageChange,
-              ),
-            ),
-          ),
+        builder: (BuildContext context) => DifficultyDisplay(
+          difficultyWeightage: _difficultyWeightage,
+          onWeightageChange: _onWeightageChange,
         ),
       );
       _overlayState.insert(_overlayEntry);
@@ -408,30 +447,10 @@ class _CreateTestState extends State<CreateTest> {
       _overlayState = Overlay.of(context);
       _overlayEntry = OverlayEntry(
         builder: (BuildContext context) =>
-            Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
-              alignment: Alignment.center,
-              color: Colors.black45,
-
-              child: Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width - 100,
-                color: Colors.transparent,
-                child: Card(
-                  color: Colors.white,
-                  elevation: 20.0,
-                  child: ChapterDisplayWidget(
-                    chapters: _chapters,
-                    selectedChapters: _addedChapters,
-                    onAddChapters: _onAddChapters,
-                  ),
-                ),
-              ),
+            ChapterDisplayWidget(
+              chapters: _chapters,
+              selectedChapters: _addedChapters,
+              onAddChapters: _onAddChapters,
             ),
       );
       _overlayState.insert(_overlayEntry);
@@ -453,21 +472,22 @@ class _CreateTestState extends State<CreateTest> {
            +'Otherwise system itself will decide the duration.',
         cancelActionText:'OK',
       ).show(context);
-    }else{_overlayState = Overlay.of(context);
-    _overlayEntry = OverlayEntry(
+    }else{
+      _overlayState = Overlay.of(context);
+      _overlayEntry = OverlayEntry(
       builder: (BuildContext context) =>
           DurationWidget(
             duration: _duration,
             durationKey:_durationKey,
             onDurationChange:_onDurationChange ,
           )
-    );
-    _overlayState.insert(_overlayEntry);
+      );
+      _overlayState.insert(_overlayEntry);
     }
 
   }
 
-  void _onAddChapters(List<String> chapters){
+  void _onAddChapters(List<Chapter> chapters){
    setState(() {
      _addedChapters=chapters;
      _overlayEntry?.remove();
@@ -478,12 +498,25 @@ class _CreateTestState extends State<CreateTest> {
     _title=title;
     }
 
-  void _onSubjectChange(String subject){
-    _subject=subject;
-    setState(() {});
+  Future<void> _onSubjectChange(String subject) async{
+    String oldSubject=_subject;
+    if(oldSubject!=subject) {
+      _subject = subject;
+      await _resetChapters();
+      setState(() {});
+    }
   }
 
-  bool validateCreateTest(){
+  Future<void> _resetChapters() async{
+    ToastMessage.showToast('', context,
+        widget:LearninkLoadingIndicator(color:Colors.blue),duration: 20);
+
+    _chapters=await widget.database.selectedGradeSubjectChapters(_grade, _subject);
+    _addedChapters=[];
+    ToastMessage.dismissToast();
+  }
+
+  bool _validateCreateTest(){
     bool _isValid=true;
     _isValid &=_titleKey.currentState.validate();
     _isValid &=_gradeKey.currentState.validate();
@@ -501,7 +534,194 @@ class _CreateTestState extends State<CreateTest> {
   }
 
   void _onStartTest(){
-    validateCreateTest();
+
+  }
+
+  Map<String,int> _calculateChapterWiseQ(){
+    Map<String,int> chaptersCovered=Map<String,int>();
+    int sum=0;
+    for(int i=0;i<_addedChapters.length;i++){
+      chaptersCovered[_addedChapters[i].chapterId]=
+      (_numberOfQuestions*_addedChapterWeights[i]*0.01).floor();
+      sum+=chaptersCovered[_addedChapters[i].chapterId];
+    }
+    int diff=_numberOfQuestions-sum;
+
+    var sortedEntries = chaptersCovered.entries.toList()
+      ..sort((e1, e2) {
+      var diff = e1.value.compareTo(e2.value);
+      if (diff == 0) diff = e1.key.compareTo(e2.key);
+      return diff;
+    });
+    Map<String,int> newMap=Map.fromEntries(sortedEntries);
+    for(int i=0;i<diff;i++){
+     newMap[sortedEntries[i%sortedEntries.length].key]=
+         sortedEntries[i%sortedEntries.length].value+1;
+    }
+
+    return newMap;
+  }
+
+  Future<String> _findTestImageUrl() async{
+    if(_addedChapters.length==1){
+      return _addedChapters[0].chapterImageUrl;
+    }
+    List<Subject> subjects=await widget.database.subjectById(_grade, _subject);
+    return subjects[0].subjectImageUrl;
+  }
+
+  Future<Map<String,List<String>>> _findQuestionsSelected(Map<String,int> chapterWiseQ) async {
+    Map<String, List<int>> chapterBreakup = Map<String, List<int>>();
+    if (!_isAdaptive) {
+      for (String chap in chapterWiseQ.keys.toList()) {
+        List<int> chapBreakList = [];
+        chapBreakList.add(
+            (chapterWiseQ[chap] * _difficultyWeightage['easy']*.01).floor());
+        chapBreakList.add(
+            (chapterWiseQ[chap] * _difficultyWeightage['moderate']*.01).floor());
+        chapBreakList.add(
+            (chapterWiseQ[chap] * _difficultyWeightage['difficult']*.01).floor());
+        int sum = chapBreakList.reduce((a, b) => a + b);
+        int diff = chapterWiseQ[chap] - sum;
+        for (int i = 0; i < diff; i++) {
+          chapBreakList[i % chapBreakList.length] += 1;
+        }
+        chapterBreakup[chap] = chapBreakList;
+      }
+    } else {
+      for (String chap in chapterWiseQ.keys.toList()) {
+        List<int> chapBreakList = [
+          chapterWiseQ[chap],
+          chapterWiseQ[chap],
+          chapterWiseQ[chap]
+        ];
+        chapterBreakup[chap] = chapBreakList;
+      }
+    }
+    print('_findQuestionsSelected:After chapterBreakup:$chapterBreakup');
+      Map<String,Map<String,List<String>>> chapterQuestions=Map<String,Map<String,List<String>>>();
+      for (String chap in chapterBreakup.keys.toList()) {
+        QuestionDistribution qDist = (await widget.database
+            .questionDistributionList(
+            _grade, _subject, chap))[0];
+        print('_finsQuestionsSelecetd:questionDistribution:${qDist.easy},${qDist.moderate},${qDist.difficult}');
+        int ms=DateTime.now().microsecondsSinceEpoch+1;
+        Random rand = Random(ms);
+        //generate easy indices
+        int easyCount = chapterBreakup[chap][0];
+        List<int> easyIndices = [];
+        for (int i = 0; i < easyCount; i++) {
+          int randIndex = rand.nextInt(qDist.easy);
+          if (easyIndices.contains(randIndex)) {
+            easyCount++;
+          } else {
+            easyIndices.add(randIndex);
+          }
+        }
+        print('_findQuestionsSelected,easyIndices:$easyIndices');
+
+        //genarate moderate indices
+        ms=DateTime.now().microsecondsSinceEpoch+2;
+        rand = Random(ms);
+        int moderateCount = chapterBreakup[chap][1];
+        List<int> moderateIndices = [];
+        for (int i = 0; i < moderateCount; i++) {
+          int randIndex = rand.nextInt(qDist.moderate);
+          if (easyIndices.contains(randIndex)) {
+            moderateCount++;
+          } else {
+            moderateIndices.add(randIndex);
+          }
+        }
+        print('_findQuestionsSelected,moderateIndices:$moderateIndices');
+          //genarate difficult indices
+        ms=DateTime.now().microsecondsSinceEpoch+3;
+        rand = Random(ms);
+        int difficultCount = chapterBreakup[chap][2];
+        List<int> difficultIndices = [];
+        for (int i = 0; i < difficultCount; i++) {
+          int randIndex = rand.nextInt(qDist.difficult);
+          if (easyIndices.contains(randIndex)) {
+            difficultCount++;
+          } else {
+            difficultIndices.add(randIndex);
+          }
+        }
+        print('_findQuestionsSelected,difficultIndices:$difficultIndices');
+
+        chapterQuestions[chap]=Map<String,List<String>>();
+        chapterQuestions[chap]['easy']=easyIndices.map((int e)=>'${_grade}_${_subject}_${chap}_easy_${e}').toList();
+        chapterQuestions[chap]['moderate']=moderateIndices.map((int e)=>'${_grade}_${_subject}_${chap}_moderate_${e}').toList();
+        chapterQuestions[chap]['difficult']=difficultIndices.map((int e)=>'${_grade}_${_subject}_${chap}_difficult_${e}').toList();
+      }
+
+      print('_findQuestionsSelected,after chapterQuestions:$chapterQuestions');
+
+      Map<String,List<String>> selectedQuestions=Map<String,List<String>>();
+      selectedQuestions['easy']=[];
+      selectedQuestions['moderate']=[];
+      selectedQuestions['difficult']=[];
+      for(String chap in chapterQuestions.keys.toList()){
+        selectedQuestions['easy'].addAll(chapterQuestions[chap]['easy']);
+        selectedQuestions['moderate'].addAll(chapterQuestions[chap]['moderate']);
+        selectedQuestions['difficult'].addAll(chapterQuestions[chap]['difficult']);
+      }
+
+      return selectedQuestions;
+  }
+
+  void _resetForm(){
+    _grade=null;
+    _subject=null;
+    _title=null;
+    _chapters=[];
+    _addedChapters=[];
+    _chapterError=false;
+     _difficultyWeightage={"easy":34,"moderate":33,"difficult":33,};
+    _numberOfQuestions=15;
+    _isAdaptive=false;
+    _isTimed=true;
+    _duration=0;
+    setState(() {});
+  }
+
+
+
+  void _onSaveTest() async{
+    ToastMessage.showToast('', context,
+        widget:LearninkLoadingIndicator(color:Colors.blue),duration: 20);
+    bool isValid=_validateCreateTest();
+    String testId;
+    if(isValid){
+       String testImageUrl=await _findTestImageUrl();
+       print('_onSaveTest,testImageUrl:${testImageUrl}');
+       Map<String,int> chapterWiseQ=_calculateChapterWiseQ();
+       print('_onSaveTest,chapterwiseQ:$chapterWiseQ');
+       Map<String,List<String>> questionSelected=await _findQuestionsSelected(chapterWiseQ);
+       print('_onSaveTest,questionSelected:$questionSelected');
+       Test test=Test(
+        uid:_user?.uid,
+        subjectId: _subject,
+        gradeId: _grade,
+        testTitle: _title,
+        isAdaptive: _isAdaptive,
+        isTimed: _isTimed,
+        status:'new',
+        chaptersCovered: chapterWiseQ,
+        testImageUrl: testImageUrl,
+        testDate: null,
+        categoryWeights: _difficultyWeightage,
+        totalQuestions: _numberOfQuestions,
+         totalMarks: null,
+         allottedTime: _duration,
+         elapsedTime:null,
+         questionSelected:questionSelected,
+         questionPresented: null
+       );
+       testId=await widget.database.createTest(test);
+       _resetForm();
+    }
+   ToastMessage.dismissToast();
   }
 
 }

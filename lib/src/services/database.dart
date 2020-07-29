@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:learnink/src/models/question.dart';
+import 'package:learnink/src/models/question_distribution.dart';
+import 'package:learnink/src/models/test.dart';
+import '../models/question.dart';
+import '../models/subscription.dart';
 import '../models/subject.dart';
 import '../models/grade.dart';
 import '../models/chapter.dart';
@@ -20,14 +23,19 @@ abstract class Database {
   Stream<List<LearninkUserInfo>> selectedUsersStream(CollectionReference ref);
   Future<List<LearninkUserInfo>> selectedUsersRefList(Query query);
   Stream<List<Grade>> gradesStream();
+  Future<List<Subject>> subjectById(String gradeId,String subjectId);
   Stream<List<Subject>> subjectsStream();
   Stream<List<Subject>> selectedSubjectsRefStream(Query query);
   Future<List<Subject>> selectedSubjectsRefList(Query query);
   Stream<List<Chapter>> chaptersStream();
   Stream<List<Chapter>> selectedChaptersRefStream(Query query);
+  Future<List<Chapter>> selectedGradeSubjectChapters(String gradeId,String subjectId);
   Stream<Cart> userCartStream();
   Future<void> setCart(Cart cart);
   Future<List<Question>> questionList();
+  Future<List<QuestionDistribution>> questionDistributionList(String gradeId,String subjectId,String chapterId);
+  Future<String> createTest(Test test);
+  Future<List<Subscription>> activeSubscriptionList();
 }
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -50,6 +58,21 @@ class FirestoreDatabase implements Database {
         builder: (data,documentId) => Job.fromMap(data,documentId),
       );
 
+ //subscription related methods
+  Future<List<Subscription>> activeSubscriptionList() async {
+    DateTime currentDate=DateTime.now();
+    CollectionReference subsRef=await getCollectionRef(APIPath.subsciptions());
+    Query query=subsRef.where('uid',isEqualTo:uid ).where('endDate',isGreaterThanOrEqualTo: currentDate);
+    return _service.collectionRefList(query: query,
+                 builder: (data,documentId)=>Subscription.fromMap(data, documentId));
+  }
+
+  //test related method
+  Future<String> createTest(Test test) async {
+    DocumentReference docRef=await _service.addData(path:APIPath.tests(),data:test.toMap());
+    return docRef.documentID;
+  }
+
   //question related methods
 
   Future<List<Question>> questionList() async => await _service.documentList(
@@ -62,7 +85,34 @@ class FirestoreDatabase implements Database {
       }
       );
 
+  Future<List<QuestionDistribution>> questionDistributionList(String gradeId,String subjectId,String chapterId) async{
+    Query query=_service.firestoreInstance
+        .collection(APIPath.questionDistribution())
+        .where('gradeId',isEqualTo: gradeId)
+        .where('subjectId',isEqualTo: subjectId)
+        .where('chapterId',isEqualTo: chapterId);
+
+    return _service.collectionRefList(query: query,
+        builder:(data,documentId)=>QuestionDistribution.fromMap(data,documentId));
+
+
+  }
+
+
   //subject related methods
+
+  Future<List<Subject>> subjectById(String gradeId,String subjectId){
+    Query query=_service.firestoreInstance
+        .collection(APIPath.subjects())
+        .where('gradeId',isEqualTo:gradeId )
+        .where('subjectId',isEqualTo:subjectId);
+
+    return _service.collectionRefList(query: query,
+        builder:(data,documentId)=>Subject.fromMap(data, documentId));
+
+
+  }
+
   Stream<List<Subject>> subjectsStream() {
     print("Inside subjectStream");
     return _service.collectionStream(
@@ -89,6 +139,16 @@ class FirestoreDatabase implements Database {
   );
 
   //chapters related methods
+  Future<List<Chapter>> selectedGradeSubjectChapters(String gradeId,String subjectId) async{
+    Query query=_service.firestoreInstance
+                 .collection(APIPath.chapters())
+                 .where('gradeId',isEqualTo:gradeId )
+                 .where('subjectId',isEqualTo:subjectId);
+
+        return _service.collectionRefList(query: query,
+            builder:(data,documentId)=>Chapter.fromMap(data, documentId));
+  }
+
   Stream<List<Chapter>> chaptersStream() => _service.collectionStream(
     path: APIPath.chapters(),
     builder: (data,documentId) => Chapter.fromMap(data,documentId),

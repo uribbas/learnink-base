@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:learnink/src/widgets/my_flutter_icons.dart';
 
 class SubjectWidget extends StatefulWidget {
-  SubjectWidget({this.selectedSubject, this.subjectKey, this.onSubjectChange});
+  SubjectWidget({this.subjectList,this.selectedSubject, this.subjectKey, this.onSubjectChange});
   String selectedSubject;
+  List<String> subjectList;
   final GlobalKey<FormFieldState> subjectKey;
   final ValueChanged<String> onSubjectChange;
 
@@ -55,7 +57,7 @@ class _SubjectWidgetState extends State<SubjectWidget> {
                 padding: EdgeInsets.only(left: 20),
                 width: 200.0,
                 //height: _isValid?60:75,
-                child: DropdownButtonFormField(
+                child: DropdownButtonFormField<String>(
                     autovalidate: _focused,
                     focusNode: _focus,
                   key: widget.subjectKey,
@@ -102,23 +104,23 @@ class _SubjectWidgetState extends State<SubjectWidget> {
                     ),
                   ),
                   items:
-                  <String>['Maths', 'English', 'Science'].map((String item) {
+                  widget.subjectList!=null? widget.subjectList.map((String item) {
                     return DropdownMenuItem<String>(
                       child: Text(
-                        '$item',
+                        item,
                         style: TextStyle(color: Colors.black),
                       ),
                       value: item,
                     );
-                  }).toList(),
+                  }).toList():[],
                   selectedItemBuilder: (BuildContext context) {
-                    return <String>['Maths', 'English', 'Science']
+                    return widget.subjectList!=null? widget.subjectList
                         .map<Widget>((String item) {
                       return Text(
-                        '$item',
+                        item,
                         style: TextStyle(color: Colors.black),
                       );
-                    }).toList();
+                    }).toList():[];
                   },
                     onTap: (){widget.subjectKey.currentState.validate();},
                   onSaved: (value) =>{},
@@ -134,9 +136,11 @@ class _SubjectWidgetState extends State<SubjectWidget> {
                       _isValid=true;
                       return null;
                     }
-                    setState(() {
-                      _isValid=false;
+                    _isValid=false;
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      setState(() {});
                     });
+
                     return 'Subject can\'t be empty';
                   }
                  ),
