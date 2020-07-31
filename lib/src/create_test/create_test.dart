@@ -71,7 +71,7 @@ class _CreateTestState extends State<CreateTest> {
 
   Future<void> _fetchCurrentUser(BuildContext context) async{
     _user=await Provider.of<AuthBase>(context,listen: false).currentUser();
-  }
+    }
 
   Future<void> _fetchSubscriptions() async{
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -621,13 +621,13 @@ class _CreateTestState extends State<CreateTest> {
         print('_findQuestionsSelected,easyIndices:$easyIndices');
 
         //genarate moderate indices
-        ms=DateTime.now().microsecondsSinceEpoch+2;
-        rand = Random(ms);
+        //ms=DateTime.now().microsecondsSinceEpoch+2;
+        //rand = Random(ms);
         int moderateCount = chapterBreakup[chap][1];
         List<int> moderateIndices = [];
         for (int i = 0; i < moderateCount; i++) {
           int randIndex = rand.nextInt(qDist.moderate);
-          if (easyIndices.contains(randIndex)) {
+          if (moderateIndices.contains(randIndex)) {
             moderateCount++;
           } else {
             moderateIndices.add(randIndex);
@@ -635,13 +635,13 @@ class _CreateTestState extends State<CreateTest> {
         }
         print('_findQuestionsSelected,moderateIndices:$moderateIndices');
           //genarate difficult indices
-        ms=DateTime.now().microsecondsSinceEpoch+3;
-        rand = Random(ms);
+        //ms=DateTime.now().microsecondsSinceEpoch+3;
+        //rand = Random(ms);
         int difficultCount = chapterBreakup[chap][2];
         List<int> difficultIndices = [];
         for (int i = 0; i < difficultCount; i++) {
           int randIndex = rand.nextInt(qDist.difficult);
-          if (easyIndices.contains(randIndex)) {
+          if (difficultIndices.contains(randIndex)) {
             difficultCount++;
           } else {
             difficultIndices.add(randIndex);
