@@ -88,7 +88,7 @@ class Subject{
       'subjectDescription': subjectDescription,
       'subjectId': subjectId,
       'subjectImageUrl': subjectImageUrl,
-      'subjectKeyWords': List.from(subjectKeyWords),
+      'subjectKeyWords': List.from(subjectKeyWords??[]),
       'subjectName': subjectName,
       'subjectPopularityRating':subjectPopularityRating,
       'validityPeriod':validityPeriod,

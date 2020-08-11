@@ -4,7 +4,7 @@ import 'material_dashboard_scaffold.dart';
 import '../progress.dart';
 import 'tab_item.dart';
 import '../account.dart';
-import '../bookshelves.dart';
+import '../bookshelves/bookshelves.dart';
 import '../store/store.dart';
 import '../chat.dart';
 
@@ -18,7 +18,7 @@ class _DashboardState extends State<Dashboard> {
 
  Map<TabItem,Widget> get widgetBuilders{
    return {
-     TabItem.bookshelves:BookShelves(),
+     TabItem.bookshelves:Bookshelves(),
      TabItem.store:Store(),
      TabItem.progress:Progress(),
      TabItem.chat:Chat(),

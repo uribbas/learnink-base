@@ -80,7 +80,7 @@ class CustomOutlineButton extends StatelessWidget {
           CustomBoxShadow(
             color: elevationColor.withOpacity(0.7),
             blurStyle: BlurStyle.outer,
-            blurRadius: 10,
+            blurRadius: 5,
             offset:Offset(0,0),
 
           ),

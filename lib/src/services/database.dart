@@ -35,6 +35,7 @@ abstract class Database {
   Future<List<Question>> questionList();
   Future<List<QuestionDistribution>> questionDistributionList(String gradeId,String subjectId,String chapterId);
   Future<String> createTest(Test test);
+  Stream<List<Test>> testListStream(String userId,[List<String> testType=const ['new','ongoing','complete'],int limit=0]);
   Future<List<Subscription>> activeSubscriptionList();
 }
 
@@ -71,6 +72,21 @@ class FirestoreDatabase implements Database {
   Future<String> createTest(Test test) async {
     DocumentReference docRef=await _service.addData(path:APIPath.tests(),data:test.toMap());
     return docRef.documentID;
+  }
+
+  Stream<List<Test>> testListStream(String userId,[List<String> testType=const ['new','ongoing','complete'],int limit=0]){
+    Query query=_service.firestoreInstance.collection(APIPath.tests())
+               .where('uid',isEqualTo:userId )
+               .where('status',whereIn:testType )
+               .orderBy('testDate');
+
+    if(limit !=0){
+      query=query.limit(limit);
+    }
+
+    return _service.queryStream(query: query,
+        builder:(data,documentId)=>Test.fromMap(data,documentId)
+    );
   }
 
   //question related methods

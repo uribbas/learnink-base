@@ -189,7 +189,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
 
     final PhoneVerificationFailed verificationFailed =
         (AuthException authException) {
-         ToastMessage.showToast(authException.message, context,backgroundColor: Colors.red,);
+         ToastMessage.showToast(authException.message, context,duration:2,backgroundColor: Colors.red,);
 
       setState(() {
         isCodeSent = false;

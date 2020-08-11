@@ -50,7 +50,7 @@ class Test{
   double totalMarks;
   int allottedTime;
   int elapsedTime;
-  Map<String,List<String>> questionSelected;
+  Map<String,List<dynamic>> questionSelected;
   List<QuestionPresented> questionPresented;
   String documentId;
 
@@ -89,15 +89,15 @@ class Test{
     final String status=data['status'];
     final Map<String,int> chaptersCovered=Map.from(data['chaptersCovered']);
     final String testImageUrl=data['testImageUrl'];
-    final DateTime testDate=(data['testDate'] as Timestamp).toDate();
+    final DateTime testDate=(data['testDate'] as Timestamp)?.toDate();
     final Map<String,int> categoryWeights=Map.from(data['categoryWeights']);
     final int totalQuestions=data['totalQuestions'];
     final double totalMarks=data['totalMarks']?.toDouble();
     final int allottedTime=data['allottedTime'];
     final int elapsedTime=data['elapsedTime'];
-    final Map<String,List<String>> questionSelected=Map.from(data['questionSelected']);
+    final Map<String,List<dynamic>> questionSelected=Map.from(data['questionSelected']??[]);
     List<QuestionPresented> questionPresented=[];
-    for(Map<String,dynamic>q in data['questionPresented']){
+    for(Map<String,dynamic>q in data['questionPresented']??[]){
       questionPresented.add(QuestionPresented.fromMap(q));
     }
 

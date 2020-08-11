@@ -68,6 +68,7 @@ class _EmailSignInFormChangeNotifierState
   void _submit(BuildContext context) async {
     try {
       print('Inside try _submit EmailSignInBlocBased:1');
+      ToastMessage.showToast('',context,widget: LearninkLoadingIndicator(),duration: 20);
       await model.submit();
       print('Inside try _submit EmailSignInBlocBased:2');
       if(model.formType==model.resetPassword){
@@ -76,6 +77,7 @@ class _EmailSignInFormChangeNotifierState
         _toggleFormType(toggleType: model.signin);
         print('Inside try _submit Reset password redirect to login :3');
       } else {
+        ToastMessage.dismissToast();
         Navigator.of(context).popUntil((route) => route.isFirst);
 //        Navigator.of(context).push(
 //          MaterialPageRoute<void>(builder:(context)=>Dashboard(),fullscreenDialog: true,),);

@@ -1,7 +1,5 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-//import 'package:fluttertoast/fluttertoast.dart';
 import 'package:learnink/src/models/to_be_presented_question.dart';
 import 'package:learnink/src/models/question.dart';
 import 'package:learnink/src/services/database.dart';

@@ -11,19 +11,20 @@ class ToastMessage {
 
   static void showToast(String msg, BuildContext context,
       {Widget widget,
-        int duration = 1,
-        int gravity = 1,
-        Color backgroundColor = const Color(0xAA000000),
-        textStyle = const TextStyle(fontSize: 15, color: Colors.white),
-        double backgroundRadius = 6,
-        Border border}) {
+      int duration = 1,
+      int gravity = 1,
+      Color backgroundColor = const Color(0xAA000000),
+      textStyle = const TextStyle(fontSize: 15, color: Colors.white),
+      double backgroundRadius = 6,
+      Border border}) {
     Widget toastWidget = widget ?? Text(msg, softWrap: true, style: textStyle);
-    bool isMargin = msg==null || msg=='' ? false : true;
+    bool isMargin = msg == null || msg == '' ? false : true;
     ToastView.dismiss();
-    ToastView.createView(toastWidget, isMargin, context, duration , gravity, backgroundColor,
-        textStyle, backgroundRadius, border);
+    ToastView.createView(toastWidget, isMargin, context, duration, gravity,
+        backgroundColor, textStyle, backgroundRadius, border);
   }
-  static void dismissToast(){
+
+  static void dismissToast() {
     ToastView.dismiss();
   }
 }
@@ -59,30 +60,34 @@ class ToastView {
 
     _overlayEntry = new OverlayEntry(
       builder: (BuildContext context) => ToastWidget(
-          duration: duration,
-          widget: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: background,
-                      borderRadius: BorderRadius.circular(backgroundRadius),
-                      border: border,
-                    ),
-                    margin: EdgeInsets.symmetric(horizontal: isMargin ? 20 : 0),
-                    padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                    child: toastWidget,
-                  )),
-            ),
-
-          gravity: gravity),
+        duration: duration,
+//          widget: Container(
+//              width: MediaQuery.of(context).size.width,
+//              child: Container(
+//                  alignment: Alignment.center,
+//                  width: MediaQuery.of(context).size.width,
+//                  child: Container(
+//                    decoration: BoxDecoration(
+//                      color: background,
+//                      borderRadius: BorderRadius.circular(backgroundRadius),
+//                      border: border,
+//                    ),
+//                    margin: EdgeInsets.symmetric(horizontal: isMargin ? 20 : 0),
+//                    padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+//                    child: toastWidget,
+        widget: toastWidget,
+        gravity: gravity,
+        background: background,
+        backgroundRadius: backgroundRadius,
+        border: border,
+        isMargin: isMargin,
+      ),
     );
     _isVisible = true;
     overlayState.insert(_overlayEntry);
-    await new Future.delayed(
-        Duration(seconds: duration == null ? ToastMessage.lengthShort : duration, milliseconds: 500));
+    await new Future.delayed(Duration(
+        seconds: duration == null ? ToastMessage.lengthShort : duration,
+        milliseconds: 500));
     dismiss();
   }
 
@@ -96,35 +101,67 @@ class ToastView {
 }
 
 class ToastWidget extends StatelessWidget {
-  ToastWidget({
-    Key key,
-    @required this.widget,
-    @required this.gravity,
-    @required this.duration,
-  }) : super(key: key);
+  ToastWidget(
+      {Key key,
+      @required this.widget,
+      @required this.gravity,
+      @required this.duration,
+      this.background,
+      this.backgroundRadius,
+      this.border,
+      this.isMargin})
+      : super(key: key);
 
   final Widget widget;
   final int gravity;
   final int duration;
+  final Color background;
+  final double backgroundRadius;
+  final Border border;
+  final bool isMargin;
 
   @override
   Widget build(BuildContext context) {
-    return
-       Positioned(
-          top: gravity == 2 ? MediaQuery.of(context).viewInsets.top + 50 : null,
-          bottom: gravity == 0 ? MediaQuery.of(context).viewInsets.bottom + 50 : null,
-          child: ToastMessageAnimation(
-            Material(
-              color: Colors.transparent,
-              child: widget,
-            ),
-            duration,
-       ),
+//    print("***********************");
+//    print('$widget');
+    return Positioned(
+        top: gravity == 2 ? MediaQuery.of(context).viewInsets.top + 50 : null,
+        bottom:
+            gravity == 0 ? MediaQuery.of(context).viewInsets.bottom + 50 : null,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width,
+            child: (widget is Text)
+                ? ToastMessageAnimation(
+                    Container(
+                      decoration: BoxDecoration(
+                        color: background,
+                        borderRadius: BorderRadius.circular(backgroundRadius),
+                        border: border,
+                      ),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: isMargin ? 20 : 0),
+                      padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: widget,
+                      ),
+                    ),
+                    duration,
+                  )
+                : Material(
+                    color: Colors.transparent,
+                    child: widget,
+                  ),
+          ),
+        ),
     );
   }
 }
 
-enum AniProps {opacity,y}
+enum AniProps { opacity, y }
 
 class ToastMessageAnimation extends StatelessWidget {
   final Widget child;
@@ -135,40 +172,40 @@ class ToastMessageAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _tween = MultiTween<AniProps>()
-        ..add(AniProps.y,Tween(begin:50.0,end:0.0),
-        Duration(milliseconds:250),
-          Curves.easeIn
-        )
-       ..add( AniProps.y,Tween(begin:0.0,end:0.0),
-           Duration(seconds: duration - 1, milliseconds: 500),
-          Curves.easeIn)
-          ..add(AniProps.y,
-              Tween(begin:0.0,end:50.0),
-              Duration(milliseconds: 250),
-           Curves.easeIn)
-          ..add( AniProps.opacity,
-            Tween(begin:0.0,end:1.0),
-           Duration(milliseconds: 250),
-          )
-          ..add(AniProps.opacity,
-            Tween(begin:1.0,end:1.0),
-            Duration(seconds: duration - 1, milliseconds: 500),
-          )
-          ..add(AniProps.opacity,
-          Tween(begin:1.0,end:0.0),
+      ..add(AniProps.y, Tween(begin: 50.0, end: 0.0),
+          Duration(milliseconds: 250), Curves.easeIn)
+      ..add(AniProps.y, Tween(begin: 0.0, end: 0.0),
+          Duration(seconds: duration - 1, milliseconds: 500), Curves.easeIn)
+      ..add(AniProps.y, Tween(begin: 0.0, end: 50.0),
+          Duration(milliseconds: 250), Curves.easeIn)
+      ..add(
+        AniProps.opacity,
+        Tween(begin: 0.0, end: 1.0),
         Duration(milliseconds: 250),
-    );
+      )
+      ..add(
+        AniProps.opacity,
+        Tween(begin: 1.0, end: 1.0),
+        Duration(seconds: duration - 1, milliseconds: 500),
+      )
+      ..add(
+        AniProps.opacity,
+        Tween(begin: 1.0, end: 0.0),
+        Duration(milliseconds: 250),
+      );
 
     return PlayAnimation(
       duration: _tween.duration,
-      tween:_tween,
+      tween: _tween,
       child: child,
-      builder: (context, child, value) => Opacity(
-        opacity: value.get(AniProps.opacity),
-        child: Transform.translate(
-            offset: Offset(0, value.get(AniProps.y)),
-            child: child),
-      ),
+      builder: (context, child, value) {
+        print("Inside PlayAnimation builder:${child}");
+        return Opacity(
+          opacity: value.get(AniProps.opacity),
+          child: Transform.translate(
+              offset: Offset(0, value.get(AniProps.y)), child: child),
+        );
+      },
     );
   }
 }
